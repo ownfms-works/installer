@@ -113,13 +113,14 @@
     <p class="hint indent">Fictional organizations, grants, payments and requirements, so there is something to look at.</p>
 
     <label class="check" for="users"><input id="users" type="checkbox"><span>Create the three sample sign-ins</span></label>
+    <p class="hint indent">Three made-up people to try the system as. <strong>Staff</strong> can create and edit records but not delete. <strong>Manager</strong> can read everything and decide grants. <strong>Demo Viewer</strong> can only look. They are not real people and use fictional addresses.</p>
     <div id="pwBox" class="indent" hidden>
-      <p class="hint">Optional. A sign-in is created only when you type a password for it. Leave a box empty to skip that sign-in. The addresses are staff@ownfms.example, manager@ownfms.example and demo@ownfms.example.</p>
-      <label for="pwStaff">Staff password</label>
+      <p class="hint">Optional. A sign-in is created only when you type a password for it. Leave a box empty to skip that sign-in. Choose your own passwords and keep them somewhere safe, because they are not shown again.</p>
+      <label for="pwStaff">Staff password (staff@ownfms.example)</label>
       <input id="pwStaff" type="password" autocomplete="new-password" spellcheck="false">
-      <label for="pwManager">Manager password</label>
+      <label for="pwManager">Manager password (manager@ownfms.example)</label>
       <input id="pwManager" type="password" autocomplete="new-password" spellcheck="false">
-      <label for="pwDemo">Demo Viewer password</label>
+      <label for="pwDemo">Demo Viewer password (demo@ownfms.example)</label>
       <input id="pwDemo" type="password" autocomplete="new-password" spellcheck="false">
     </div>
 
