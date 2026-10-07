@@ -126,6 +126,8 @@
     <h2 style="margin-top:22px">Before you install</h2>
     <label class="check" for="dedicated"><input id="dedicated" type="checkbox" aria-describedby="dedicatedHint"><span>I am using a server just for this</span></label>
     <p class="hint indent" id="dedicatedHint">Required to install. Some settings apply to the whole Corteza server, not only to OwnFMS.works.</p>
+    <label class="check" for="terms"><input id="terms" type="checkbox" aria-describedby="termsHint"><span>I understand this software is provided as is, with no warranty. I am responsible for my server, my data and my backups.</span></label>
+    <p class="hint indent" id="termsHint">Required to install. It is free, open-source software under the Apache 2.0 licence.</p>
     <details>
       <summary>What the setup changes on your server</summary>
       <ul>
@@ -136,6 +138,7 @@
       </ul>
     </details>
     <p class="hint field-msg" id="dedicatedError" role="alert" hidden style="color:#a32a1d;font-weight:600;margin-left:32px">Tick the box above to confirm, then press Install.</p>
+    <p class="hint field-msg" id="termsError" role="alert" hidden style="color:#a32a1d;font-weight:600;margin-left:32px">Tick the box about the software being provided as is, then press Install.</p>
 
     <div class="buttons">
       <button type="button" id="btnTest">Test connection</button>
@@ -2114,7 +2117,7 @@
   var els = {
     server: $("server"), clientId: $("clientId"), secret: $("clientSecret"), sample: $("sample"), users: $("users"),
     pwBox: $("pwBox"), pwStaff: $("pwStaff"), pwManager: $("pwManager"), pwDemo: $("pwDemo"), dedicated: $("dedicated"),
-    dedicatedError: $("dedicatedError"), btnTest: $("btnTest"), btnInstall: $("btnInstall"), btnVerify: $("btnVerify"),
+    terms: $("terms"), termsError: $("termsError"), dedicatedError: $("dedicatedError"), btnTest: $("btnTest"), btnInstall: $("btnInstall"), btnVerify: $("btnVerify"),
     btnForget: $("btnForget"), btnCopy: $("btnCopy"), status: $("status"), connNote: $("connNote"), log: $("log"),
     errorBox: $("errorBox"), errorMsg: $("errorMsg"), errorHints: $("errorHints"), successBox: $("successBox"),
     signinLink: $("signinLink"), usersNote: $("usersNote"), checksBox: $("checksBox"), checksTitle: $("checksTitle"),
@@ -2158,14 +2161,14 @@
   function setBusy(on) {
     busy = on;
     actionButtons.forEach(function (b) { b.disabled = on; });
-    [els.server, els.clientId, els.secret, els.sample, els.users, els.pwStaff, els.pwManager, els.pwDemo, els.dedicated, els.revoke, els.btnForget]
+    [els.server, els.clientId, els.secret, els.sample, els.users, els.pwStaff, els.pwManager, els.pwDemo, els.dedicated, els.terms, els.revoke, els.btnForget]
       .forEach(function (e) { e.disabled = on; });
   }
   window.addEventListener("beforeunload", function (e) { if (busy) { e.preventDefault(); e.returnValue = ""; } });
 
   function hideResults() {
     els.errorBox.hidden = true; els.successBox.hidden = true; els.checksBox.hidden = true; els.revokeBox.hidden = true;
-    els.dedicatedError.hidden = true;
+    els.dedicatedError.hidden = true; els.termsError.hidden = true;
     [els.server, els.clientId, els.secret].forEach(function (e) { e.classList.remove("field-error"); });
   }
 
@@ -2243,6 +2246,7 @@
   });
   els.users.addEventListener("change", function () { els.pwBox.hidden = !els.users.checked; });
   els.dedicated.addEventListener("change", function () { if (els.dedicated.checked) { els.dedicatedError.hidden = true; } });
+  els.terms.addEventListener("change", function () { if (els.terms.checked) { els.termsError.hidden = true; } });
   $("form").addEventListener("submit", function (ev) { ev.preventDefault(); });
 
   // ---- actions
@@ -2281,6 +2285,12 @@
       hideResults();
       els.dedicatedError.hidden = false; els.dedicated.focus();
       setStatus("Please confirm that you are using a server just for this.");
+      return;
+    }
+    if (!els.terms.checked) {
+      hideResults();
+      els.termsError.hidden = false; els.terms.focus();
+      setStatus("Please confirm that you accept the software is provided as is.");
       return;
     }
     run(els.btnInstall, async function () {
