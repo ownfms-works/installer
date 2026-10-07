@@ -1,0 +1,2400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https: http://localhost:* http://127.0.0.1:*; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light">
+<title>Install OwnFMS.works</title>
+<link rel="icon" href="data:,">
+<style>
+  :root {
+    --ink: #1d2730; --muted: #55616b; --bg: #f6f5f1; --card: #ffffff; --line: #d6d3ca;
+    --brand: #0b344e; --brand-ink: #ffffff; --accent: #c4501a;
+    --warn-bg: #fff6dd; --warn-line: #d9b44a;
+    --err-bg: #fdecec; --err-line: #c0392b; --ok-bg: #e9f6ee; --ok-line: #2e8b57;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.5;
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  main { max-width: 46rem; margin: 0 auto; padding: 20px 16px 40px; }
+  h1 { font-size: 1.75rem; line-height: 1.2; margin: 8px 0 8px; }
+  h2 { font-size: 1.15rem; margin: 0 0 8px; }
+  p { margin: 0 0 12px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin: 16px 0; }
+  .notice { background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 12px; padding: 12px 16px; margin: 16px 0; }
+  .notice p { margin: 0; }
+  .error { background: var(--err-bg); border: 1px solid var(--err-line); border-radius: 12px; padding: 14px 16px; margin: 16px 0; }
+  .success { background: var(--ok-bg); border: 1px solid var(--ok-line); border-radius: 12px; padding: 14px 16px; margin: 16px 0; }
+  .error h2, .success h2 { margin-top: 0; }
+  [hidden] { display: none !important; }
+  label { display: block; font-weight: 600; margin: 14px 0 4px; }
+  .hint { color: var(--muted); font-size: 0.9rem; margin: 2px 0 0; }
+  input[type="text"], input[type="password"], input[type="url"] {
+    width: 100%; font: inherit; padding: 10px 12px; border: 1px solid #8a948f; border-radius: 8px; background: #fff; color: var(--ink); }
+  input:focus-visible, button:focus-visible, summary:focus-visible, a:focus-visible, pre:focus-visible {
+    outline: 3px solid #1a73e8; outline-offset: 2px; }
+  .check { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; margin: 12px 0 4px; }
+  .check input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; }
+  .check span { font-weight: 600; }
+  .indent { margin-left: 32px; }
+  fieldset { border: 0; padding: 0; margin: 0; }
+  details { margin: 6px 0 0 32px; }
+  summary { cursor: pointer; color: var(--brand); font-weight: 600; padding: 4px 0; }
+  details ul { margin: 6px 0 0; padding-left: 20px; }
+  details li { margin: 6px 0; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  button { font: inherit; font-weight: 600; min-height: 46px; padding: 10px 18px; border-radius: 10px; border: 2px solid var(--brand);
+    background: #fff; color: var(--brand); cursor: pointer; }
+  button.primary { background: var(--brand); color: var(--brand-ink); }
+  button.small { min-height: 36px; padding: 6px 12px; font-size: 0.9rem; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  #status { min-height: 1.5em; margin: 12px 0 0; color: var(--ink); }
+  .spin { display: inline-block; width: 1em; height: 1em; border: 3px solid #b9c4cc; border-top-color: var(--brand);
+    border-radius: 50%; vertical-align: -0.15em; margin-right: 8px; animation: spin 0.9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+  #log { font: 0.85rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background: #101820; color: #e6edf3;
+    border-radius: 10px; padding: 12px; height: 18rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; margin: 8px 0 0; }
+  .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+  ol.steps { margin: 8px 0 0; padding-left: 22px; }
+  ol.steps li { margin: 6px 0; }
+  a { color: #0b4f8a; overflow-wrap: anywhere; }
+  .signin { font-size: 1.05rem; font-weight: 600; }
+  footer { color: var(--muted); font-size: 0.85rem; margin-top: 28px; text-align: center; }
+  .pwrow { display: flex; gap: 8px; align-items: stretch; }
+  .pwrow input { flex: 1 1 auto; min-width: 0; }
+  .pwrow button { flex: none; min-height: 0; }
+  .revoke-note { background: #f1f5f8; border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; margin: 6px 0 0 32px; }
+  .field-error { border-color: var(--err-line) !important; box-shadow: 0 0 0 2px #f3c4bf; }
+  @media (max-width: 480px) { h1 { font-size: 1.5rem; } .buttons button { flex: 1 1 100%; } .indent, details { margin-left: 0; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Install OwnFMS.works</h1>
+  <p>This page sets up the OwnFMS.works starter on your own Corteza server: nine modules for managing grants, their pages, three roles, a dashboard and, if you want it, a small set of fictional sample data. It does the same work as the Python scripts, without installing anything on your computer. It is safe to run twice: whatever already exists is reused.</p>
+
+  <div class="notice" id="fileNote" hidden role="note">
+    <p><strong>This page was opened from a file on your computer.</strong> Most servers refuse requests from such a page, so the connection may fail. If it does, put this file on an https address you control, or use the Python scripts or the Colab notebook instead.</p>
+  </div>
+
+  <div class="notice" role="note">
+    <p><strong>Your client secret stays in this page and is sent only to your own server. It is not stored.</strong></p>
+  </div>
+
+  <form id="form" class="card" autocomplete="off" novalidate>
+    <h2>Your server</h2>
+    <label for="server">Server address</label>
+    <input id="server" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://corteza.example.com" aria-describedby="serverHint">
+    <p class="hint" id="serverHint">The address of your Corteza server, starting with https://</p>
+
+    <label for="clientId">Client ID</label>
+    <div class="pwrow">
+      <input id="clientId" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="clientHint">
+      <button type="button" class="small" id="showId" aria-controls="clientId" aria-pressed="false" aria-label="Show Client ID">Show</button>
+    </div>
+    <p class="hint" id="clientHint">From the setup client you created in the Corteza admin area (Auth Clients, type client_credentials).</p>
+
+    <label for="clientSecret">Client secret</label>
+    <div class="pwrow">
+      <input id="clientSecret" type="password" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button type="button" class="small" id="showSecret" aria-controls="clientSecret" aria-pressed="false" aria-label="Show client secret">Show</button>
+    </div>
+
+    <label class="check" for="revoke"><input id="revoke" type="checkbox" checked aria-describedby="revokeHint"><span>Revoke this setup key when the install finishes (recommended)</span></label>
+    <p class="hint indent" id="revokeHint">The page installs, runs the checks, and then turns the setup key off and deletes it, so it cannot be used again. If the checks fail, it keeps the key so you can repair and try again. After the key is revoked, Test connection and Run checks no longer work with it, which is why the checks run first.</p>
+    <p class="hint revoke-note">Expiry dates are not enforced for these keys. To revoke by hand: open Admin &gt; Auth Clients, untick Enabled, save, then delete.</p>
+
+    <h2 style="margin-top:22px">Options</h2>
+    <label class="check" for="sample"><input id="sample" type="checkbox" checked><span>Load the sample data</span></label>
+    <p class="hint indent">Fictional organizations, grants, payments and requirements, so there is something to look at.</p>
+
+    <label class="check" for="users"><input id="users" type="checkbox"><span>Create the three sample sign-ins</span></label>
+    <div id="pwBox" class="indent" hidden>
+      <p class="hint">Optional. A sign-in is created only when you type a password for it. Leave a box empty to skip that sign-in. The addresses are staff@ownfms.example, manager@ownfms.example and demo@ownfms.example.</p>
+      <label for="pwStaff">Staff password</label>
+      <input id="pwStaff" type="password" autocomplete="new-password" spellcheck="false">
+      <label for="pwManager">Manager password</label>
+      <input id="pwManager" type="password" autocomplete="new-password" spellcheck="false">
+      <label for="pwDemo">Demo Viewer password</label>
+      <input id="pwDemo" type="password" autocomplete="new-password" spellcheck="false">
+    </div>
+
+    <h2 style="margin-top:22px">Before you install</h2>
+    <label class="check" for="dedicated"><input id="dedicated" type="checkbox" aria-describedby="dedicatedHint"><span>I am using a server just for this</span></label>
+    <p class="hint indent" id="dedicatedHint">Required to install. Some settings apply to the whole Corteza server, not only to OwnFMS.works.</p>
+    <details>
+      <summary>What the setup changes on your server</summary>
+      <ul>
+        <li><strong>Navigation.</strong> It writes a stylesheet and a small script that add a top bar of page links and hide the left sidebar in the Compose app. It <strong>replaces</strong> the server's existing custom CSS and code snippets.</li>
+        <li><strong>Default access.</strong> It removes the read access every signed-in user has by default, so people see only what their role grants. It also masks other people's email addresses from signed-in users. Names stay visible, so a record's History can show who made a change.</li>
+        <li><strong>Roles.</strong> It creates Staff, Manager and Demo Viewer, and gives the built-in Administrator role the page-layout permissions the build needs.</li>
+        <li><strong>Landing page.</strong> People who hold only the Staff, Manager or Demo Viewer role are sent straight to the OwnFMS.works Home page when they open the server's front page. Administrators keep Corteza's own screens. It also hides the Jitsi video tile from these three roles.</li>
+      </ul>
+    </details>
+    <p class="hint field-msg" id="dedicatedError" role="alert" hidden style="color:#a32a1d;font-weight:600;margin-left:32px">Tick the box above to confirm, then press Install.</p>
+
+    <div class="buttons">
+      <button type="button" id="btnTest">Test connection</button>
+      <button type="button" id="btnInstall" class="primary">Install</button>
+      <button type="button" id="btnVerify">Run checks</button>
+      <button type="button" id="btnRevoke">Revoke setup key now</button>
+    </div>
+    <p class="hint">Test connection only reads. Run checks reads the setup and adds a few clearly labelled test records (ZZTEST-) which it removes again. Revoke setup key now turns the key off and deletes it; run your checks first.</p>
+    <div id="status" role="status" aria-live="polite"></div>
+    <div class="row" style="margin-top:8px">
+      <span class="hint" id="connNote" hidden>Connected. The secret box was cleared; the page keeps the connection in memory until you close or reload it.</span>
+      <button type="button" id="btnForget" class="small" hidden>Forget connection</button>
+    </div>
+  </form>
+
+  <div id="errorBox" class="error" role="alert" hidden>
+    <h2>That did not work</h2>
+    <p id="errorMsg"></p>
+    <p style="margin-bottom:4px"><strong>What to try</strong></p>
+    <ul id="errorHints"></ul>
+  </div>
+
+  <div id="checksBox" class="success" hidden role="status">
+    <h2 id="checksTitle"></h2>
+    <p id="checksBody" style="margin:0"></p>
+  </div>
+
+  <div id="revokeBox" class="success" hidden role="status">
+    <h2 id="revokeTitle"></h2>
+    <p id="revokeBody" style="margin:0"></p>
+  </div>
+
+  <div id="successBox" class="success" hidden role="status">
+    <h2>OwnFMS.works is installed</h2>
+    <p>Sign in here: <a id="signinLink" class="signin" target="_blank" rel="noopener noreferrer"></a></p>
+    <p id="usersNote" hidden></p>
+    <p style="margin-bottom:4px"><strong>Next steps</strong></p>
+    <ol class="steps">
+      <li id="revokeStep">Revoke the setup client: open Admin &gt; Auth Clients, untick Enabled, save, then delete. Expiry dates are not enforced for these keys, and the key can act as an administrator.</li>
+      <li>Change the passwords of the sample sign-ins, or remove those users, before real people use the server.</li>
+      <li>Back up the server (a snapshot from your host is enough) before you enter real records.</li>
+    </ol>
+  </div>
+
+  <section class="card" aria-labelledby="logTitle">
+    <div class="row">
+      <h2 id="logTitle" style="margin:0">Progress</h2>
+      <button type="button" id="btnCopy" class="small">Copy all</button>
+    </div>
+    <pre id="log" tabindex="0" role="log" aria-label="Progress log"></pre>
+    <p class="hint">The log never contains your secret or passwords.</p>
+  </section>
+
+  <footer>OwnFMS.works installer <span id="ver"></span> &middot; Apache-2.0 &middot; ownfms.works</footer>
+</main>
+
+<script>
+/*
+ * OwnFMS.works installer core: a faithful JavaScript port of ownfms_lib.py, setup_ownfms.py,
+ * sample_data.py and verify_ownfms.py.
+ *
+ * One dependency-free file that runs in a browser page and in Node. It talks only to the
+ * Corteza server whose address you give it. The client secret and the access token are held in
+ * memory for the life of the installer object; nothing is stored in localStorage, sessionStorage,
+ * cookies or the URL, and neither value is ever logged or returned.
+ *
+ *   const inst = OwnFMSInstaller.createInstaller({ baseUrl, clientId, clientSecret, log });
+ *   await inst.connect();   await inst.check();   await inst.install();
+ *   await inst.verify({ scenario: true });   await inst.cleanup();
+ *
+ * Apache-2.0.
+ */
+(function (root, factory) {
+  var api = factory();
+  if (root) { root.OwnFMSInstaller = api; }
+  if (typeof module === "object" && module && module.exports) { module.exports = api; }
+})(typeof globalThis !== "undefined" ? globalThis : (typeof window !== "undefined" ? window : this), function () {
+  "use strict";
+
+  var VERSION = "0.1.0";
+
+  // ---------------------------------------------------------------------------
+  // Constants (ownfms_lib.py, setup_ownfms.py)
+  // ---------------------------------------------------------------------------
+
+  var NAMESPACE_SLUG = "OWNFMS";
+  var NAMESPACE_NAME = "OwnFMS.works";
+  var GRID_WIDTH = 48;
+  var DATE_FORMAT = "MMM D, YYYY";
+
+  var LEFT_W = 28;
+  var RIGHT_W = GRID_WIDTH - LEFT_W;
+  var RELATED_PER_PAGE = 5;
+  var RELATED_TABS_H = Math.ceil((46 + 187 + 51 * RELATED_PER_PAGE + 45) / 10);
+  var CHART_H = 20;
+  var LIST_ROUTE = "!isView && !isCreate && !isEdit";
+  var CREATE_ROUTE = "isCreate";
+  var RECORD_ROUTE = '(isView || isEdit) && record.recordID != ""';
+  var RECORD_BLOCK_VIS = "isView || isCreate || isEdit";
+  var BUTTON_NAMES = ["new", "edit", "submit", "delete", "clone", "back"];
+  function buttonSet(pred) {
+    var o = {};
+    BUTTON_NAMES.forEach(function (k) { o[k] = { enabled: pred(k), label: "" }; });
+    return o;
+  }
+  var ALL_BUTTONS = buttonSet(function () { return true; });
+  var READ_ONLY_BUTTONS = buttonSet(function (k) { return k === "back"; });
+  var NO_DELETE_BUTTONS = buttonSet(function (k) { return k !== "delete"; });
+  var ADMIN_NAMES = ["Super administrator", "Administrator"];
+  var TABS_STYLE = { appearance: "tabs", alignment: "left", position: "top", fill: false, justify: "justify" };
+
+  var RECORD_BLOCK_OPTIONS = {
+    fieldConditions: [], fields: [], horizontalFieldLayoutEnabled: false,
+    inlineRecordEditEnabled: false, magnifyOption: "", recordFieldLayoutOption: "wrap",
+    recordSelectorAddRecordDisplayOption: "sameTab", recordSelectorDisplayOption: "sameTab",
+    recordSelectorShowAddRecordButton: false, referenceField: ""
+  };
+
+  var ORG_TYPES = ["Grantee", "Prospective grantee", "Partner", "Other"];
+  var GRANT_STATUSES = ["Draft", "Submitted", "Under Review", "Approved", "Declined", "Active", "Closed"];
+  var REQ_TYPES = ["Report", "Deliverable", "Documentation", "Other"];
+  var REQ_STATUSES = ["Not started", "Submitted", "Accepted", "Needs revision", "Waived"];
+  var PAYMENT_STATUSES = ["Scheduled", "Released", "On Hold", "Cancelled"];
+  var PERIOD_STATUSES = ["Planned", "Open", "Closed"];
+  var MEETING_STATUSES = ["Scheduled", "Held", "Cancelled"];
+  var INITIATIVE_STATUSES = ["Draft", "Active", "On Hold", "Completed"];
+
+  var STAFF = "Staff";
+  var MANAGER = "Manager";
+  var DEMO = "Demo Viewer";
+  var ADMIN_ROLES = ["Super administrator", "Administrator"];
+  var EDITING = [STAFF].concat(ADMIN_ROLES);
+
+  var PREFIX_ROOT = "ZZTEST-";
+
+  // ---------------------------------------------------------------------------
+  // Small helpers
+  // ---------------------------------------------------------------------------
+
+  function InstallerError(message, kind, extra) {
+    var e = new Error(message);
+    e.name = "InstallerError";
+    e.kind = kind || "error";
+    if (extra) { for (var k in extra) { e[k] = extra[k]; } }
+    return e;
+  }
+
+  function slugify(s) {
+    return String(s).toLowerCase().replace(/[^a-z0-9_]+/g, "_").replace(/^_+|_+$/g, "");
+  }
+
+  // Python's urllib.parse.quote (safe "/"), so request paths are byte-identical to the Python setup.
+  function pyQuote(s) {
+    return encodeURIComponent(s).replace(/[!'()*]/g, function (c) {
+      return "%" + c.charCodeAt(0).toString(16).toUpperCase();
+    }).replace(/%2F/g, "/");
+  }
+
+  // Python's json.dumps for a list of strings (", " separators, non-ASCII escaped), so the scripts
+  // written to the server are character-for-character what the Python setup writes.
+  function pyJsonList(list) {
+    return "[" + list.map(function (s) {
+      return JSON.stringify(String(s)).replace(/[\u007f-\uffff]/g, function (c) {
+        return "\\u" + ("0000" + c.charCodeAt(0).toString(16)).slice(-4);
+      });
+    }).join(", ") + "]";
+  }
+
+  // Python's == on parsed JSON (dict key order does not matter).
+  function deepEqual(a, b) {
+    if (a === b) { return true; }
+    if (a === null || b === null || typeof a !== "object" || typeof b !== "object") { return false; }
+    if (Array.isArray(a) !== Array.isArray(b)) { return false; }
+    if (Array.isArray(a)) {
+      if (a.length !== b.length) { return false; }
+      for (var i = 0; i < a.length; i++) { if (!deepEqual(a[i], b[i])) { return false; } }
+      return true;
+    }
+    var ka = Object.keys(a), kb = Object.keys(b);
+    if (ka.length !== kb.length) { return false; }
+    for (var j = 0; j < ka.length; j++) {
+      if (!Object.prototype.hasOwnProperty.call(b, ka[j]) || !deepEqual(a[ka[j]], b[ka[j]])) { return false; }
+    }
+    return true;
+  }
+
+  function has(o, k) { return o !== null && o !== undefined && Object.prototype.hasOwnProperty.call(o, k); }
+  function orObj(x) { return x ? x : {}; }
+  function sameJson(a, b) { return JSON.stringify(a) === JSON.stringify(b); }
+  function pick(m, keys) {
+    var o = {};
+    keys.forEach(function (k) { if (has(m, k)) { o[k] = m[k]; } });
+    return o;
+  }
+
+  function normalizeBaseUrl(raw) {
+    var s = String(raw === undefined || raw === null ? "" : raw).trim();
+    if (!s) { throw InstallerError("Enter the address of your Corteza server, for example https://corteza.example.com", "input"); }
+    if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(s)) { s = "https://" + s; }
+    var u;
+    try { u = new URL(s); } catch (e) {
+      throw InstallerError("That server address does not look like a web address. Use the form https://corteza.example.com", "input");
+    }
+    var local = (u.hostname === "localhost" || u.hostname === "127.0.0.1");
+    if (u.protocol === "http:" && !local) {
+      throw InstallerError("The server address must use https. A plain http address would send your client secret unprotected across the network.", "input");
+    }
+    if (u.protocol !== "https:" && !(u.protocol === "http:" && local)) {
+      throw InstallerError("The server address must use https", "input");
+    }
+    if (u.username || u.password) {
+      throw InstallerError("Leave the user name and password out of the server address. Use the Client ID and Client secret fields instead.", "input");
+    }
+    var path = u.pathname.replace(/\/+$/, "");
+    // someone pastes the admin or Compose address: keep only the server itself
+    path = path.replace(/\/(admin|compose|auth|workflow|reporter|one|api)(\/.*)?$/i, "");
+    return u.origin + path;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Field builders (ownfms_lib.py)
+  // ---------------------------------------------------------------------------
+
+  function f_string(name, label, multiline, required) {
+    return { name: name, kind: "String", label: label || name, isRequired: !!required, options: { multiLine: !!multiline } };
+  }
+  function f_record(name, moduleId, label, required, labelField, multi) {
+    var options = { moduleID: moduleId };
+    if (labelField) { options.labelField = labelField; }
+    return { name: name, kind: "Record", label: label || name, isRequired: !!required, isMulti: !!multi, options: options };
+  }
+  function f_select(name, optionsList, label, required) {
+    return { name: name, kind: "Select", label: label || name, isRequired: !!required,
+      options: { options: optionsList.map(function (o) { return { text: o, value: o }; }), selectType: "default" } };
+  }
+  function f_number(name, label, prefix, precision, required) {
+    return { name: name, kind: "Number", label: label || name, isRequired: !!required,
+      options: { precision: precision === undefined ? 2 : precision, prefix: prefix === undefined ? "" : prefix } };
+  }
+  function f_date(name, label, required) {
+    return { name: name, kind: "DateTime", label: label || name, isRequired: !!required,
+      options: { onlyDate: true, format: DATE_FORMAT } };
+  }
+  function f_file(name, label, required, multi) {
+    return { name: name, kind: "File", label: label || name, isRequired: !!required, isMulti: !!multi,
+      options: { allowDocuments: true, mode: "list" } };
+  }
+  function f_email(name, label, required) {
+    return { name: name, kind: "Email", label: label || name, isRequired: !!required };
+  }
+  function f_url(name, label, required) {
+    return { name: name, kind: "Url", label: label || name, isRequired: !!required };
+  }
+
+  // ---------------------------------------------------------------------------
+  // Navigation CSS and scripts (ownfms_lib.py). The scripts are kept as raw text, with the
+  // script tags added in code so this file can sit inside an HTML <script> element.
+  // ---------------------------------------------------------------------------
+
+  var NAV_CSS = [
+    "/* OwnFMS.works: top navigation, no left sidebar */",
+    "body#compose .b-sidebar-outer, body#compose .b-sidebar.sidebar, body#compose .sidebar-spacer { display: none !important; }",
+    "body#compose aside div.tab { display: none !important; }",
+    "body#compose .header-navigation { padding-left: 16px !important; }",
+    'body#compose .header-navigation a[data-test-id="app-selector"] { display: none !important; }',
+    "body#compose .ownfms-topnav { flex: 0 0 calc(100vw - 32px); max-width: none; display: flex; flex-wrap: wrap; align-items: center;",
+    "  gap: 2px; padding: 4px 0 2px; }",
+    "body#compose .ownfms-topnav a { display: inline-block; padding: 4px 9px; border-radius: 8px; font-size: 13px; font-weight: 500;",
+    "  color: #0B344E; text-decoration: none; line-height: 1.3; }",
+    "body#compose .ownfms-topnav a:hover { background: #f3efe6; }",
+    "body#compose .ownfms-topnav a.active { background: #FF9661; color: #fff; }",
+    "/* a list inside a Tabs block repeats the tab label as its own heading */",
+    "body#compose .tab-pane .block.RecordList > .card-header { display: none !important; }",
+    "/* zero-size grid items hold the tab children and must not paint a sliver */",
+    'body#compose .vue-grid-item[style*="width: 0px"] { display: none !important; }',
+    "/* record-list tables fit their block and wrap long text instead of scrolling sideways */",
+    ".block.RecordList .record-list-table > table { width: 100% !important; max-width: 100% !important; }",
+    ".block.RecordList table td .text-nowrap, .block.RecordList table th { white-space: normal !important; overflow-wrap: anywhere; }",
+    ".block.RecordList table td > .d-flex { min-width: 90px !important; }",
+    ""
+  ].join("\n");
+
+  var NAV_SCRIPT_BODY = String.raw`
+(function () {
+  // A tab bar with every page the signed-in user can read. The page list the API returns is already
+  // filtered by permission, so each role sees only its own pages. Re-rendered after every route change.
+  if (document.body.id !== 'compose') { return; }
+  var NS_ID = '__NS_ID__', SLUG = '__SLUG__';
+  var ORDER = __ORDER__;
+  var pages = null, rendering = false;
+  function root() {
+    var all = document.body.getElementsByTagName('*');
+    for (var i = 0; i < all.length; i++) { if (all[i].__vue__) { return all[i].__vue__.$root; } }
+    return null;
+  }
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function currentPage() { var m = location.pathname.match(/\/pages\/(\d+)/); return m ? m[1] : null; }
+  function render() {
+    var hdr = document.querySelector('.header-navigation');
+    if (!hdr || !pages) { return; }
+    var nav = hdr.querySelector('.ownfms-topnav');
+    if (!nav) { nav = document.createElement('nav'); nav.className = 'ownfms-topnav'; hdr.appendChild(nav); }
+    var cur = currentPage(), html = '';
+    for (var i = 0; i < ORDER.length; i++) {
+      var pg = pages[ORDER[i]];
+      if (!pg) { continue; }
+      html += '<a href="/compose/ns/' + SLUG + '/pages/' + pg + '" data-page="' + pg + '"' +
+              (pg === cur ? ' class="active"' : '') + '>' + esc(ORDER[i]) + '</a>';
+    }
+    if (nav.innerHTML !== html) { rendering = true; nav.innerHTML = html; rendering = false; }
+  }
+  function load() {
+    var r = root();
+    if (!r || !r.$auth || !r.$auth.accessToken) { setTimeout(load, 500); return; }
+    fetch('/api/compose/namespace/' + NS_ID + '/page/?limit=100', { headers: { Authorization: 'Bearer ' + r.$auth.accessToken } })
+      .then(function (res) { return res.json(); })
+      .then(function (j) {
+        var set = (j && j.response && j.response.set) || [];
+        pages = {};
+        set.forEach(function (p) { if (p.visible !== false) { pages[p.title] = p.pageID; } });
+        render();
+        if (r.$router && r.$router.afterEach) { r.$router.afterEach(function () { setTimeout(render, 0); }); }
+      })
+      .catch(function () { setTimeout(load, 2000); });
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest && e.target.closest('.ownfms-topnav a');
+    if (!a) { return; }
+    e.preventDefault();
+    var r = root();
+    if (r && r.$router) { r.$router.push('/ns/' + SLUG + '/pages/' + a.getAttribute('data-page')); }
+    else { window.location.assign(a.getAttribute('href')); }
+  }, true);
+  new MutationObserver(function () { if (!rendering && pages && !document.querySelector('.ownfms-topnav')) { render(); } })
+    .observe(document.body, { childList: true, subtree: true });
+  load();
+})();
+`;
+
+  // People who hold only a Staff, Manager or Demo Viewer role have one place to go. Sending them from the
+  // launcher ("/") and the namespace list straight to Home saves a click and a confusing screen.
+  // Administrators are not in the list, so they keep Corteza's own screens.
+  var LANDING_SCRIPT_BODY = String.raw`
+(function () {
+  var FORWARD = __ROLES__;
+  var HOME_PATH = '/ns/__SLUG__/pages/__HOME__', HOME_URL = '/compose' + HOME_PATH;
+  var app = document.body.id;
+  if (app !== 'one' && app !== 'compose') { return; }
+  function root() {
+    var all = document.body.getElementsByTagName('*');
+    for (var i = 0; i < all.length; i++) { if (all[i].__vue__) { return all[i].__vue__.$root; } }
+    return null;
+  }
+  function shouldForward(r) {
+    var roles = (r && r.$auth && r.$auth.user && r.$auth.user.roles) || [];
+    for (var i = 0; i < roles.length; i++) { if (FORWARD.indexOf(String(roles[i])) >= 0) { return true; } }
+    return false;
+  }
+  function onOneChoiceScreen() {
+    var p = location.pathname.replace(/\/+$/, '');
+    if (app === 'one') { return p === '' || p === '/'; }
+    return p === '/compose' || p === '/compose/namespaces' || p === '/compose/ns';
+  }
+  function check(tries) {
+    var r = root();
+    if (!r || !r.$auth || !r.$auth.user || !r.$auth.user.userID) {
+      if (tries < 40) { setTimeout(function () { check(tries + 1); }, 250); }
+      return;
+    }
+    if (!shouldForward(r) || !onOneChoiceScreen()) { return; }
+    if (app === 'compose' && r.$router) { r.$router.replace(HOME_PATH); } else { window.location.replace(HOME_URL); }
+  }
+  check(0);
+  if (app === 'compose') {
+    var hook = function () { var r = root(); if (r && r.$router && r.$router.afterEach) { r.$router.afterEach(function () { setTimeout(function () { check(0); }, 0); }); return true; } return false; };
+    if (!hook()) { var t = setInterval(function () { if (hook()) { clearInterval(t); } }, 300); }
+  }
+})();
+`;
+
+  function wrapScript(body) { return "<script>" + body.replace(/\n$/, "") + "\n</scr" + "ipt>"; }
+  function fill(text, map) {
+    Object.keys(map).forEach(function (k) { text = text.split(k).join(map[k]); });
+    return text;
+  }
+  // The leading newline in the raw bodies is the one after <script> in the Python source
+  var NAV_SCRIPT = wrapScript(NAV_SCRIPT_BODY);
+  var LANDING_SCRIPT = wrapScript(LANDING_SCRIPT_BODY);
+
+  // ---------------------------------------------------------------------------
+  // Schema and page specs (setup_ownfms.py)
+  // ---------------------------------------------------------------------------
+
+  // Dependency order. Organization and Contact point at each other, so the primary contact link on
+  // Organization is added after Contact exists. ensureModule and addField are supplied by the caller
+  // so the same definitions drive both the install and the verify.
+  async function createModules(nsId, ensureModule, addField) {
+    var ids = {};
+    ids.fiscal_period = await ensureModule(nsId, "Fiscal Period", [
+      f_string("name", "Name", false, true),
+      f_date("start_date", "Start date"), f_date("end_date", "End date"),
+      f_select("status", PERIOD_STATUSES, "Status"),
+      f_number("budget", "Budget", "$", 0),
+      f_string("notes", "Notes", true)]);
+    ids.program = await ensureModule(nsId, "Program", [
+      f_string("name", "Name", false, true),
+      f_string("description", "Description", true),
+      f_select("status", ["Active", "Archived"], "Status")]);
+    ids.organization = await ensureModule(nsId, "Organization", [
+      f_string("name", "Name", false, true),
+      f_select("type", ORG_TYPES, "Type"),
+      f_select("status", ["Active", "Inactive"], "Status"),
+      f_string("phone", "Phone"), f_string("address", "Address"), f_url("website", "Website")]);
+    ids.contact = await ensureModule(nsId, "Contact", [
+      f_string("first_name", "First name", false, true),
+      f_string("last_name", "Last name", false, true),
+      f_email("email", "Email"), f_string("phone", "Phone"), f_string("title", "Title"),
+      f_record("organization", ids.organization, "Organization", false, "name")]);
+    await addField(nsId, ids.organization,
+      f_record("primary_contact", ids.contact, "Primary contact", false, "last_name"));
+    ids.board_meeting = await ensureModule(nsId, "Board Meeting", [
+      f_string("title", "Title", false, true),
+      f_select("meeting_type", ["Board", "Committee"], "Type"),
+      f_date("meeting_date", "Date"),
+      f_select("status", MEETING_STATUSES, "Status"),
+      f_string("agenda", "Agenda", true),
+      f_file("minutes", "Minutes"),
+      f_string("notes", "Notes", true)]);
+    ids.initiative = await ensureModule(nsId, "Initiative", [
+      f_string("title", "Title", false, true),
+      f_string("description", "Description", true),
+      f_select("status", INITIATIVE_STATUSES, "Status"),
+      f_record("programs", ids.program, "Programs", false, "name", true),
+      f_record("organizations", ids.organization, "Organizations", false, "name", true),
+      f_record("contacts", ids.contact, "Contacts", false, "last_name", true),
+      f_record("fiscal_periods", ids.fiscal_period, "Fiscal periods", false, "name", true),
+      f_date("start_date", "Start date"), f_date("end_date", "End date")]);
+    ids.grant = await ensureModule(nsId, "Grant", [
+      f_string("reference_number", "Reference number"),
+      f_string("purpose", "Purpose", true, true),
+      f_record("organization", ids.organization, "Organization", true, "name"),
+      f_record("contacts", ids.contact, "Contacts", false, "last_name", true),
+      f_record("program", ids.program, "Program", false, "name"),
+      f_record("initiative", ids.initiative, "Initiative", false, "title"),
+      f_record("fiscal_period", ids.fiscal_period, "Fiscal period", false, "name"),
+      f_number("amount_requested", "Amount requested", "$", 0),
+      f_number("amount_awarded", "Amount awarded", "$", 0),
+      f_date("start_date", "Start date"), f_date("end_date", "End date"),
+      f_select("status", GRANT_STATUSES, "Status"),
+      f_date("approved_date", "Approved date"),
+      f_record("board_meeting", ids.board_meeting, "Board meeting", false, "title"),
+      f_string("decision_notes", "Decision notes", true)]);
+    ids.grant_payment = await ensureModule(nsId, "Grant Payment", [
+      f_record("grant", ids.grant, "Grant", true, "reference_number"),
+      f_number("amount", "Amount", "$", 0),
+      f_date("scheduled_date", "Scheduled date"), f_date("paid_date", "Paid date"),
+      f_select("status", PAYMENT_STATUSES, "Status"),
+      f_record("fiscal_period", ids.fiscal_period, "Fiscal period", false, "name"),
+      f_string("notes", "Notes", true)]);
+    ids.grantee_requirement = await ensureModule(nsId, "Grantee Requirement", [
+      f_record("grant", ids.grant, "Grant", true, "reference_number"),
+      f_string("title", "Title", false, true),
+      f_select("requirement_type", REQ_TYPES, "Type"),
+      f_date("due_date", "Due date"), f_date("completed_date", "Completed date"),
+      f_select("status", REQ_STATUSES, "Status"),
+      f_record("fiscal_period", ids.fiscal_period, "Fiscal period", false, "name"),
+      f_file("file", "File"), f_string("notes", "Notes", true)]);
+    return ids;
+  }
+
+  // One entry per module page. related = [child module, tab title, field on the child that points here, columns]
+  var SPECS = {
+    organization: { title: "Organizations", singular: "Organization", record_title: "${record.values.name}",
+      list: ["name", "type", "status", "phone"],
+      form: ["name", "type", "status", "phone", "website", "address", "primary_contact"],
+      related: [["contact", "Contacts", "organization", ["first_name", "last_name", "email"]],
+                ["grant", "Grants", "organization", ["reference_number", "status", "amount_awarded"]]],
+      history: true, editing_roles: EDITING },
+    contact: { title: "Contacts", singular: "Contact", record_title: "${record.values.first_name} ${record.values.last_name}",
+      list: ["first_name", "last_name", "email", "organization"],
+      form: ["first_name", "last_name", "title", "email", "phone", "organization"],
+      editing_roles: EDITING },
+    program: { title: "Programs", singular: "Program", record_title: "${record.values.name}",
+      list: ["name", "status", "description"], form: ["name", "status", "description"],
+      related: [["initiative", "Initiatives", "programs", ["title", "status"]],
+                ["grant", "Grants", "program", ["reference_number", "status", "amount_awarded"]]],
+      editing_roles: EDITING },
+    initiative: { title: "Initiatives", singular: "Initiative", record_title: "${record.values.title}",
+      list: ["title", "status", "start_date", "end_date"],
+      form: ["title", "status", "description", "programs", "organizations", "contacts", "fiscal_periods",
+             "start_date", "end_date"],
+      related: [["grant", "Grants", "initiative", ["reference_number", "status", "amount_awarded"]]],
+      history: true, editing_roles: EDITING },
+    grant: { title: "Grants", singular: "Grant", record_title: "${record.values.reference_number}",
+      list: ["reference_number", "organization", "status", "amount_requested", "amount_awarded"],
+      form: ["reference_number", "purpose", "organization", "contacts", "program", "initiative", "fiscal_period",
+             "amount_requested", "amount_awarded", "start_date", "end_date", "status", "approved_date",
+             "board_meeting", "decision_notes"],
+      related: [["grant_payment", "Payments", "grant", ["amount", "scheduled_date", "status"]],
+                ["grantee_requirement", "Requirements", "grant", ["title", "requirement_type", "due_date", "status"]]],
+      history: true, charts: [["grants_by_status", "Grants by Status"], ["amount_awarded_by_status", "Amount Awarded by Status"]],
+      editing_roles: [STAFF, MANAGER].concat(ADMIN_ROLES) },
+    grant_payment: { title: "Grant Payments", singular: "Grant Payment", record_title: "Payment of $${record.values.amount}",
+      list: ["grant", "amount", "scheduled_date", "paid_date", "status"],
+      form: ["grant", "amount", "scheduled_date", "paid_date", "status", "fiscal_period", "notes"],
+      history: true, charts: [["payments_by_status", "Payments by Status"]], editing_roles: EDITING },
+    grantee_requirement: { title: "Grantee Requirements", singular: "Grantee Requirement",
+      record_title: "${record.values.title}",
+      list: ["title", "grant", "requirement_type", "due_date", "status"],
+      form: ["grant", "title", "requirement_type", "due_date", "completed_date", "status", "fiscal_period", "file", "notes"],
+      charts: [["requirements_by_status", "Requirements by Status"]], editing_roles: EDITING },
+    fiscal_period: { title: "Fiscal Periods", singular: "Fiscal Period", record_title: "${record.values.name}",
+      list: ["name", "start_date", "end_date", "status", "budget"],
+      form: ["name", "status", "start_date", "end_date", "budget", "notes"],
+      related: [["grant", "Grants", "fiscal_period", ["reference_number", "status", "amount_awarded"]],
+                ["grant_payment", "Payments", "fiscal_period", ["amount", "scheduled_date", "status"]]],
+      editing_roles: EDITING },
+    board_meeting: { title: "Board Meetings", singular: "Board Meeting", record_title: "${record.values.title}",
+      list: ["title", "meeting_type", "meeting_date", "status"],
+      form: ["title", "meeting_type", "meeting_date", "status", "agenda", "minutes", "notes"],
+      related: [["grant", "Grants", "board_meeting", ["reference_number", "organization", "status", "amount_awarded"]]],
+      editing_roles: EDITING }
+  };
+  // Order shown on the Home navigation row
+  var NAV_ORDER = ["grant", "organization", "contact", "program", "initiative", "grant_payment", "grantee_requirement",
+    "fiscal_period", "board_meeting"];
+  var REVISION_MODULES = ["grant", "organization", "grant_payment", "initiative"];
+  var DELETE_ORDER = ["grantee_requirement", "grant_payment", "grant", "initiative", "board_meeting", "contact",
+    "organization", "program", "fiscal_period"];
+
+  // The stock Authenticated role can read every namespace, module, record, page and chart.
+  // Clearing those means a signed-in user sees only what a role grants explicitly.
+  var AUTHENTICATED_WILDCARDS = [
+    ["corteza::compose:namespace/*", ["read", "export", "modules.search", "modules.export",
+      "charts.search", "charts.export", "pages.search", "pages.export"]],
+    ["corteza::compose:module/*/*", ["read", "export", "records.search"]],
+    ["corteza::compose:module-field/*/*/*", ["record.value.read"]],
+    ["corteza::compose:record/*/*/*", ["read"]],
+    ["corteza::compose:page/*/*", ["read", "export"]],
+    ["corteza::compose:page-layout/*/*/*", ["read"]],
+    ["corteza::compose:chart/*/*", ["read", "export"]]
+  ];
+  // Signed-in users keep seeing people's names (record History needs them) but not their email addresses.
+  var USER_NAMES_ALLOWED = [
+    ["corteza::system/", ["users.search"]],
+    ["corteza::system:user/*", ["read", "name.unmask"]]
+  ];
+  var USER_EMAILS_MASKED = [
+    ["corteza::system:user/*", ["email.unmask"]]
+  ];
+
+  var LABEL_FIELD = { fiscal_period: "name", program: "name", organization: "name", contact: "last_name",
+    board_meeting: "title", initiative: "title", grant: "reference_number",
+    grant_payment: "notes", grantee_requirement: "title" };
+
+  function record_block_fields(module, names) {
+    // Record blocks store the full field definition, not just the name.
+    var byName = new Map();
+    module.fields.forEach(function (f) { byName.set(f.name, f); });
+    return names.map(function (n) { return Object.assign({}, byName.get(n)); });
+  }
+
+  function details_height(nFields, multiline) {
+    // View mode lays fields out two per row at this width, one grid row is 10px, a field is about 75px
+    return Math.ceil(17 + 7.5 * Math.ceil(nFields / 2) + 2.1 * (multiline || 0));
+  }
+
+  function _meta(expr) {
+    return { hidden: false, visibility: { expression: expr || "", roles: [] } };
+  }
+
+  function _lay(block, xywh, hidden) {
+    var expr = block.kind === "Record" ? RECORD_BLOCK_VIS : "";
+    var meta = _meta(expr);
+    meta.hidden = !!hidden;
+    return { blockID: block.blockID, xywh: xywh, meta: meta };
+  }
+
+  function v(name, value) { return { name: name, value: value }; }
+  function d(iso) { return iso + "T00:00:00Z"; }
+  function mv(name, ids) { return ids.map(function (i, n) { return { name: name, value: i, place: n }; }); }
+
+  // ---------------------------------------------------------------------------
+  // The installer
+  // ---------------------------------------------------------------------------
+
+  function createInstaller(cfg) {
+    cfg = cfg || {};
+    var web = normalizeBaseUrl(cfg.baseUrl);
+    var T = { id: String(cfg.clientId === undefined || cfg.clientId === null ? "" : cfg.clientId).trim(),
+              secret: String(cfg.clientSecret === undefined || cfg.clientSecret === null ? "" : cfg.clientSecret),
+              token: null, expires: 0 };
+    if (!T.id) { throw InstallerError("Enter the Client ID of the setup client.", "input"); }
+    if (!T.secret) { throw InstallerError("Enter the Client secret of the setup client.", "input"); }
+    var options = Object.assign({ sampleData: true, passwords: {}, emails: {} }, cfg.options || {});
+    var logFn = typeof cfg.log === "function" ? cfg.log : function () {};
+    var fetchFn = cfg.fetchFn || null;
+    var skippedOperations = new Set();
+    var results = [];          // verify: [ok, name, detail]
+    var revoked = false;       // set once revokeSetupClient() has dropped the key from memory
+
+    // --- never let a secret reach a log line or an error message
+    function secretValues() {
+      var vals = [T.secret, T.token];
+      var pw = options.passwords || {};
+      ["staff", "manager", "demo"].forEach(function (k) { if (pw[k]) { vals.push(pw[k]); } });
+      return vals.filter(function (x) { return x && String(x).length >= 4; });
+    }
+    function scrub(text) {
+      var s = String(text);
+      secretValues().forEach(function (x) { s = s.split(String(x)).join("***"); });
+      return s;
+    }
+    function say(msg) {
+      try { logFn(scrub(msg === undefined ? "" : msg)); } catch (e) { /* a broken log function must not stop the install */ }
+    }
+    function fail(message, kind, extra) { return InstallerError(scrub(message), kind, extra); }
+
+    // --- network
+    function doFetch(url, init) {
+      if (fetchFn) { return fetchFn(url, init); }
+      return globalThis.fetch(url, init);
+    }
+
+    function networkProblem(err, what) {
+      var msg = String((err && err.message) || err);
+      var origin = "";
+      try { origin = (typeof location !== "undefined" && location.origin) ? location.origin : ""; } catch (e) { origin = ""; }
+      var fromFile = (typeof location !== "undefined" && location && location.protocol === "file:");
+      var reasons = ["The address is wrong or has a typo.",
+        "The address starts with http:// when the server needs https://, or the other way round.",
+        "The server is switched off or not reachable from this device."];
+      if (fromFile) {
+        reasons.push("This page was opened from a file on your computer, and most servers refuse requests from such pages. Host install_ownfms.html on an https address instead, or use the Python scripts or the Colab notebook.");
+      } else {
+        reasons.push("The server does not allow requests from this page's address" + (origin && origin !== "null" ? " (" + origin + ")" : "") +
+          " (a browser security rule called CORS). Host this page where the server allows it, or use the Python scripts or the Colab notebook.");
+      }
+      var headline = "Could not reach your server at " + web + " (" + what + ").";
+      return fail(headline + " Possible reasons: " + reasons.join(" "), "network", { headline: headline, reasons: reasons, detail: msg });
+    }
+
+    async function rawFetch(url, init, what, timeoutMs) {
+      var ctl = (typeof AbortController !== "undefined") ? new AbortController() : null;
+      var timer = null, timedOut = false;
+      if (ctl) {
+        init.signal = ctl.signal;
+        timer = setTimeout(function () { timedOut = true; ctl.abort(); }, timeoutMs);
+      }
+      init.credentials = "omit";
+      init.cache = "no-store";
+      init.referrerPolicy = "no-referrer";
+      try {
+        var res = await doFetch(url, init);
+        var text = await res.text();
+        return { status: res.status, ok: res.ok, text: text };
+      } catch (err) {
+        if (timedOut) {
+          throw fail("The server at " + web + " did not answer within " + Math.round(timeoutMs / 1000) + " seconds (" + what + "). Check that it is running, then try again.", "network");
+        }
+        if (err && err.kind) { throw err; }
+        // fetch rejects with a TypeError ("Failed to fetch") for every network, CORS and TLS failure
+        throw networkProblem(err, what);
+      } finally {
+        if (timer) { clearTimeout(timer); }
+      }
+    }
+
+    function basicAuth() {
+      var raw = T.id + ":" + T.secret;
+      var bytes = new TextEncoder().encode(raw), bin = "";
+      for (var i = 0; i < bytes.length; i++) { bin += String.fromCharCode(bytes[i]); }
+      return "Basic " + btoa(bin);
+    }
+
+    async function getToken() {
+      if (revoked) {
+        throw fail("The setup key was revoked by this page, so it can no longer be used. To run the install or the checks again, create a new setup client in the Corteza admin area.", "revoked");
+      }
+      if (T.token && (Date.now() / 1000) < T.expires - 60) { return T.token; }
+      var res = await rawFetch(web + "/auth/oauth2/token", {
+        method: "POST",
+        headers: { Authorization: basicAuth(), "Content-Type": "application/x-www-form-urlencoded" },
+        body: "grant_type=client_credentials&scope=api"
+      }, "sign-in request", 20000);
+      if (!res.ok) {
+        var hint = (res.status === 401 || res.status === 400 || res.status === 403)
+          ? "The server did not accept the Client ID and Client secret. Check that you copied both exactly, that the client is of type client_credentials, and that it is still enabled."
+          : "The server refused the sign-in request.";
+        throw fail("Sign-in failed (HTTP " + res.status + "). " + hint, "auth", { status: res.status });
+      }
+      var data;
+      try { data = JSON.parse(res.text); } catch (e) {
+        throw fail("The address answered, but not like a Corteza server. Check the server address (use the address of the Corteza site itself, not a page inside it).", "data");
+      }
+      if (!data || !data.access_token) {
+        throw fail("The server did not return an access token. Check that the setup client is of type client_credentials and impersonates an administrator.", "auth");
+      }
+      T.token = data.access_token;
+      T.expires = (Date.now() / 1000) + (data.expires_in || 7200);
+      return T.token;
+    }
+
+    // Port of api(): Bearer auth, JSON in and out, one retry with a fresh token after a 401.
+    async function api(method, path, body, retried) {
+      var init = { method: method, headers: { Authorization: "Bearer " + (await getToken()), "Content-Type": "application/json" } };
+      if (body !== undefined && body !== null) { init.body = JSON.stringify(body); }
+      var res = await rawFetch(web + "/api" + path, init, method + " " + path, 30000);
+      if (!res.ok) {
+        if (res.status === 401 && !retried) {
+          T.token = null;
+          return api(method, path, body, true);
+        }
+        throw fail(method + " " + path + ": HTTP " + res.status + " " + res.text.slice(0, 400), "http", { status: res.status });
+      }
+      var d0;
+      if (res.text) {
+        try { d0 = JSON.parse(res.text); } catch (e) {
+          throw fail(method + " " + path + ": the server did not answer with Corteza data. Check the server address.", "data");
+        }
+      } else { d0 = {}; }
+      if (d0 && typeof d0 === "object" && !Array.isArray(d0) && d0.error) {
+        throw fail(method + " " + path + ": " + (typeof d0.error === "string" ? d0.error : JSON.stringify(d0.error)), "http");
+      }
+      return d0;
+    }
+
+    // ---------------------------------------------------------------------------
+    // Namespace, modules, charts
+    // ---------------------------------------------------------------------------
+
+    async function ensureNamespace() {
+      var set = (await api("GET", "/compose/namespace/")).response.set;
+      for (var i = 0; i < set.length; i++) {
+        if (set[i].slug === NAMESPACE_SLUG) {
+          say("Namespace " + NAMESPACE_SLUG + " exists (" + set[i].namespaceID + ")");
+          return set[i].namespaceID;
+        }
+      }
+      var nsId = (await api("POST", "/compose/namespace/", { slug: NAMESPACE_SLUG, name: NAMESPACE_NAME, enabled: true })).response.namespaceID;
+      say("Created namespace " + NAMESPACE_SLUG + " (" + nsId + ")");
+      return nsId;
+    }
+
+    async function ensureModule(nsId, name, fields, handle) {
+      handle = handle || slugify(name);
+      var set = (await api("GET", "/compose/namespace/" + nsId + "/module/?query=" + handle)).response.set;
+      for (var i = 0; i < set.length; i++) {
+        if (set[i].handle === handle) {
+          say("Module " + name + " exists (" + set[i].moduleID + ")");
+          return set[i].moduleID;
+        }
+      }
+      var modId = (await api("POST", "/compose/namespace/" + nsId + "/module/", { name: name, handle: handle, fields: fields })).response.moduleID;
+      say("Created module " + name + " (" + modId + ")");
+      return modId;
+    }
+
+    // Corteza has no field-level endpoint: POST the module again with the field appended.
+    async function addField(nsId, moduleId, newField) {
+      var mod = (await api("GET", "/compose/namespace/" + nsId + "/module/" + moduleId)).response;
+      if (mod.fields.some(function (f) { return f.name === newField.name; })) { return; }
+      await api("POST", "/compose/namespace/" + nsId + "/module/" + moduleId,
+        { name: mod.name, handle: mod.handle, fields: mod.fields.concat([newField]) });
+      say("  added field " + newField.name + " to " + mod.name);
+    }
+
+    // Show dates as 'Oct 2, 2026' instead of '10/2/26' on modules that already exist.
+    async function syncDateFormat(nsId, moduleId) {
+      var m = (await api("GET", "/compose/namespace/" + nsId + "/module/" + moduleId)).response;
+      var changed = false;
+      m.fields.forEach(function (f) {
+        if (f.kind === "DateTime" && orObj(f.options).format !== DATE_FORMAT) {
+          f.options = Object.assign({}, orObj(f.options), { format: DATE_FORMAT });
+          changed = true;
+        }
+      });
+      if (changed) {
+        var body = pick(m, ["name", "handle", "fields", "meta", "config"]);
+        body.updatedAt = m.updatedAt === undefined ? null : m.updatedAt;
+        await api("POST", "/compose/namespace/" + nsId + "/module/" + moduleId, body);
+        say("  date format set on " + m.handle);
+      }
+    }
+
+    async function enableRevisions(nsId, moduleId) {
+      var m = (await api("GET", "/compose/namespace/" + nsId + "/module/" + moduleId)).response;
+      var cfgm = Object.assign({}, orObj(m.config));
+      if (orObj(cfgm.recordRevisions).enabled) { return; }
+      cfgm.recordRevisions = Object.assign({}, orObj(cfgm.recordRevisions), { enabled: true });
+      var body = pick(m, ["name", "handle", "fields", "meta"]);
+      body.config = cfgm;
+      body.updatedAt = m.updatedAt === undefined ? null : m.updatedAt;
+      await api("POST", "/compose/namespace/" + nsId + "/module/" + moduleId, body);
+      say("  revisions on for " + m.handle);
+    }
+
+    // Bar chart of a module, grouped by one field. metrics[].type is the renderer ('bar'), and
+    // dimensions[].modifier is required: both are silently accepted when wrong and then fail to render.
+    async function ensureChart(nsId, moduleId, name, handle, dimension, metricField, aggregate, label) {
+      metricField = metricField || "count";
+      var set = (await api("GET", "/compose/namespace/" + nsId + "/chart/")).response.set;
+      for (var i = 0; i < set.length; i++) { if (set[i].handle === handle) { return set[i].chartID; } }
+      var metric = { field: metricField, type: "bar", label: label || name.split(" by ")[0] };
+      if (aggregate) { metric.aggregate = aggregate; }
+      var title = dimension.replace(/_/g, " ").replace(/\w\S*/g, function (w) { return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase(); });
+      var chartId = (await api("POST", "/compose/namespace/" + nsId + "/chart/", {
+        name: name, handle: handle,
+        config: { reports: [{ moduleID: moduleId, metrics: [metric],
+          dimensions: [{ field: dimension, label: title, modifier: "value" }] }] }
+      })).response.chartID;
+      say("Created chart " + name);
+      return chartId;
+    }
+
+    // ---------------------------------------------------------------------------
+    // Pages
+    // ---------------------------------------------------------------------------
+
+    async function upsertLayout(nsId, pageId, handle, title, expression, blocks, useTitle, roles, buttons) {
+      var payload = { handle: handle, blocks: blocks, meta: { title: title, description: "" },
+        config: { visibility: { expression: expression, roles: (roles || []).slice() },
+          buttons: buttons || ALL_BUTTONS, useTitle: !!useTitle } };
+      var layouts = (await api("GET", "/compose/namespace/" + nsId + "/page/" + pageId + "/layout/")).response.set;
+      var existing = layouts.find(function (l) { return l.handle === handle; });
+      if (!existing) {
+        // creating re-indexes block IDs to 1..n, so create and then update, which keeps the IDs
+        existing = (await api("POST", "/compose/namespace/" + nsId + "/page/" + pageId + "/layout/",
+          Object.assign({}, payload, { name: title }))).response;
+      }
+      await api("POST", "/compose/namespace/" + nsId + "/page/" + pageId + "/layout/" + existing.pageLayoutID, payload);
+    }
+
+    async function buildModulePage(nsId, module, spec, modulesByHandle, chartIds, roleIds, noExportRoles) {
+      noExportRoles = noExportRoles || [];
+      var handle = module.handle + "_list";
+      var modId = module.moduleID;
+      var names = new Set(module.fields.map(function (f) { return f.name; }));
+      ["list", "form"].forEach(function (key) {
+        var bad = spec[key].filter(function (f) { return !names.has(f); });
+        if (bad.length) { throw fail(module.handle + ": " + key + " references unknown fields " + JSON.stringify(bad), "data"); }
+      });
+
+      var nid = 0;
+      function newId() { nid += 1; return String(nid); }
+
+      var blocks = [];
+      var main = { blockID: newId(), kind: "RecordList", title: spec.title, style: {}, xywh: [0, 0, GRID_WIDTH, 60],
+        meta: _meta(), options: {
+          moduleID: modId, fields: spec.list, perPage: 20, presort: "createdAt DESC",
+          hideAddButton: false, hideImportButton: false, hideConfigureFieldsButton: false,
+          hideSearch: false, hideFiltering: false, hideSorting: false, selectable: false,
+          recordDisplayOption: "sameTab", allowExport: true } };
+      blocks.push(main);
+      var viewerMain = null;
+      if (noExportRoles.length) {
+        viewerMain = Object.assign({}, main, { blockID: newId(), options: Object.assign({}, main.options, { allowExport: false }) });
+        blocks.push(viewerMain);
+      }
+      var details = { blockID: newId(), kind: "Record", title: "Details", style: {}, xywh: [0, 0, GRID_WIDTH, 20],
+        meta: _meta(RECORD_BLOCK_VIS),
+        options: Object.assign({}, RECORD_BLOCK_OPTIONS, { fields: record_block_fields(module, spec.form) }) };
+      blocks.push(details);
+
+      var tabChildren = [];
+      (spec.related || []).forEach(function (rel) {
+        var childHandle = rel[0], tabTitle = rel[1], refField = rel[2], columns = rel[3];
+        var child = modulesByHandle[childHandle];
+        var cnames = new Set(child.fields.map(function (f) { return f.name; }));
+        var bad = columns.concat([refField]).filter(function (f) { return !cnames.has(f); });
+        if (bad.length) { throw fail(module.handle + " related " + childHandle + ": unknown fields " + JSON.stringify(bad), "data"); }
+        var b = { blockID: newId(), kind: "RecordList", title: tabTitle, style: {}, xywh: [0, 0, GRID_WIDTH, 20],
+          meta: _meta(), options: {
+            moduleID: child.moduleID, refField: refField, fields: columns,
+            hideAddButton: false, hideImportButton: true, hideConfigureFieldsButton: true,
+            hideSearch: true, hideFiltering: true, hideSorting: true, selectable: false,
+            perPage: RELATED_PER_PAGE, presort: "createdAt DESC", recordDisplayOption: "sameTab" } };
+        blocks.push(b);
+        tabChildren.push(b);
+      });
+      if (spec.history) {
+        var h = { blockID: newId(), kind: "RecordRevisions", title: "History", style: {},
+          xywh: [0, 0, GRID_WIDTH, 20], meta: _meta(),
+          options: { preload: true, displayedFields: [], magnifyOption: "" } };
+        blocks.push(h);
+        tabChildren.push(h);
+      }
+
+      var relatedTabs = null;
+      if (tabChildren.length) {
+        relatedTabs = { blockID: newId(), kind: "Tabs", title: "Related records", style: {},
+          xywh: [LEFT_W, 0, RIGHT_W, RELATED_TABS_H], meta: _meta(),
+          options: { tabs: tabChildren.map(function (b) { return { blockID: b.blockID, title: b.title }; }),
+            style: Object.assign({}, TABS_STYLE) } };
+        blocks.push(relatedTabs);
+      }
+
+      var charts = [];
+      (spec.charts || []).forEach(function (ch) {
+        var chartHandle = ch[0], chartTitle = ch[1];
+        if (!has(chartIds, chartHandle)) { return; }
+        var c = { blockID: newId(), kind: "Chart", title: chartTitle, style: {}, xywh: [0, 0, GRID_WIDTH, CHART_H],
+          meta: _meta(), options: { chartID: chartIds[chartHandle] } };
+        blocks.push(c);
+        charts.push(c);
+      });
+
+      var multiline = module.fields.filter(function (f) {
+        return spec.form.indexOf(f.name) >= 0 && orObj(f.options).multiLine;
+      }).length;
+      var leftW = tabChildren.length ? LEFT_W : GRID_WIDTH;
+      var hDetails = details_height(spec.form.length, multiline);
+
+      var listLayout = [_lay(main, [0, 0, GRID_WIDTH, 60])];
+      var y = 60;
+      charts.forEach(function (c, i) {
+        listLayout.push(_lay(c, [(i % 2) * Math.floor(GRID_WIDTH / 2), y, Math.floor(GRID_WIDTH / 2), CHART_H]));
+        if (i % 2 === 1) { y += CHART_H; }
+      });
+      if (charts.length % 2 === 1) {
+        listLayout[listLayout.length - 1].xywh = [0, listLayout[listLayout.length - 1].xywh[1], GRID_WIDTH, CHART_H];
+      }
+
+      var viewerLayout = null;
+      if (viewerMain) { viewerLayout = [_lay(viewerMain, [0, 0, GRID_WIDTH, 60])].concat(listLayout.slice(1)); }
+      var createLayout = [_lay(details, [0, 0, GRID_WIDTH, hDetails])];
+      var recordLayout = [_lay(details, [0, 0, leftW, hDetails])];
+      if (relatedTabs) {
+        recordLayout.push(_lay(relatedTabs, [LEFT_W, 0, RIGHT_W, RELATED_TABS_H]));
+        // children must be in the layout for the tabs to resolve; zero size keeps them off the page
+        tabChildren.forEach(function (b) { recordLayout.push(_lay(b, [0, 0, 0, 0], true)); });
+      }
+
+      var positions = new Map();
+      listLayout.concat(createLayout, recordLayout).forEach(function (lb) {
+        if (!sameJson(lb.xywh, [0, 0, 0, 0])) { positions.set(lb.blockID, lb.xywh); }
+      });
+      blocks.forEach(function (b) { if (positions.has(b.blockID)) { b.xywh = positions.get(b.blockID); } });
+
+      var body = { title: spec.title, handle: handle, moduleID: modId, visible: true, blocks: blocks };
+      var allPages = (await api("GET", "/compose/namespace/" + nsId + "/page/")).response.set;
+      var page = allPages.find(function (p) { return p.handle === handle || p.moduleID === modId; });
+      var pageId;
+      if (page) {
+        pageId = page.pageID;
+        await api("POST", "/compose/namespace/" + nsId + "/page/" + pageId, body);
+      } else {
+        pageId = (await api("POST", "/compose/namespace/" + nsId + "/page/", body)).response.pageID;
+      }
+
+      var recordTitle = spec.title + " \u203a " + spec.record_title;
+      if (module.fields.some(function (f) { return f.name === "status"; })) {
+        recordTitle += '${record.values.status ? " \u00b7 " + record.values.status : ""}';
+      }
+      var createTitle = spec.title + " \u203a New " + spec.singular;
+      var roleNames = Object.keys(roleIds);
+      var others = viewerLayout ? roleNames.filter(function (n) { return noExportRoles.indexOf(n) < 0; }).map(function (n) { return roleIds[n]; }) : [];
+      await upsertLayout(nsId, pageId, "primary", spec.title, LIST_ROUTE, listLayout, false, others);
+      if (viewerLayout) {
+        await upsertLayout(nsId, pageId, "primary_viewer", spec.title, LIST_ROUTE, viewerLayout, false,
+          noExportRoles.filter(function (n) { return has(roleIds, n); }).map(function (n) { return roleIds[n]; }));
+      }
+      await upsertLayout(nsId, pageId, "create", createTitle, CREATE_ROUTE, createLayout, true);
+      // Roles are an allow-list per layout: administrators get every button, other editing roles get
+      // everything except Delete, and the rest get a read-only toolbar.
+      var editingNames = spec.editing_roles || [];
+      var full = editingNames.filter(function (n) { return has(roleIds, n) && ADMIN_NAMES.indexOf(n) >= 0; }).map(function (n) { return roleIds[n]; });
+      var staff = editingNames.filter(function (n) { return has(roleIds, n) && ADMIN_NAMES.indexOf(n) < 0; }).map(function (n) { return roleIds[n]; });
+      var readonly = roleNames.filter(function (n) { return editingNames.indexOf(n) < 0; }).map(function (n) { return roleIds[n]; });
+      await upsertLayout(nsId, pageId, "record", recordTitle, RECORD_ROUTE, recordLayout, true, full);
+      if (staff.length) {
+        await upsertLayout(nsId, pageId, "record_staff", recordTitle, RECORD_ROUTE, recordLayout, true, staff, NO_DELETE_BUTTONS);
+      }
+      await upsertLayout(nsId, pageId, "record_readonly", recordTitle, RECORD_ROUTE, recordLayout, true, readonly, READ_ONLY_BUTTONS);
+      say("  page " + spec.title + " (" + pageId + ")");
+      return pageId;
+    }
+
+    // Home: the charts, then the work queues. Without one visible page that is not tied to a module,
+    // Corteza shows 'no visible pages'.
+    async function buildHome(nsId, navTitles, charts, queues, modulesByHandle, chartIds, pageIdsByTitle) {
+      var blocks = [], layout = [], nid = 0;
+      function add(block, xywh) {
+        nid += 1;
+        block.blockID = String(nid);
+        if (!has(block, "style")) { block.style = {}; }
+        block.xywh = xywh;
+        block.meta = _meta();
+        blocks.push(block);
+        layout.push({ blockID: block.blockID, xywh: xywh, meta: _meta() });
+      }
+      // No link tiles here: the top bar (see NAV_SCRIPT) already lists every page, so a second row repeats it.
+      var y = 0;
+      var cw = Math.floor(GRID_WIDTH / Math.max(1, charts.length));
+      charts.forEach(function (ch, i) {
+        if (has(chartIds, ch[0])) {
+          add({ kind: "Chart", title: ch[1], options: { chartID: chartIds[ch[0]] } }, [i * cw, y, cw, 22]);
+        }
+      });
+      y += 22;
+      queues.forEach(function (q, i) {
+        var title = q[0], handle = q[1], prefilter = q[2], fields = q[3];
+        add({ kind: "RecordList", title: title, options: {
+          moduleID: modulesByHandle[handle].moduleID, fields: fields, prefilter: prefilter, perPage: 5,
+          presort: "createdAt DESC", hideAddButton: true, hideImportButton: true,
+          hideConfigureFieldsButton: true, hideSearch: true, hideFiltering: true, hideSorting: false,
+          selectable: false, recordDisplayOption: "sameTab", allowExport: false } },
+          [(i % 2) * Math.floor(GRID_WIDTH / 2), y, Math.floor(GRID_WIDTH / 2), 48]);
+        if (i % 2 === 1) { y += 48; }
+      });
+      var body = { title: "Home", handle: "home", visible: true, weight: 0, blocks: blocks };
+      var allPages = (await api("GET", "/compose/namespace/" + nsId + "/page/")).response.set;
+      var page = allPages.find(function (p) { return p.handle === "home"; });
+      var pageId;
+      if (page) {
+        pageId = page.pageID;
+        await api("POST", "/compose/namespace/" + nsId + "/page/" + pageId, body);
+      } else {
+        pageId = (await api("POST", "/compose/namespace/" + nsId + "/page/", body)).response.pageID;
+      }
+      var layouts = (await api("GET", "/compose/namespace/" + nsId + "/page/" + pageId + "/layout/")).response.set;
+      var payload = { handle: "primary", blocks: layout, config: { buttons: ALL_BUTTONS } };
+      if (layouts.length) {
+        await api("POST", "/compose/namespace/" + nsId + "/page/" + pageId + "/layout/" + layouts[0].pageLayoutID,
+          Object.assign({}, payload, { handle: layouts[0].handle,
+            config: Object.assign({}, orObj(layouts[0].config), { buttons: ALL_BUTTONS }) }));
+      } else {
+        await api("POST", "/compose/namespace/" + nsId + "/page/" + pageId + "/layout/", Object.assign({}, payload, { name: "Primary" }));
+      }
+      say("  Home page (" + pageId + "): " + web + "/compose/ns/" + NAMESPACE_SLUG + "/pages/" + pageId);
+      return pageId;
+    }
+
+    // Write the navigation CSS and scripts into the server settings. Safe to repeat.
+    async function installNavigation(nsId, pageTitles, homeId, forwardRoleIds) {
+      var order = pyJsonList(["Home"].concat(pageTitles));
+      var script = fill(NAV_SCRIPT, { "__NS_ID__": nsId, "__SLUG__": NAMESPACE_SLUG, "__ORDER__": order });
+      var snippets = [{ name: "OwnFMS top navigation", enabled: true, script: script }];
+      if (homeId && forwardRoleIds && forwardRoleIds.length) {
+        var landing = fill(LANDING_SCRIPT, { "__ROLES__": pyJsonList(forwardRoleIds.map(String)),
+          "__SLUG__": NAMESPACE_SLUG, "__HOME__": String(homeId) });
+        snippets.push({ name: "OwnFMS landing: Staff, Manager and Demo Viewer go straight to Home",
+          enabled: true, script: landing });
+      }
+      var settings = (await api("GET", "/system/settings/")).response;
+      var cssSetting = settings.find(function (x) { return x.name === "ui.studio.custom-css"; });
+      var currentCss = cssSetting ? cssSetting.value : null;
+      if (currentCss === null || currentCss === undefined) {
+        say("  (this Corteza build has no custom CSS setting, navigation CSS skipped)");
+      } else if (!currentCss.some(function (e) { return e.id === "general" && e.values === NAV_CSS; })) {
+        var nu = currentCss.map(function (e) { return Object.assign({}, e, { values: e.id === "general" ? NAV_CSS : e.values }); });
+        await api("PATCH", "/system/settings/", { values: [{ name: "ui.studio.custom-css", value: nu }] });
+        say("  custom CSS installed");
+      }
+      var snipSetting = settings.find(function (x) { return x.name === "code-snippets"; });
+      var cur = snipSetting ? snipSetting.value : null;
+      if (!deepEqual(cur, snippets)) {
+        await api("PATCH", "/system/settings/", { values: [{ name: "code-snippets", value: snippets }] });
+        say("  navigation script installed");
+      }
+    }
+
+    // ---------------------------------------------------------------------------
+    // Roles, permissions, users
+    // ---------------------------------------------------------------------------
+
+    async function ensureRole(name) {
+      var handle = slugify(name);
+      var set = (await api("GET", "/system/roles/?query=" + pyQuote(handle))).response.set;
+      for (var i = 0; i < set.length; i++) { if (set[i].handle === handle) { return set[i].roleID; } }
+      var rid = (await api("POST", "/system/roles/", { name: name, handle: handle })).response.roleID;
+      say("Created role " + name);
+      return rid;
+    }
+
+    // Apply permission rules. A Corteza build rejects the whole call when one operation name does not
+    // exist on it, so unknown operations are dropped, remembered and reported.
+    async function rules_(roleId, rules, area) {
+      area = area || "compose";
+      rules = rules.slice();
+      for (var n = 0; n < 12; n++) {
+        try {
+          await api("PATCH", "/" + area + "/permissions/" + roleId + "/rules", { rules: rules });
+          return;
+        } catch (e) {
+          var m = /invalid operation '([^']+)' for ([\w-]+) resource/.exec(String(e && e.message));
+          if (!m) { throw e; }
+          var op = m[1];
+          skippedOperations.add(op);
+          rules = rules.filter(function (r) { return r.operation !== op; });
+          if (!rules.length) { return; }
+        }
+      }
+      throw fail("too many unknown operations in one permission call", "http");
+    }
+
+    async function grant(roleId, resource, operation, access, area) {
+      await rules_(roleId, [{ resource: resource, operation: operation, access: access || "allow" }], area);
+    }
+
+    // ops: any of read, create, update. Update on records is a record-resource grant; module update
+    // would mean editing the schema.
+    async function grantModule(roleId, nsId, moduleId, ops) {
+      var mod = "corteza::compose:module/" + nsId + "/" + moduleId;
+      var rec = "corteza::compose:record/" + nsId + "/" + moduleId + "/*";
+      var fld = "corteza::compose:module-field/" + nsId + "/" + moduleId + "/*";
+      var rules = [];
+      var A = function (resource, operation) { return { resource: resource, operation: operation, access: "allow" }; };
+      if (ops.indexOf("read") >= 0) {
+        rules.push(A(mod, "read"), A(mod, "records.search"), A(rec, "read"), A(fld, "record.value.read"));
+      }
+      if (ops.indexOf("create") >= 0) { rules.push(A(mod, "record.create")); }
+      if (ops.indexOf("update") >= 0) { rules.push(A(rec, "update"), A(rec, "owner.manage")); }
+      if (ops.indexOf("create") >= 0 || ops.indexOf("update") >= 0) { rules.push(A(fld, "record.value.update")); }
+      await rules_(roleId, rules);
+    }
+
+    // Without namespace, page and page-layout grants a role sees 'no visible pages' even with every module grant in place.
+    async function grantNamespaceAccess(roleId, nsId) {
+      var ns = "corteza::compose:namespace/" + nsId;
+      var rules = ["read", "pages.search", "modules.search", "charts.search"].map(function (op) {
+        return { resource: ns, operation: op, access: "allow" };
+      });
+      rules.push({ resource: "corteza::compose:page/" + nsId + "/*", operation: "read", access: "allow" },
+        { resource: "corteza::compose:page/" + nsId + "/*", operation: "page-layouts.search", access: "allow" },
+        { resource: "corteza::compose:page-layout/" + nsId + "/*/*", operation: "read", access: "allow" },
+        { resource: "corteza::compose:chart/" + nsId + "/*", operation: "read", access: "allow" });
+      await rules_(roleId, rules);
+    }
+
+    // The built-in Administrator role does not bypass these three on this build.
+    async function grantAdminBaseline() {
+      var set = (await api("GET", "/system/roles/?query=Administrator")).response.set;
+      var adminRole = set.find(function (r) { return r.handle === "administrator" || r.name === "Administrator"; });
+      var admin = adminRole ? adminRole.roleID : null;
+      if (!admin) { say("  (no Administrator role found, skipped)"); return; }
+      await grant(admin, "corteza::compose:record/*/*/*", "owner.manage");
+      await grant(admin, "corteza::compose:page/*/*", "page-layouts.search");
+      await grant(admin, "corteza::compose:page/*/*", "page-layout.create");
+      for (var op of ["read", "update", "delete"]) {
+        await grant(admin, "corteza::compose:page-layout/*/*/*", op);
+      }
+    }
+
+    async function hardenAuthenticatedBaseline() {
+      var set = (await api("GET", "/system/roles/?query=authenticated")).response.set;
+      var role = set.find(function (r) { return r.handle === "authenticated"; });
+      var rid = role ? role.roleID : null;
+      if (!rid) { say("  (no Authenticated role found, skipped)"); return; }
+      var rules = [];
+      AUTHENTICATED_WILDCARDS.forEach(function (e) { e[1].forEach(function (op) { rules.push({ resource: e[0], operation: op, access: "inherit" }); }); });
+      await rules_(rid, rules);
+      say("Cleared " + rules.length + " read wildcards on the Authenticated role");
+      // By default every signed-in user can read everyone's email address. Mask it, and keep names visible.
+      rules = [];
+      USER_NAMES_ALLOWED.forEach(function (e) { e[1].forEach(function (op) { rules.push({ resource: e[0], operation: op, access: "allow" }); }); });
+      USER_EMAILS_MASKED.forEach(function (e) { e[1].forEach(function (op) { rules.push({ resource: e[0], operation: op, access: "inherit" }); }); });
+      await api("PATCH", "/system/permissions/" + rid + "/rules", { rules: rules });
+      say("Masked other people's email addresses for signed-in users (names stay visible)");
+    }
+
+    // Staff only need Namespaces on the root launcher. Names that do not exist on this build are skipped.
+    async function hideLauncherTiles(roleId, visible, hidden) {
+      visible = visible || ["Namespaces"];
+      hidden = hidden || ["Admin Area", "Workflows", "Reporter", "Privacy", "Jitsi Video Conferencing"];
+      var apps = new Map();
+      (await api("GET", "/system/application/")).response.set.forEach(function (a) { apps.set(a.name, a.applicationID); });
+      var rules = visible.filter(function (n) { return apps.has(n); }).map(function (n) {
+        return { resource: "corteza::system:application/" + apps.get(n), operation: "read", access: "allow" };
+      });
+      hidden.filter(function (n) { return apps.has(n); }).forEach(function (n) {
+        rules.push({ resource: "corteza::system:application/" + apps.get(n), operation: "read", access: "deny" });
+      });
+      if (rules.length) { await api("PATCH", "/system/permissions/" + roleId + "/rules", { rules: rules }); }
+    }
+
+    async function ensureUser(email, name, handle, password) {
+      var set = (await api("GET", "/system/users/?query=" + pyQuote(email))).response.set;
+      for (var i = 0; i < set.length; i++) {
+        if (String(set[i].email).toLowerCase() === email.toLowerCase()) { return set[i].userID; }
+      }
+      var uid = (await api("POST", "/system/users/", { email: email, username: email, name: name, handle: handle })).response.userID;
+      await api("POST", "/system/users/" + uid + "/password", { password: password });
+      say("Created user " + name);
+      return uid;
+    }
+
+    async function addRoleMember(roleId, userId) {
+      try {
+        await api("POST", "/system/roles/" + roleId + "/member/" + userId);
+      } catch (e) {
+        if (String(e && e.message).indexOf("not unique") < 0) { throw e; }
+      }
+    }
+
+    // ---------------------------------------------------------------------------
+    // Records
+    // ---------------------------------------------------------------------------
+
+    // Create, then save once more: a record that was never edited can render blank in a related list
+    // on this Corteza line (first revision), and one update fixes it.
+    async function createRecord(nsId, moduleId, values) {
+      var rec = (await api("POST", "/compose/namespace/" + nsId + "/module/" + moduleId + "/record/", { values: values })).response;
+      var rid = rec.recordID;
+      await api("POST", "/compose/namespace/" + nsId + "/module/" + moduleId + "/record/" + rid, { values: values });
+      return rid;
+    }
+
+    // ---------------------------------------------------------------------------
+    // Setup steps (setup_ownfms.py)
+    // ---------------------------------------------------------------------------
+
+    async function createCharts(nsId, ids) {
+      return {
+        grants_by_status: await ensureChart(nsId, ids.grant, "Grants by Status", "grants_by_status", "status"),
+        amount_awarded_by_status: await ensureChart(nsId, ids.grant, "Amount Awarded by Status",
+          "amount_awarded_by_status", "status", "amount_awarded", "sum", "Amount awarded"),
+        payments_by_status: await ensureChart(nsId, ids.grant_payment, "Payments by Status", "payments_by_status", "status"),
+        requirements_by_status: await ensureChart(nsId, ids.grantee_requirement, "Requirements by Status",
+          "requirements_by_status", "status")
+      };
+    }
+
+    async function createRolesAndAccess(nsId, ids) {
+      await grantAdminBaseline();
+      await hardenAuthenticatedBaseline();
+      for (var mod of REVISION_MODULES) { await enableRevisions(nsId, ids[mod]); }
+      var staff = await ensureRole(STAFF), manager = await ensureRole(MANAGER), demo = await ensureRole(DEMO);
+      for (var role of [staff, manager, demo]) {
+        await grantNamespaceAccess(role, nsId);
+        await hideLauncherTiles(role);
+        await grant(role, "corteza::compose:record/" + nsId + "/*/*", "revisions.search");
+      }
+      for (var handle of Object.keys(ids)) {
+        var modId = ids[handle];
+        await grantModule(staff, nsId, modId, ["create", "read", "update"]);     // no delete anywhere
+        await grantModule(manager, nsId, modId, handle === "grant" ? ["read", "update"] : ["read"]);
+        await grantModule(demo, nsId, modId, ["read"]);
+      }
+      var out = {};
+      out[STAFF] = staff; out[MANAGER] = manager; out[DEMO] = demo;
+      return out;
+    }
+
+    // Users are created only when their password is given.
+    async function createUsers(roles) {
+      var pw = options.passwords || {};
+      var em = options.emails || {};
+      var spec = [["staff", "OwnFMS Staff", "staff", roles[STAFF], "staff@ownfms.example"],
+        ["manager", "OwnFMS Manager", "manager", roles[MANAGER], "manager@ownfms.example"],
+        ["demo", "OwnFMS Demo", "demo", roles[DEMO], "demo@ownfms.example"]];
+      var created = [];
+      for (var s of spec) {
+        var key = s[0], name = s[1], handle = s[2], roleId = s[3], defaultEmail = s[4];
+        var password = pw[key];
+        if (!password) {
+          say("  (no password given for the " + handle + " sign-in, user " + handle + " not created)");
+          continue;
+        }
+        var email = em[key] || defaultEmail;
+        var uid = await ensureUser(email, name, "ownfms_" + handle, password);
+        await addRoleMember(roleId, uid);
+        created.push({ name: name, email: email });
+      }
+      return created;
+    }
+
+    async function buildPages(nsId, ids, charts, roles) {
+      for (var modId of Object.values(ids)) { await syncDateFormat(nsId, modId); }
+      var modules = {};
+      for (var i of Object.values(ids)) {
+        var m = (await api("GET", "/compose/namespace/" + nsId + "/module/" + i)).response;
+        modules[m.handle] = m;
+      }
+      var roleIds = Object.assign({}, roles);
+      (await api("GET", "/system/roles/?limit=200")).response.set.forEach(function (r) {
+        if (ADMIN_ROLES.indexOf(r.name) >= 0) { roleIds[r.name] = r.roleID; }
+      });
+      var pageIds = {};
+      for (var handle of NAV_ORDER) {
+        pageIds[SPECS[handle].title] = await buildModulePage(nsId, modules[handle], SPECS[handle], modules, charts, roleIds, [DEMO]);
+      }
+      var homeId = await buildHome(
+        nsId, NAV_ORDER.map(function (h) { return SPECS[h].title; }),
+        [["grants_by_status", "Grants by Status"], ["amount_awarded_by_status", "Amount Awarded by Status"],
+         ["requirements_by_status", "Requirements by Status"]],
+        [["Grants awaiting a decision", "grant", "status = 'Submitted' OR status = 'Under Review'",
+          ["reference_number", "organization", "status", "amount_requested"]],
+         ["Upcoming board meetings", "board_meeting", "status = 'Scheduled'",
+          ["title", "meeting_type", "meeting_date"]],
+         ["Requirements not yet received", "grantee_requirement", "status = 'Not started' OR status = 'Needs revision'",
+          ["title", "grant", "due_date", "status"]],
+         ["Payments scheduled", "grant_payment", "status = 'Scheduled'",
+          ["grant", "amount", "scheduled_date", "status"]]],
+        modules, charts, pageIds);
+      await installNavigation(nsId, NAV_ORDER.map(function (h) { return SPECS[h].title; }), homeId,
+        Object.keys(roles).map(function (k) { return roles[k]; }));
+      return { modules: modules, homeId: homeId };
+    }
+
+    // ---------------------------------------------------------------------------
+    // Sample data (sample_data.py)
+    // ---------------------------------------------------------------------------
+
+    async function sampleAlreadyLoaded(nsId, moduleId) {
+      var rows = (await api("GET", "/compose/namespace/" + nsId + "/module/" + moduleId + "/record/?limit=1")).response.set;
+      return rows.length > 0;
+    }
+
+    async function loadSampleData(nsId, ids) {
+      if (await sampleAlreadyLoaded(nsId, ids.program)) {
+        say("Sample data already present, skipped.");
+        return false;
+      }
+      var mk = function (mod, vals) { return createRecord(nsId, ids[mod], vals); };
+
+      // ---- fiscal years (July to June)
+      var fy26 = await mk("fiscal_period", [v("name", "FY2026"), v("start_date", d("2025-07-01")), v("end_date", d("2026-06-30")),
+        v("status", "Closed"), v("budget", "1200000")]);
+      var fy27 = await mk("fiscal_period", [v("name", "FY2027"), v("start_date", d("2026-07-01")), v("end_date", d("2027-06-30")),
+        v("status", "Open"), v("budget", "1500000")]);
+      var fy28 = await mk("fiscal_period", [v("name", "FY2028"), v("start_date", d("2027-07-01")), v("end_date", d("2028-06-30")),
+        v("status", "Planned"), v("budget", "1600000")]);
+
+      // ---- programs
+      var pLearn = await mk("program", [v("name", "Early Childhood Learning"), v("status", "Active"),
+        v("description", "Early education, literacy and school readiness for children under six.")]);
+      var pHealth = await mk("program", [v("name", "Community Health"), v("status", "Active"),
+        v("description", "Neighborhood clinics, prevention and access to care.")]);
+      var pFood = await mk("program", [v("name", "Food Security"), v("status", "Active"),
+        v("description", "Food access, nutrition and local food systems.")]);
+
+      // ---- organizations and contacts
+      async function org(name, typ, phone, address, site, people) {
+        var oid = await mk("organization", [v("name", name), v("type", typ), v("status", "Active"), v("phone", phone),
+          v("address", address), v("website", site)]);
+        var cids = [];
+        for (var p of people) {
+          cids.push(await mk("contact", [v("first_name", p[0]), v("last_name", p[1]), v("title", p[2]),
+            v("email", p[3]), v("organization", oid)]));
+        }
+        var upd = [v("name", name), v("type", typ), v("status", "Active"), v("phone", phone), v("address", address),
+          v("website", site), v("primary_contact", cids[0])];
+        await api("POST", "/compose/namespace/" + nsId + "/module/" + ids.organization + "/record/" + oid, { values: upd });
+        return [oid, cids];
+      }
+
+      var r;
+      r = await org("Riverbend Learning Center", "Grantee", "(555) 010-1101", "14 Mill Street, Riverbend",
+        "https://riverbend.example.org",
+        [["Maya", "Okafor", "Executive Director", "maya.okafor@riverbend.example.org"],
+         ["Daniel", "Reyes", "Program Manager", "daniel.reyes@riverbend.example.org"]]);
+      var riverbend = r[0], riverbendC = r[1];
+      r = await org("Oakridge Family Clinic", "Grantee", "(555) 010-1102", "220 Oak Ridge Road, Oakridge",
+        "https://oakridgeclinic.example.org",
+        [["Priya", "Nair", "Clinic Director", "priya.nair@oakridgeclinic.example.org"]]);
+      var oakridge = r[0], oakridgeC = r[1];
+      r = await org("Harvest Table Pantry", "Grantee", "(555) 010-1103", "9 Market Lane, Fairview",
+        "https://harvesttable.example.org",
+        [["Tomas", "Lindqvist", "Director", "tomas.lindqvist@harvesttable.example.org"],
+         ["Aisha", "Bello", "Operations Lead", "aisha.bello@harvesttable.example.org"]]);
+      var harvest = r[0], harvestC = r[1];
+      r = await org("Lakeshore Youth Arts", "Prospective grantee", "(555) 010-1104", "3 Harbor Walk, Lakeshore",
+        "https://lakeshorearts.example.org",
+        [["Chen", "Wu", "Founder", "chen.wu@lakeshorearts.example.org"]]);
+      var lakeshore = r[0], lakeshoreC = r[1];
+      r = await org("Greenway Housing Partners", "Partner", "(555) 010-1105", "77 Elm Court, Greenway",
+        "https://greenwayhousing.example.org",
+        [["Sofia", "Marin", "Partnerships Lead", "sofia.marin@greenwayhousing.example.org"]]);
+      var greenway = r[0], greenwayC = r[1];
+      r = await org("Summit Literacy Alliance", "Grantee", "(555) 010-1106", "501 Summit Avenue, Highland",
+        "https://summitliteracy.example.org",
+        [["James", "Whitfield", "Executive Director", "james.whitfield@summitliteracy.example.org"]]);
+      var summit = r[0], summitC = r[1];
+
+      // ---- board meetings
+      var mSpring = await mk("board_meeting", [v("title", "Spring Board Meeting"), v("meeting_type", "Board"),
+        v("meeting_date", d("2026-05-14")), v("status", "Held"),
+        v("agenda", "FY2027 grant slate, program review.")]);
+      var mFall = await mk("board_meeting", [v("title", "Fall Board Meeting"), v("meeting_type", "Board"),
+        v("meeting_date", d("2026-09-17")), v("status", "Held"),
+        v("agenda", "Fall grant approvals, fiscal year budget check.")]);
+      await mk("board_meeting", [v("title", "Grants Committee, November"), v("meeting_type", "Committee"),
+        v("meeting_date", d("2026-11-05")), v("status", "Scheduled"),
+        v("agenda", "Review of applications under consideration.")]);
+
+      // ---- initiatives that cross programs and organizations
+      var iStart = await mk("initiative", [v("title", "Healthy Start"), v("status", "Active"),
+        v("description", "A joint effort on early childhood health, nutrition and learning.")]
+        .concat(mv("programs", [pLearn, pHealth, pFood]),
+          mv("organizations", [riverbend, oakridge, harvest]),
+          mv("contacts", [riverbendC[0], oakridgeC[0], harvestC[0]]),
+          mv("fiscal_periods", [fy26, fy27]),
+          [v("start_date", d("2025-09-01")), v("end_date", d("2028-06-30"))]));
+      var iRead = await mk("initiative", [v("title", "Ready to Read"), v("status", "Active"),
+        v("description", "Literacy support from the preschool years through third grade.")]
+        .concat(mv("programs", [pLearn]),
+          mv("organizations", [summit, riverbend]),
+          mv("contacts", [summitC[0], riverbendC[1]]),
+          mv("fiscal_periods", [fy27, fy28]),
+          [v("start_date", d("2026-07-01")), v("end_date", d("2029-06-30"))]));
+
+      // ---- grants
+      async function grantRec(ref, purpose, orgId, contacts, program, init, fy, req, awarded, start, end, status, approved, meeting, notes) {
+        var vals = [v("reference_number", ref), v("purpose", purpose), v("organization", orgId)]
+          .concat(mv("contacts", contacts),
+            [v("program", program), v("fiscal_period", fy), v("amount_requested", String(req)),
+             v("start_date", d(start)), v("end_date", d(end)), v("status", status)]);
+        if (init) { vals.push(v("initiative", init)); }
+        if (awarded) { vals.push(v("amount_awarded", String(awarded))); }
+        if (approved) { vals.push(v("approved_date", d(approved))); }
+        if (meeting) { vals.push(v("board_meeting", meeting)); }
+        if (notes) { vals.push(v("decision_notes", notes)); }
+        return mk("grant", vals);
+      }
+
+      var g1 = await grantRec("OF-2026-001", "Expand the family reading program to three new schools.", riverbend, riverbendC.slice(0, 1), pLearn,
+        iRead, fy27, 60000, 60000, "2026-10-01", "2027-09-30", "Active", "2026-09-17", mFall,
+        "Approved in full. Strong track record with the first cohort.");
+      var g2 = await grantRec("OF-2026-002", "Mobile clinic days in two outlying neighborhoods.", oakridge, oakridgeC, pHealth,
+        iStart, fy27, 85000, 70000, "2026-10-01", "2027-09-30", "Active", "2026-09-17", mFall,
+        "Approved at a reduced amount; one clinic day per week instead of two.");
+      var g3 = await grantRec("OF-2026-003", "Cold storage and a delivery van for the pantry.", harvest, harvestC.slice(0, 1), pFood,
+        iStart, fy27, 45000, 45000, "2026-11-01", "2027-10-31", "Approved", "2026-09-17", mFall,
+        "Approved. Funds released in two installments.");
+      await grantRec("OF-2026-004", "After-school arts and literacy workshops.", lakeshore, lakeshoreC, pLearn,
+        null, fy27, 30000, null, "2027-01-01", "2027-12-31", "Under Review");
+      await grantRec("OF-2026-005", "Summer reading camp for 200 children.", summit, summitC, pLearn,
+        iRead, fy27, 52000, null, "2027-06-01", "2027-08-31", "Submitted");
+      await grantRec("OF-2026-006", "Nutrition education for new parents.", oakridge, oakridgeC, pHealth,
+        iStart, fy28, 28000, null, "2027-07-01", "2028-06-30", "Draft");
+      await grantRec("OF-2026-007", "Community garden build-out.", greenway, greenwayC, pFood,
+        null, fy27, 40000, null, "2026-11-01", "2027-10-31", "Declined", "2026-09-17", mFall,
+        "Declined. Outside current program priorities; invited to reapply next cycle.");
+      var g8 = await grantRec("OF-2025-009", "Teacher training in early literacy.", summit, summitC, pLearn,
+        null, fy26, 38000, 38000, "2025-09-01", "2026-06-30", "Closed", "2025-05-15", mSpring,
+        "Completed and closed. Final report accepted.");
+
+      // ---- payments
+      async function pay(g, amount, sched, paid, status, fy, note) {
+        var vals = [v("grant", g), v("amount", String(amount)), v("scheduled_date", d(sched)), v("status", status),
+          v("fiscal_period", fy)];
+        if (paid) { vals.push(v("paid_date", d(paid))); }
+        if (note) { vals.push(v("notes", note)); }
+        await mk("grant_payment", vals);
+      }
+      await pay(g1, 30000, "2026-10-01", "2026-10-01", "Released", fy27, "First installment");
+      await pay(g1, 30000, "2027-04-01", null, "Scheduled", fy27, "Second installment");
+      await pay(g2, 35000, "2026-10-01", "2026-10-02", "Released", fy27, "First installment");
+      await pay(g2, 35000, "2027-04-01", null, "Scheduled", fy27, "Second installment");
+      await pay(g3, 22500, "2026-11-01", null, "Scheduled", fy27, "First installment");
+      await pay(g3, 22500, "2027-05-01", null, "Scheduled", fy27, "Second installment");
+      await pay(g8, 19000, "2025-09-01", "2025-09-02", "Released", fy26, "First installment");
+      await pay(g8, 19000, "2026-02-01", "2026-02-03", "Released", fy26, "Second installment");
+
+      // ---- requirements
+      async function req(g, title, typ, due, status, fy, done) {
+        var vals = [v("grant", g), v("title", title), v("requirement_type", typ), v("due_date", d(due)),
+          v("status", status), v("fiscal_period", fy)];
+        if (done) { vals.push(v("completed_date", d(done))); }
+        await mk("grantee_requirement", vals);
+      }
+      await req(g1, "Signed grant agreement", "Documentation", "2026-10-01", "Accepted", fy27, "2026-09-28");
+      await req(g1, "Interim narrative report", "Report", "2027-03-15", "Not started", fy27);
+      await req(g1, "Final financial report", "Report", "2027-10-31", "Not started", fy27);
+      await req(g2, "Signed grant agreement", "Documentation", "2026-10-01", "Accepted", fy27, "2026-09-30");
+      await req(g2, "Clinic schedule for the first quarter", "Deliverable", "2026-10-30", "Not started", fy27);
+      await req(g2, "Interim impact report", "Report", "2027-03-31", "Not started", fy27);
+      await req(g3, "Signed grant agreement", "Documentation", "2026-10-15", "Submitted", fy27, "2026-10-01");
+      await req(g3, "Proof of equipment purchase", "Deliverable", "2027-02-28", "Not started", fy27);
+      await req(g8, "Final narrative report", "Report", "2026-07-31", "Accepted", fy26, "2026-07-20");
+      await req(g8, "Final financial report", "Report", "2026-07-31", "Accepted", fy26, "2026-07-22");
+
+      say("Sample data loaded: 3 programs, 6 organizations, 8 contacts, 2 initiatives, 3 fiscal years, " +
+        "3 board meetings, 8 grants, 8 payments, 10 requirements");
+      return true;
+    }
+
+    // ---------------------------------------------------------------------------
+    // Verify (verify_ownfms.py)
+    // ---------------------------------------------------------------------------
+
+    function check(ok, name, detail) {
+      results.push([!!ok, name, detail || ""]);
+      say((ok ? "  PASS  " : "  FAIL  ") + name + (detail && !ok ? "   " + detail : ""));
+      return !!ok;
+    }
+
+    // The module definitions the setup builds, collected without touching a server.
+    async function expectedModules() {
+      var mods = {};
+      await createModules("ns", async function (ns, name, fields, handle) {
+        var h = handle || slugify(name);
+        mods[h] = { name: name, fields: fields.slice() };
+        return "id_" + h;
+      }, async function (ns, mid, f) { mods[mid.slice(3)].fields.push(f); });
+      return mods;
+    }
+
+    function norm(x) {
+      // Date-only fields come back as YYYY-MM-DD, without the time part that was sent.
+      x = String(x);
+      return /^\d{4}-\d\d-\d\dT00:00:00Z$/.test(x) ? x.slice(0, 10) : x;
+    }
+
+    function valuesOf(rec) {
+      var out = {};
+      (rec.values || []).forEach(function (item) {
+        if (!has(out, item.name)) { out[item.name] = []; }
+        out[item.name].push(item.value);
+      });
+      return out;
+    }
+
+    async function listRecords(nsId, moduleId, query, limit) {
+      var path = "/compose/namespace/" + nsId + "/module/" + moduleId + "/record/?limit=" + (limit === undefined ? 500 : limit);
+      if (query) { path += "&query=" + pyQuote(query); }
+      return (await api("GET", path)).response.set;
+    }
+
+    // Run calls with another auth client, then restore the administrator client.
+    async function actingAs(clientId, clientSecret, fn) {
+      var saved = { id: T.id, secret: T.secret, token: T.token, expires: T.expires };
+      T.id = clientId; T.secret = clientSecret; T.token = null; T.expires = 0;
+      try { return await fn(); } finally { T.id = saved.id; T.secret = saved.secret; T.token = saved.token; T.expires = saved.expires; }
+    }
+
+    async function structure(nsId) {
+      say("");
+      say("Structure");
+      var want = await expectedModules();
+      var have = {};
+      (await api("GET", "/compose/namespace/" + nsId + "/module/")).response.set.forEach(function (m) { have[m.handle] = m; });
+      var wantKeys = Object.keys(want);
+      var missingMods = wantKeys.filter(function (k) { return !has(have, k); }).sort();
+      check(!missingMods.length, "all nine modules exist", "missing " + JSON.stringify(missingMods));
+      var ids = {};
+      for (var handle of wantKeys) {
+        var w = want[handle];
+        if (!has(have, handle)) { continue; }
+        var m = (await api("GET", "/compose/namespace/" + nsId + "/module/" + have[handle].moduleID)).response;
+        ids[handle] = m.moduleID;
+        var got = {};
+        m.fields.forEach(function (f) { got[f.name] = f; });
+        var missing = w.fields.filter(function (f) { return !has(got, f.name); }).map(function (f) { return f.name; });
+        var wrong = w.fields.filter(function (f) {
+          return has(got, f.name) && (got[f.name].kind !== f.kind || !!got[f.name].isRequired !== !!f.isRequired ||
+            !!got[f.name].isMulti !== !!f.isMulti);
+        }).map(function (f) { return f.name; });
+        check(!missing.length && !wrong.length, handle + ": fields match the design",
+          "missing " + JSON.stringify(missing) + ", differ " + JSON.stringify(wrong));
+        w.fields.forEach(function (f) {
+          if (f.kind === "Select" && has(got, f.name)) {
+            var a = f.options.options.map(function (o) { return o.value; });
+            var b = (orObj(got[f.name].options).options || []).map(function (o) { return o.value; });
+            if (!sameJson(a, b)) { check(false, handle + "." + f.name + ": select options", JSON.stringify(b) + " != " + JSON.stringify(a)); }
+          }
+        });
+      }
+      var pages = {};
+      (await api("GET", "/compose/namespace/" + nsId + "/page/")).response.set.forEach(function (p) { pages[p.handle] = p; });
+      check(has(pages, "home"), "Home page exists");
+      var specHandles = Object.keys(SPECS);
+      for (var h1 of specHandles) {
+        var p = pages[h1 + "_list"];
+        if (!check(p !== undefined, h1 + ": page exists")) { continue; }
+        var layouts = (await api("GET", "/compose/namespace/" + nsId + "/page/" + p.pageID + "/layout/")).response.set.map(function (l) { return l.handle; });
+        check(["primary", "primary_viewer", "create", "record", "record_staff", "record_readonly"].every(function (x) { return layouts.indexOf(x) >= 0; }),
+          h1 + ": six route layouts", JSON.stringify(layouts.slice().sort()));
+      }
+      // Delete is offered to administrators only
+      for (var h2 of specHandles) {
+        var p2 = pages[h2 + "_list"];
+        if (!p2) { continue; }
+        var lay = {};
+        (await api("GET", "/compose/namespace/" + nsId + "/page/" + p2.pageID + "/layout/")).response.set.forEach(function (l) { lay[l.handle] = l; });
+        if (has(lay, "record_staff")) {
+          var b = orObj(lay.record_staff.config).buttons || {};
+          check(!orObj(b["delete"]).enabled && orObj(b.edit).enabled, h2 + ": Staff layout has no Delete button");
+        }
+        if (has(lay, "primary_viewer") && has(lay, "primary")) {
+          var exportOn = async function (layout) {
+            var idsIn = new Set(layout.blocks.map(function (x) { return x.blockID; }));
+            var page = (await api("GET", "/compose/namespace/" + nsId + "/page/" + p2.pageID)).response;
+            return page.blocks.some(function (x) {
+              return orObj(x.options).allowExport && x.kind === "RecordList" && idsIn.has(x.blockID) && !orObj(x.options).refField;
+            });
+          };
+          var viewerOn = await exportOn(lay.primary_viewer);
+          var okExport = !viewerOn && (await exportOn(lay.primary));
+          check(okExport, h2 + ": Demo Viewer list has no Export button");
+        }
+        if (has(lay, "record_readonly")) {
+          var b2 = orObj(lay.record_readonly.config).buttons || {};
+          check(!["delete", "edit", "new"].some(function (k) { return orObj(b2[k]).enabled; }), h2 + ": read-only layout has no edit buttons");
+        }
+      }
+      for (var h3 of wantKeys) {
+        if (has(ids, h3)) {
+          var fm = (await api("GET", "/compose/namespace/" + nsId + "/module/" + ids[h3])).response.fields;
+          var bad = fm.filter(function (x) { return x.kind === "DateTime" && orObj(x.options).format !== DATE_FORMAT; }).map(function (x) { return x.name; });
+          check(!bad.length, h3 + ": dates use the readable format", JSON.stringify(bad));
+        }
+      }
+      var settings = {};
+      (await api("GET", "/system/settings/")).response.forEach(function (x) { settings[x.name] = x.value; });
+      var snippets = settings["code-snippets"] || [];
+      check(snippets.some(function (sn) { return sn.enabled && (sn.script || "").indexOf("ownfms-topnav") >= 0; }), "navigation script installed");
+      check(snippets.some(function (sn) { return sn.enabled && (sn.script || "").indexOf("FORWARD") >= 0 && (sn.script || "").indexOf("/pages/") >= 0; }),
+        "landing script installed (Staff, Manager and Demo Viewer skip the launcher)");
+      var css = settings["ui.studio.custom-css"] || [];
+      check(css.some(function (e) { return e.id === "general" && (e.values || "").indexOf("ownfms-topnav") >= 0; }), "navigation CSS installed");
+      var chartHandles = (await api("GET", "/compose/namespace/" + nsId + "/chart/")).response.set.map(function (c) { return c.handle; });
+      check(["grants_by_status", "amount_awarded_by_status", "payments_by_status", "requirements_by_status"].every(function (x) { return chartHandles.indexOf(x) >= 0; }),
+        "four charts exist", JSON.stringify(chartHandles.slice().sort()));
+      var roles = {};
+      (await api("GET", "/system/roles/?limit=200")).response.set.forEach(function (r) { roles[r.name] = r.roleID; });
+      [STAFF, MANAGER, DEMO].forEach(function (name) { check(has(roles, name), "role " + name + " exists"); });
+      if ([STAFF, MANAGER, DEMO].every(function (n) { return has(roles, n); })) {
+        var combos = [[STAFF, ["delete"]], [MANAGER, ["delete", "record.create"]], [DEMO, ["delete", "record.create", "update"]]];
+        for (var combo of combos) {
+          var name = combo[0], noOps = combo[1];
+          var rules = (await api("GET", "/compose/permissions/" + roles[name] + "/rules")).response;
+          rules = Array.isArray(rules) ? rules : (rules.set || []);
+          var badRules = rules.filter(function (r) {
+            return r.access === "allow" && noOps.indexOf(r.operation) >= 0 && ((r.resource || "") + (r.operation || "")).indexOf("record") >= 0;
+          });
+          check(!badRules.length, name + " has no " + noOps.join("/") + " rule", JSON.stringify(badRules.slice(0, 2)));
+        }
+      }
+      return ids;
+    }
+
+    async function sweep(nsId, ids) {
+      // Delete every record whose label starts with the test prefix. Sample data never matches.
+      var removed = 0;
+      for (var handle of DELETE_ORDER) {
+        if (!has(ids, handle)) { continue; }
+        var rows = await listRecords(nsId, ids[handle]);
+        for (var rec of rows) {
+          var label = (valuesOf(rec)[LABEL_FIELD[handle]] || [""])[0];
+          if (String(label).indexOf(PREFIX_ROOT) === 0) {
+            try {
+              await api("DELETE", "/compose/namespace/" + nsId + "/module/" + ids[handle] + "/record/" + rec.recordID);
+              removed += 1;
+            } catch (e) {
+              say("  could not delete " + handle + " " + rec.recordID + ": " + String(e.message).slice(0, 100));
+            }
+          }
+        }
+      }
+      return removed;
+    }
+
+    function pad2(n) { return (n < 10 ? "0" : "") + n; }
+
+    async function scenario(nsId, ids, keep) {
+      var now = new Date();
+      var stamp = pad2(now.getMonth() + 1) + pad2(now.getDate()) + "-" + pad2(now.getHours()) + pad2(now.getMinutes()) + pad2(now.getSeconds());
+      var P = PREFIX_ROOT + stamp;
+      say("");
+      say("Scenario  (records labelled " + P + ")");
+      var made = {};
+      var recPath = function (handle) { return "/compose/namespace/" + nsId + "/module/" + ids[handle] + "/record/"; };
+      var allMatch = function (got, vals) {
+        return vals.every(function (item) {
+          return (got[item.name] || []).some(function (x) { return norm(x) === norm(item.value); });
+        });
+      };
+
+      async function make(handle, vals) {
+        var rec = (await api("POST", recPath(handle), { values: vals })).response;
+        made[handle] = rec.recordID;
+        var back = (await api("GET", recPath(handle) + rec.recordID)).response;
+        check(allMatch(valuesOf(back), vals), "1. create " + handle + " and read it back");
+        return rec.recordID;
+      }
+      async function update(handle, vals, note) {
+        await api("POST", recPath(handle) + made[handle], { values: vals });
+        var back = valuesOf((await api("GET", recPath(handle) + made[handle])).response);
+        check(allMatch(back, vals), note);
+      }
+
+      try {
+        var fy = await make("fiscal_period", [v("name", P + " Fiscal Period"), v("start_date", d("2030-07-01")),
+          v("end_date", d("2031-06-30")), v("status", "Planned"), v("budget", "1000")]);
+        var prog = await make("program", [v("name", P + " Program"), v("status", "Active")]);
+        var orgVals = [v("name", P + " Organization"), v("type", "Grantee"), v("status", "Active")];
+        var org = await make("organization", orgVals);
+        var contact = await make("contact", [v("first_name", "Test"), v("last_name", P + " Contact"), v("email", "test@ownfms.example"),
+          v("organization", org)]);
+        await update("organization", orgVals.concat([v("primary_contact", contact)]), "2. organization points at its primary contact");
+        var meeting = await make("board_meeting", [v("title", P + " Board Meeting"), v("meeting_type", "Board"),
+          v("meeting_date", d("2030-09-15")), v("status", "Scheduled")]);
+        var init = await make("initiative", [v("title", P + " Initiative"), v("status", "Active")]
+          .concat(mv("programs", [prog]), mv("organizations", [org]), mv("contacts", [contact]), mv("fiscal_periods", [fy])));
+        var grantVals = [v("reference_number", P + " Grant"), v("purpose", "Scenario test grant"), v("organization", org)]
+          .concat(mv("contacts", [contact]),
+            [v("program", prog), v("initiative", init), v("fiscal_period", fy),
+             v("amount_requested", "5000"), v("status", "Draft")]);
+        var grantId = await make("grant", grantVals);
+        var pay = await make("grant_payment", [v("grant", grantId), v("amount", "2500"), v("scheduled_date", d("2030-10-01")),
+          v("status", "Scheduled"), v("fiscal_period", fy), v("notes", P + " Payment")]);
+        var req = await make("grantee_requirement", [v("grant", grantId), v("title", P + " Requirement"),
+          v("requirement_type", "Report"), v("due_date", d("2031-01-15")),
+          v("status", "Not started"), v("fiscal_period", fy)]);
+
+        // links resolve from the parent side, the way the related lists on each page ask for them
+        var children = async function (handle, field, parent) {
+          var rows = await listRecords(nsId, ids[handle], field + " = '" + parent + "'");
+          return new Set(rows.map(function (r) { return r.recordID; }));
+        };
+
+        check((await children("grant", "organization", org)).has(grantId), "3. organization lists its grant");
+        check((await children("contact", "organization", org)).has(contact), "3. organization lists its contact");
+        check((await children("grant_payment", "grant", grantId)).has(pay), "3. grant lists its payment");
+        check((await children("grantee_requirement", "grant", grantId)).has(req), "3. grant lists its requirement");
+        check((await children("grant", "program", prog)).has(grantId), "3. program lists its grant");
+        check((await children("grant", "initiative", init)).has(grantId), "3. initiative lists its grant");
+        check((await children("grant", "fiscal_period", fy)).has(grantId), "3. fiscal period lists its grant");
+        check((await children("grant_payment", "fiscal_period", fy)).has(pay), "3. fiscal period lists its payment");
+        // the one that depends on a multi-value field: Program page, Initiatives tab
+        try {
+          check((await children("initiative", "programs", prog)).has(init), "3. program lists its initiative (multi-value link)");
+        } catch (e) {
+          check(false, "3. program lists its initiative (multi-value link)", String(e.message).slice(0, 140));
+        }
+
+        // approval path, one edit at a time
+        for (var status of ["Submitted", "Under Review"]) {
+          await update("grant", grantVals.filter(function (x) { return x.name !== "status"; }).concat([v("status", status)]), "4. grant moves to " + status);
+        }
+        var approved = grantVals.filter(function (x) { return x.name !== "status"; }).concat([
+          v("status", "Approved"), v("amount_awarded", "4000"), v("approved_date", d("2030-09-15")),
+          v("board_meeting", meeting), v("decision_notes", "Scenario approval")]);
+        await update("grant", approved, "4. grant approved with amount, date and board meeting");
+        check((await children("grant", "board_meeting", meeting)).has(grantId), "4. board meeting lists the grant it approved");
+        try {
+          var revs = (await api("GET", recPath("grant") + grantId + "/revisions")).response;
+          var n = 0;
+          if (Array.isArray(revs)) { n = revs.length; }
+          else if (revs && typeof revs === "object") { n = has(revs, "set") ? revs.set.length : Object.keys(revs).length; }
+          check(n >= 3, "5. change history holds the edits", n + " revisions");
+        } catch (e) {
+          check(false, "5. change history holds the edits", String(e.message).slice(0, 140));
+        }
+
+        // permissions, only when auth clients for those users were provided
+        var vc = cfg.verifyClients || options.verifyClients || {};
+        var staffC = vc.staff || {}, viewerC = vc.viewer || {};
+        if (staffC.id && staffC.secret) {
+          await actingAs(staffC.id, staffC.secret, async function () {
+            try {
+              var r = (await api("POST", recPath("grant"), { values: [
+                v("reference_number", P + " Staff Grant"), v("purpose", "Staff create test"),
+                v("organization", org), v("status", "Draft")] })).response;
+              made.staff_grant = r.recordID;
+              check(true, "6. Staff can create a grant");
+            } catch (e) {
+              check(false, "6. Staff can create a grant", String(e.message).slice(0, 140));
+            }
+            var deleted = false;
+            try {
+              await api("DELETE", recPath("grant") + (made.staff_grant || grantId));
+              deleted = true;
+            } catch (e) { /* refused, as it should be */ }
+            if (deleted) { check(false, "6. Staff cannot delete a grant", "the delete succeeded"); }
+            else { check(true, "6. Staff cannot delete a grant"); }
+          });
+        } else {
+          say("  (Staff permission test skipped: no staff auth client given)");
+        }
+        if (viewerC.id && viewerC.secret) {
+          await actingAs(viewerC.id, viewerC.secret, async function () {
+            var created = false;
+            try {
+              await api("POST", recPath("program"), { values: [v("name", P + " Viewer Program")] });
+              created = true;
+            } catch (e) { /* refused, as it should be */ }
+            if (created) { check(false, "6. Demo Viewer cannot create", "the create succeeded"); }
+            else { check(true, "6. Demo Viewer cannot create"); }
+            check((await listRecords(nsId, ids.program, null, 1)).length > 0, "6. Demo Viewer can read programs");
+          });
+        } else {
+          say("  (Demo Viewer test skipped: no viewer auth client given)");
+        }
+      } finally {
+        if (keep) {
+          say("");
+          say("  --keep: test records left in place, search for " + P);
+        } else {
+          var removed = await sweep(nsId, ids);
+          say("");
+          say("  cleanup: removed " + removed + " test records");
+        }
+      }
+    }
+
+    async function findNamespace() {
+      var ns = (await api("GET", "/compose/namespace/")).response.set.find(function (n) { return n.slug === NAMESPACE_SLUG; });
+      if (!ns) { throw fail("Namespace " + NAMESPACE_SLUG + " not found. Run the install first.", "state"); }
+      return ns.namespaceID;
+    }
+
+    async function moduleIds(nsId) {
+      var ids = {};
+      (await api("GET", "/compose/namespace/" + nsId + "/module/")).response.set.forEach(function (m) { ids[m.handle] = m.moduleID; });
+      return ids;
+    }
+
+    // ---------------------------------------------------------------------------
+    // Public methods
+    // ---------------------------------------------------------------------------
+
+    // Obtain a token and, if the server offers it, its version. Returns no secret and no token.
+    async function connect() {
+      T.token = null; T.expires = 0;
+      await getToken();
+      var version = null, buildTime = null;
+      try {
+        var res = await rawFetch(web + "/version", { method: "GET" }, "version request", 10000);
+        if (res.ok) {
+          var j = JSON.parse(res.text);
+          version = (j && j.response && j.response.version) || null;
+          buildTime = (j && j.response && j.response.buildTime) || null;
+        }
+      } catch (e) { /* the version is a courtesy, not a requirement */ }
+      say("Connected to " + web + (version ? " (Corteza " + version + ")" : ""));
+      return { server: web, connected: true, version: version, buildTime: buildTime };
+    }
+
+    // Read-only: token, namespaces, roles.
+    async function checkServer() {
+      say("Server: " + web);
+      await getToken();
+      say("Token: ok");
+      var nss = (await api("GET", "/compose/namespace/")).response.set;
+      var slugs = nss.map(function (n) { return n.slug; });
+      say("Namespaces: " + (slugs.length ? JSON.stringify(slugs) : "none"));
+      var roles = (await api("GET", "/system/roles/?limit=200")).response.set.map(function (r) { return r.name; }).sort();
+      say("Roles: " + JSON.stringify(roles));
+      return { server: web, token: true, namespaces: slugs, roles: roles, installed: slugs.indexOf(NAMESPACE_SLUG) >= 0 };
+    }
+
+    async function install() {
+      skippedOperations.clear();
+      say("Building OwnFMS.works on " + web);
+      var nsId = await ensureNamespace();
+      var ids = await createModules(nsId, ensureModule, addField);
+      var charts = await createCharts(nsId, ids);
+      var roles = await createRolesAndAccess(nsId, ids);
+      var built = await buildPages(nsId, ids, charts, roles);
+      var users = await createUsers(roles);
+      var sample = false;
+      if (options.sampleData !== false) {
+        sample = await loadSampleData(nsId, ids);
+      }
+      if (skippedOperations.size) {
+        say("(this Corteza build does not know these permission names, so they were skipped: " + Array.from(skippedOperations).sort().join(", ") + ")");
+      }
+      var signIn = web + "/compose/ns/" + NAMESPACE_SLUG + "/";
+      say("");
+      say("Done. " + signIn);
+      return { ok: true, server: web, namespaceId: nsId, homeId: built.homeId, signInUrl: signIn,
+        sampleDataLoaded: sample, usersCreated: users, skippedOperations: Array.from(skippedOperations).sort() };
+    }
+
+    async function verify(opts) {
+      opts = opts || {};
+      var doStructure = opts.structure !== false;
+      var doScenario = opts.scenario !== false;
+      results = [];
+      var nsId = await findNamespace();
+      var ids = await moduleIds(nsId);
+      if (doStructure) { await structure(nsId); }
+      if (doScenario) { await scenario(nsId, ids, !!opts.keep); }
+      var failed = results.filter(function (r) { return !r[0]; });
+      say("");
+      say((results.length - failed.length) + " passed, " + failed.length + " failed");
+      failed.forEach(function (r) { say("  FAILED: " + r[1] + "  " + r[2]); });
+      return { passed: results.length - failed.length, failed: failed.length,
+        results: results.map(function (r) { return { ok: r[0], name: r[1], detail: r[2] }; }) };
+    }
+
+    // Turn the setup key off, delete it, and prove the server now refuses it. Corteza keeps issuing tokens to a
+    // client that is only deleted or expired, so the key is disabled first (Enabled off), then deleted. A token
+    // that was issued earlier stays valid until it expires, so this page drops its token and secret afterwards.
+    // Returns { revoked, deleted, detail }; it throws nothing, because the answer is the message to show.
+    async function revokeSetupClient() {
+      var byHand = " To do it by hand: open Admin > Auth Clients, untick Enabled, save, then delete the client.";
+      function dropKey() { T.token = null; T.secret = null; revoked = true; }
+      var client = null, deleted = false, step = "reading the list of auth clients";
+      try {
+        var list = (await api("GET", "/system/auth/clients/")).response;
+        list = Array.isArray(list) ? list : (list && list.set) || [];
+        client = list.find(function (c) { return String(c.authClientID) === T.id; }) ||
+          list.find(function (c) { return c.handle && String(c.handle) === T.id; }) || null;
+        if (!client) {
+          return { revoked: false, deleted: false, detail: "This page could not find the setup client in the server's list of auth clients, so it could not turn it off." + byHand };
+        }
+        var id = client.authClientID;
+        step = "turning the client off";
+        await api("PUT", "/system/auth/clients/" + id, Object.assign({}, client, { enabled: false }));
+        say("Setup client turned off (Enabled unticked).");
+        step = "deleting the client";
+        try {
+          await api("DELETE", "/system/auth/clients/" + id);
+          deleted = true;
+          say("Setup client deleted.");
+        } catch (e) {
+          say("Could not delete the setup client: " + String(e.message).slice(0, 120));
+        }
+      } catch (e) {
+        return { revoked: false, deleted: false, detail: "Revoking stopped while " + step + " (" + String(e && e.message).slice(0, 160) + ")." + byHand };
+      }
+      // prove it: a brand-new token request with the same ID and secret must now be refused
+      T.token = null; T.expires = 0;
+      var proof;
+      try {
+        proof = await rawFetch(web + "/auth/oauth2/token", {
+          method: "POST",
+          headers: { Authorization: basicAuth(), "Content-Type": "application/x-www-form-urlencoded" },
+          body: "grant_type=client_credentials&scope=api"
+        }, "revocation check", 20000);
+      } catch (e) {
+        return { revoked: false, deleted: deleted, detail: "The setup client was turned off, but this page could not confirm that the server now refuses it (" + String(e && (e.headline || e.message)).slice(0, 160) + "). Open Admin > Auth Clients and check that Enabled is unticked." };
+      }
+      if (proof.ok) {
+        return { revoked: false, deleted: deleted, detail: "The server still issued a new token to the setup key, so it is NOT revoked." + byHand };
+      }
+      dropKey();
+      say("Proof: the server now refuses the setup key (HTTP " + proof.status + ").");
+      return { revoked: true, deleted: deleted, detail: "The setup key was turned off" + (deleted ? " and deleted" : ", but deleting it failed; remove it under Admin > Auth Clients") +
+        ". The server now refuses it, and this page has forgotten it." };
+    }
+
+    async function cleanup() {
+      var nsId = await findNamespace();
+      var ids = await moduleIds(nsId);
+      var n = await sweep(nsId, ids);
+      say("removed " + n + " test records");
+      return { removed: n };
+    }
+
+    return {
+      server: web,
+      connect: connect,
+      check: checkServer,
+      install: install,
+      verify: verify,
+      cleanup: cleanup,
+      revokeSetupClient: revokeSetupClient,
+      // The UI changes these between runs; they are read at the moment a method runs.
+      setOptions: function (o) { options = Object.assign({}, options, o || {}); },
+      setLog: function (fn) { logFn = typeof fn === "function" ? fn : function () {}; }
+    };
+  }
+
+  return {
+    VERSION: VERSION,
+    createInstaller: createInstaller,
+    normalizeBaseUrl: normalizeBaseUrl,
+    // exposed for the tests that compare this port with the Python setup
+    _internals: { NAV_CSS: NAV_CSS, NAV_SCRIPT: NAV_SCRIPT, LANDING_SCRIPT: LANDING_SCRIPT, SPECS: SPECS, NAV_ORDER: NAV_ORDER,
+      pyJsonList: pyJsonList, pyQuote: pyQuote, slugify: slugify, deepEqual: deepEqual, createModules: createModules,
+      fill: fill, NAMESPACE_SLUG: NAMESPACE_SLUG }
+  };
+});
+</script>
+<script>
+(function () {
+  "use strict";
+  function $(id) { return document.getElementById(id); }
+  var core = window.OwnFMSInstaller;
+  var inst = null, instKey = "", busy = false;
+  var els = {
+    server: $("server"), clientId: $("clientId"), secret: $("clientSecret"), sample: $("sample"), users: $("users"),
+    pwBox: $("pwBox"), pwStaff: $("pwStaff"), pwManager: $("pwManager"), pwDemo: $("pwDemo"), dedicated: $("dedicated"),
+    dedicatedError: $("dedicatedError"), btnTest: $("btnTest"), btnInstall: $("btnInstall"), btnVerify: $("btnVerify"),
+    btnForget: $("btnForget"), btnCopy: $("btnCopy"), status: $("status"), connNote: $("connNote"), log: $("log"),
+    errorBox: $("errorBox"), errorMsg: $("errorMsg"), errorHints: $("errorHints"), successBox: $("successBox"),
+    signinLink: $("signinLink"), usersNote: $("usersNote"), checksBox: $("checksBox"), checksTitle: $("checksTitle"),
+    checksBody: $("checksBody"), showId: $("showId"), showSecret: $("showSecret"), revoke: $("revoke"), btnRevoke: $("btnRevoke"),
+    revokeBox: $("revokeBox"), revokeTitle: $("revokeTitle"), revokeBody: $("revokeBody"), revokeStep: $("revokeStep")
+  };
+  var actionButtons = [els.btnTest, els.btnInstall, els.btnVerify, els.btnRevoke];
+  var revokedKey = false;        // true once this page has revoked the key it was given
+  var REVOKE_BY_HAND = "Revoke the setup client: open Admin > Auth Clients, untick Enabled, save, then delete. Expiry dates are not enforced for these keys, and the key can act as an administrator.";
+
+  // ---- Show / Hide for the two masked fields
+  function wireToggle(button, input, what) {
+    button.addEventListener("click", function () {
+      var show = input.type === "password";
+      input.type = show ? "text" : "password";
+      button.textContent = show ? "Hide" : "Show";
+      button.setAttribute("aria-pressed", show ? "true" : "false");
+      button.setAttribute("aria-label", (show ? "Hide " : "Show ") + what);
+    });
+  }
+  wireToggle(els.showId, els.clientId, "Client ID");
+  wireToggle(els.showSecret, els.secret, "client secret");
+
+  $("ver").textContent = "version " + core.VERSION;
+  if (location.protocol === "file:") { $("fileNote").hidden = false; }
+
+  // ---- log
+  function appendLog(line) {
+    var nearBottom = els.log.scrollTop + els.log.clientHeight >= els.log.scrollHeight - 40;
+    els.log.appendChild(document.createTextNode(String(line) + "\n"));
+    if (nearBottom) { els.log.scrollTop = els.log.scrollHeight; }
+  }
+  function resetLog() { els.log.textContent = ""; }
+
+  function setStatus(text, working) {
+    els.status.textContent = "";
+    if (working) { var s = document.createElement("span"); s.className = "spin"; s.setAttribute("aria-hidden", "true"); els.status.appendChild(s); }
+    els.status.appendChild(document.createTextNode(text || ""));
+  }
+
+  function setBusy(on) {
+    busy = on;
+    actionButtons.forEach(function (b) { b.disabled = on; });
+    [els.server, els.clientId, els.secret, els.sample, els.users, els.pwStaff, els.pwManager, els.pwDemo, els.dedicated, els.revoke, els.btnForget]
+      .forEach(function (e) { e.disabled = on; });
+  }
+  window.addEventListener("beforeunload", function (e) { if (busy) { e.preventDefault(); e.returnValue = ""; } });
+
+  function hideResults() {
+    els.errorBox.hidden = true; els.successBox.hidden = true; els.checksBox.hidden = true; els.revokeBox.hidden = true;
+    els.dedicatedError.hidden = true;
+    [els.server, els.clientId, els.secret].forEach(function (e) { e.classList.remove("field-error"); });
+  }
+
+  // ---- errors, in plain words
+  function hintsFor(e) {
+    if (e && e.kind === "network" && e.reasons) { return e.reasons; }
+    var kind = e && e.kind;
+    if (kind === "input") { return ["Fix the field mentioned above and press the button again."]; }
+    if (kind === "auth") {
+      return ["In the Corteza admin area open Auth Clients and check that the setup client is of type client_credentials, impersonates an administrator and is still enabled (a key that was revoked cannot be used again).",
+        "Copy the Client ID and Client secret again. The secret is shown only once, so if you lost it, create a new client."];
+    }
+    if (kind === "data") { return ["Check the server address. Use the address of the Corteza site itself, for example https://corteza.example.com, not a page inside it."]; }
+    if (kind === "revoked") { return ["Create a new setup client in the Corteza admin area (Auth Clients, type client_credentials), then enter its ID and secret."]; }
+    if (kind === "state") { return ["Press Install first, then run the checks."]; }
+    if (e && e.status === 403) { return ["The setup client was refused. It must impersonate an administrator.", "Edit the client in the Corteza admin area and pick an administrator user."]; }
+    if (e && e.status === 404) { return ["The server does not have the page that was asked for. Check the address, and that the server is Corteza 2024.9.1."]; }
+    return ["Press the button again. Install is safe to repeat: what already exists is reused.",
+      "If it keeps failing, use Copy all to copy the progress log and ask for help. The log never contains your secret."];
+  }
+  function showError(e) {
+    var msg = (e && (e.headline || e.message)) || "Something unexpected happened.";
+    els.errorMsg.textContent = msg;
+    els.errorHints.textContent = "";
+    hintsFor(e).forEach(function (h) { var li = document.createElement("li"); li.textContent = h; els.errorHints.appendChild(li); });
+    els.errorBox.hidden = false;
+    if (e && e.kind === "input") {
+      var field = /secret/i.test(msg) ? els.secret : /client id/i.test(msg) ? els.clientId : els.server;
+      field.classList.add("field-error"); field.focus();
+    } else { els.errorBox.scrollIntoView({ block: "nearest" }); }
+    appendLog("Stopped: " + msg);
+    setStatus("Stopped. See the message above.");
+  }
+
+  // ---- the installer object lives only in memory
+  function currentOptions() {
+    var pw = { staff: "", manager: "", demo: "" };
+    if (els.users.checked) { pw = { staff: els.pwStaff.value, manager: els.pwManager.value, demo: els.pwDemo.value }; }
+    return { sampleData: els.sample.checked, passwords: pw };
+  }
+  function getInstaller() {
+    if (revokedKey && !els.secret.value) {
+      var gone = new Error("The setup key was revoked by this page, so it can no longer be used.");
+      gone.kind = "revoked";
+      throw gone;
+    }
+    var key = els.server.value.trim() + "\n" + els.clientId.value.trim();
+    if (inst && key === instKey && !els.secret.value) {
+      inst.setOptions(currentOptions());
+      return inst;
+    }
+    inst = core.createInstaller({ baseUrl: els.server.value, clientId: els.clientId.value, clientSecret: els.secret.value,
+      log: appendLog, options: currentOptions() });
+    instKey = key;
+    return inst;
+  }
+  function forget() {
+    inst = null; instKey = "";
+    els.connNote.hidden = true; els.btnForget.hidden = true;
+    setStatus("Connection forgotten. Enter the secret again to continue.");
+  }
+  function afterConnect() {
+    els.secret.value = "";                 // the secret is no longer needed in the page's fields
+    els.connNote.hidden = false; els.btnForget.hidden = false;
+  }
+  els.btnForget.addEventListener("click", forget);
+  [els.server, els.clientId, els.secret].forEach(function (e) {
+    e.addEventListener("input", function () { e.classList.remove("field-error"); revokedKey = false; });
+  });
+  // a new address or client ID means a new connection; a typed secret always starts one (see getInstaller)
+  [els.server, els.clientId].forEach(function (e) {
+    e.addEventListener("input", function () {
+      if (inst && !busy) { inst = null; instKey = ""; els.connNote.hidden = true; els.btnForget.hidden = true; }
+    });
+  });
+  els.users.addEventListener("change", function () { els.pwBox.hidden = !els.users.checked; });
+  els.dedicated.addEventListener("change", function () { if (els.dedicated.checked) { els.dedicatedError.hidden = true; } });
+  $("form").addEventListener("submit", function (ev) { ev.preventDefault(); });
+
+  // ---- actions
+  async function run(button, fn) {
+    if (busy) { return; }
+    hideResults();
+    setBusy(true);
+    try { await fn(); }
+    catch (e) { showError(e); }
+    finally { setBusy(false); if (button) { button.focus(); } }
+  }
+  async function connectFirst(i) {
+    setStatus("Connecting to your server...", true);
+    var info = await i.connect();
+    afterConnect();
+    return info;
+  }
+
+  els.btnTest.addEventListener("click", function () {
+    run(els.btnTest, async function () {
+      resetLog();
+      var i = getInstaller();
+      var info = await connectFirst(i);
+      setStatus("Reading what is on the server...", true);
+      var r = await i.check();
+      var msg = "Connection works" + (info.version ? " (Corteza " + info.version + ")" : "") + ". " +
+        (r.installed ? "OwnFMS.works is already installed here; Install will check and repair it." : "OwnFMS.works is not installed yet.");
+      appendLog(msg);
+      setStatus(msg);
+    });
+  });
+
+  els.btnInstall.addEventListener("click", function () {
+    if (busy) { return; }
+    if (!els.dedicated.checked) {
+      hideResults();
+      els.dedicatedError.hidden = false; els.dedicated.focus();
+      setStatus("Please confirm that you are using a server just for this.");
+      return;
+    }
+    run(els.btnInstall, async function () {
+      resetLog();
+      var i = getInstaller();
+      var wantUsers = els.users.checked;
+      var info = await connectFirst(i);
+      setStatus("Installing. This can take a few minutes on a new server. Please keep this page open.", true);
+      var r = await i.install();
+      [els.pwStaff, els.pwManager, els.pwDemo].forEach(function (e) { e.value = ""; });
+      els.signinLink.href = r.signInUrl; els.signinLink.textContent = r.signInUrl;
+      if (r.usersCreated && r.usersCreated.length) {
+        els.usersNote.textContent = "Sample sign-ins: " + r.usersCreated.map(function (u) { return u.email; }).join(", ") + ". The passwords are the ones you typed here.";
+        els.usersNote.hidden = false;
+      } else {
+        els.usersNote.textContent = wantUsers ? "No sample sign-in was created because no password was typed. Sign in with your administrator login." : "Sign in with your administrator login.";
+        els.usersNote.hidden = false;
+      }
+      els.revokeStep.textContent = REVOKE_BY_HAND;
+      els.successBox.hidden = false;
+      els.successBox.scrollIntoView({ block: "nearest" });
+      var done = "Done. OwnFMS.works is installed" + (info.version ? " on Corteza " + info.version : "") + ".";
+      setStatus(done);
+      if (!els.revoke.checked) { return; }
+      // order: install, run checks, then revoke, so the checks still have a key to work with
+      setStatus(done + " Running the checks before the setup key is revoked...", true);
+      var v = await i.verify({ scenario: true });
+      showChecks(v);
+      if (v.failed) {
+        showRevoke({ revoked: false, detail: "The checks reported failures, so the setup key was NOT revoked yet. Press Install again to repair, and run the checks again. When they pass, press Revoke setup key now." }, true);
+        setStatus("The checks found problems. The setup key was kept so you can repair and try again.");
+        return;
+      }
+      setStatus("Checks passed. Revoking the setup key...", true);
+      var out = await revokeNow(i);
+      setStatus(out.revoked ? done + " Access revoked: this key can no longer be used." : done + " The setup key was NOT revoked. See the message below.");
+    });
+  });
+
+  function showChecks(r) {
+    els.checksTitle.textContent = r.passed + " passed, " + r.failed + " failed";
+    var failedNames = r.results.filter(function (x) { return !x.ok; }).map(function (x) { return x.name; });
+    els.checksBody.textContent = r.failed ? "These checks failed: " + failedNames.join("; ") + ". Press Install again to repair, then run the checks again."
+      : "Everything checked out. The test records were removed again.";
+    els.checksBox.className = r.failed ? "error" : "success";
+    els.checksBox.hidden = false;
+  }
+
+  function showRevoke(out, notYet) {
+    els.revokeTitle.textContent = out.revoked ? "Access revoked: this key can no longer be used" : (notYet ? "The setup key was kept" : "The setup key was not revoked");
+    els.revokeBody.textContent = out.detail;
+    els.revokeBox.className = out.revoked ? "success" : "error";
+    els.revokeBox.hidden = false;
+    if (!els.successBox.hidden) {
+      els.revokeStep.textContent = out.revoked ? "The setup key was revoked: it was turned off and deleted, and the server now refuses it. Nothing more to do for it."
+        : REVOKE_BY_HAND;
+    }
+  }
+
+  // turn the key off, delete it, prove it, and make the page forget it
+  async function revokeNow(i) {
+    var out = await i.revokeSetupClient();
+    if (out.revoked) {
+      inst = null; instKey = ""; revokedKey = true;
+      els.secret.value = "";
+      els.connNote.hidden = true; els.btnForget.hidden = true;
+    }
+    appendLog(out.revoked ? "Access revoked: this key can no longer be used." : "Not revoked: " + out.detail);
+    showRevoke(out);
+    return out;
+  }
+
+  els.btnRevoke.addEventListener("click", function () {
+    if (busy) { return; }
+    if (!window.confirm("Revoke the setup key now? The server will refuse it afterwards, so you cannot run the install or the checks again with it. Run the checks first if you have not.")) { return; }
+    run(els.btnRevoke, async function () {
+      var i = getInstaller();
+      await connectFirst(i);
+      setStatus("Revoking the setup key...", true);
+      var out = await revokeNow(i);
+      setStatus(out.revoked ? "Access revoked: this key can no longer be used." : "The setup key was NOT revoked. See the message below.");
+    });
+  });
+
+  els.btnVerify.addEventListener("click", function () {
+    run(els.btnVerify, async function () {
+      resetLog();
+      var i = getInstaller();
+      await connectFirst(i);
+      setStatus("Running the checks...", true);
+      var r = await i.verify({ scenario: true });
+      showChecks(r);
+      setStatus("Checks finished: " + r.passed + " passed, " + r.failed + " failed.");
+    });
+  });
+
+  // ---- copy the log
+  els.btnCopy.addEventListener("click", function () {
+    var text = els.log.textContent;
+    function done(ok) { setStatus(ok ? "Progress log copied." : "Could not copy. Select the log and copy it by hand."); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { fallback(); });
+    } else { fallback(); }
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.top = "-1000px";
+      document.body.appendChild(ta); ta.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      done(ok);
+    }
+  });
+})();
+</script>
+</body>
+</html>
