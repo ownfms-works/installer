@@ -2,7 +2,7 @@
 
 **Own your system. Own your data. Own your future.**
 
-This is the web page behind <https://install.ownfms.works>. It sets up the open-source
+This is the web page behind <https://ownfms-works.github.io/installer/>. It sets up the open-source
 [OwnFMS.works](https://ownfms.works) base configuration (nine grant-management modules) on a Corteza server that
 **you** control. You paste your server address and a setup key, press **Install**, and the page builds everything.
 
@@ -31,7 +31,7 @@ Please check it. Two simple ways:
    To check what the live site serves, run this and compare the result with `SHA256SUMS`:
 
    ```
-   curl -s https://install.ownfms.works/ | sha256sum
+   curl -s https://ownfms-works.github.io/installer/ | sha256sum
    ```
 
 You can also read the network panel in your browser's developer tools while you use it: the only requests go to your own server.
