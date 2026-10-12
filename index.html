@@ -10,8 +10,8 @@
 <link rel="icon" href="data:,">
 <style>
   :root {
-    --ink: #1d2730; --muted: #55616b; --bg: #f6f5f1; --card: #ffffff; --line: #d6d3ca;
-    --brand: #0b344e; --brand-ink: #ffffff; --accent: #c4501a;
+    --ink: #2a1636; --muted: #5f5368; --bg: #f7f4f9; --card: #ffffff; --line: #e3dce9;
+    --brand: #4a1462; --brand-ink: #ffffff; --accent: #f97a3d; --teal: #1c8f82;
     --warn-bg: #fff6dd; --warn-line: #d9b44a;
     --err-bg: #fdecec; --err-line: #c0392b; --ok-bg: #e9f6ee; --ok-line: #2e8b57;
   }
@@ -20,7 +20,13 @@
   body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.5;
     font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
   main { max-width: 46rem; margin: 0 auto; padding: 20px 16px 40px; }
-  h1 { font-size: 1.75rem; line-height: 1.2; margin: 8px 0 8px; }
+  h1 { font-size: 1.75rem; line-height: 1.2; margin: 8px 0 4px; color: var(--brand); }
+  .tagline { color: var(--muted); font-weight: 600; margin: 0 0 14px; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 4px 0 10px; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+  .logo { display: block; width: 200px; height: 38px; background: url("data:image/png;base64,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") no-repeat left center / contain; }
+  .top a.demo { font-weight: 600; text-decoration: none; border: 2px solid var(--brand); border-radius: 10px; padding: 6px 12px; font-size: 0.92rem; }
+  .top a.demo:hover { background: #efe9f4; }
+  .card { border-top: 3px solid var(--accent); }
   h2 { font-size: 1.15rem; margin: 0 0 8px; }
   p { margin: 0 0 12px; }
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin: 16px 0; }
@@ -61,7 +67,7 @@
   .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
   ol.steps { margin: 8px 0 0; padding-left: 22px; }
   ol.steps li { margin: 6px 0; }
-  a { color: #0b4f8a; overflow-wrap: anywhere; }
+  a { color: var(--brand); overflow-wrap: anywhere; }
   .signin { font-size: 1.05rem; font-weight: 600; }
   footer { color: var(--muted); font-size: 0.85rem; margin-top: 28px; text-align: center; }
   .pwrow { display: flex; gap: 8px; align-items: stretch; }
@@ -74,8 +80,13 @@
 </head>
 <body>
 <main>
+  <div class="top">
+    <span class="logo" role="img" aria-label="OwnFMS.works"></span>
+    <a class="demo" href="https://ownfms-works.github.io/demo/" target="_blank" rel="noopener noreferrer">Watch the demo and try it first</a>
+  </div>
   <h1>Install OwnFMS.works</h1>
-  <p>This page sets up the OwnFMS.works starter on your own Corteza server: nine modules for managing grants, their pages, three roles, a dashboard and, if you want it, a small set of fictional sample data. It does the same work as the Python scripts, without installing anything on your computer. It is safe to run twice: whatever already exists is reused.</p>
+  <p class="tagline">Own your system. Own your data. Own your future.</p>
+  <p>This page sets up the OwnFMS.works starter on your own Corteza server: nine linked areas for managing grants (organizations, contacts, programs, initiatives, grants, payments, requirements, fiscal periods and board meetings), a change log for each grant, their pages, three roles, a dashboard and, if you want it, a small set of fictional sample data. It does the same work as the Python scripts, without installing anything on your computer. It is safe to run twice: whatever already exists is reused, and an older install gains the new fields.</p>
 
   <div class="notice" id="fileNote" hidden role="note">
     <p><strong>This page was opened from a file on your computer.</strong> Most servers refuse requests from such a page, so the connection may fail. If it does, put this file on an https address you control, or use the Python scripts or the Colab notebook instead.</p>
@@ -135,6 +146,7 @@
         <li><strong>Navigation.</strong> It writes a stylesheet and a small script that add a top bar of page links and hide the left sidebar in the Compose app. It <strong>replaces</strong> the server's existing custom CSS and code snippets.</li>
         <li><strong>Default access.</strong> It removes the read access every signed-in user has by default, so people see only what their role grants. It also masks other people's email addresses from signed-in users. Names stay visible, so a record's History can show who made a change.</li>
         <li><strong>Roles.</strong> It creates Staff, Manager and Demo Viewer, and gives the built-in Administrator role the page-layout permissions the build needs.</li>
+        <li><strong>Data model.</strong> Nine modules plus a read-only Change Log, with duplicate rules (organization name and EIN, contact email, grant reference number, program and fiscal-period names, initiative title), default values (a new grant starts as Draft) and an EIN format check (12-3456789).</li>
         <li><strong>Landing page.</strong> People who hold only the Staff, Manager or Demo Viewer role are sent straight to the OwnFMS.works Home page when they open the server's front page. Administrators keep Corteza's own screens. It also hides the Jitsi video tile from these three roles.</li>
       </ul>
     </details>
@@ -181,6 +193,7 @@
       <li id="revokeStep">Revoke the setup client: open Admin &gt; Auth Clients, untick Enabled, save, then delete. Expiry dates are not enforced for these keys, and the key can act as an administrator.</li>
       <li>Change the passwords of the sample sign-ins, or remove those users, before real people use the server.</li>
       <li>Back up the server (a snapshot from your host is enough) before you enter real records.</li>
+      <li>Optional, and recommended: schedule the small job that keeps the calculated fields current (automatic reference numbers, due flags, budget status, the payments check, possible-duplicate marks and each grant's History tab). It is <code>run_jobs.py</code> in the starter; the README has a section called "Keeping it up to date". Without it everything else works, but those fields stay empty.</li>
     </ol>
   </div>
 
@@ -193,7 +206,7 @@
     <p class="hint">The log never contains your secret or passwords.</p>
   </section>
 
-  <footer>OwnFMS.works installer <span id="ver"></span> &middot; Apache-2.0 &middot; ownfms.works</footer>
+  <footer>OwnFMS.works installer <span id="ver"></span> &middot; Apache-2.0 &middot; ownfms.works &middot; <a href="https://ownfms-works.github.io/demo/" target="_blank" rel="noopener noreferrer">Try the demo</a></footer>
 </main>
 
 <script>
@@ -219,7 +232,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : (typeof window !== "undefined" ? window : this), function () {
   "use strict";
 
-  var VERSION = "0.1.0";
+  var VERSION = "0.2.3";
 
   // ---------------------------------------------------------------------------
   // Constants (ownfms_lib.py, setup_ownfms.py)
@@ -229,6 +242,7 @@
   var NAMESPACE_NAME = "OwnFMS.works";
   var GRID_WIDTH = 48;
   var DATE_FORMAT = "MMM D, YYYY";
+  var DATETIME_FORMAT = "MMM D, YYYY h:mm A";
 
   var LEFT_W = 28;
   var RIGHT_W = GRID_WIDTH - LEFT_W;
@@ -264,6 +278,9 @@
   var REQ_STATUSES = ["Not started", "Submitted", "Accepted", "Needs revision", "Waived"];
   var PAYMENT_STATUSES = ["Scheduled", "Released", "On Hold", "Cancelled"];
   var PERIOD_STATUSES = ["Planned", "Open", "Closed"];
+  var PRIORITIES = ["High", "Medium", "Low"];
+  // Kept up to date by upkeep: how close the due date is, from the date and the status
+  var DUE_FLAGS = ["Overdue", "Due this week", "Due in 30 days", "Later", "In review", "Done"];
   var MEETING_STATUSES = ["Scheduled", "Held", "Cancelled"];
   var INITIATIVE_STATUSES = ["Draft", "Active", "On Hold", "Completed"];
 
@@ -393,6 +410,13 @@
   function f_url(name, label, required) {
     return { name: name, kind: "Url", label: label || name, isRequired: !!required };
   }
+  function f_datetime(name, label, required) {
+    return { name: name, kind: "DateTime", label: label || name, isRequired: !!required,
+      options: { onlyDate: false, onlyTime: false, format: DATETIME_FORMAT } };
+  }
+  function f_user(name, label, required) {
+    return { name: name, kind: "User", label: label || name, isRequired: !!required, options: { selectType: "default" } };
+  }
 
   // ---------------------------------------------------------------------------
   // Navigation CSS and scripts (ownfms_lib.py). The scripts are kept as raw text, with the
@@ -404,21 +428,45 @@
     "body#compose .b-sidebar-outer, body#compose .b-sidebar.sidebar, body#compose .sidebar-spacer { display: none !important; }",
     "body#compose aside div.tab { display: none !important; }",
     "body#compose .header-navigation { padding-left: 16px !important; }",
-    'body#compose .header-navigation a[data-test-id="app-selector"] { display: none !important; }',
+    "body#compose .header-navigation a[data-test-id=\"app-selector\"] { display: none !important; }",
     "body#compose .ownfms-topnav { flex: 0 0 calc(100vw - 32px); max-width: none; display: flex; flex-wrap: wrap; align-items: center;",
     "  gap: 2px; padding: 4px 0 2px; }",
     "body#compose .ownfms-topnav a { display: inline-block; padding: 4px 9px; border-radius: 8px; font-size: 13px; font-weight: 500;",
     "  color: #0B344E; text-decoration: none; line-height: 1.3; }",
     "body#compose .ownfms-topnav a:hover { background: #f3efe6; }",
     "body#compose .ownfms-topnav a.active { background: #FF9661; color: #fff; }",
+    "/* the dark theme: the links were dark navy on a dark bar */",
+    "[data-color-mode=\"dark\"] body#compose .ownfms-topnav a { color: #d7e3ec; }",
+    "[data-color-mode=\"dark\"] body#compose .ownfms-topnav a:hover { background: rgba(255, 255, 255, 0.12); }",
+    "[data-color-mode=\"dark\"] body#compose .ownfms-topnav a.active { background: #FF9661; color: #fff; }",
+    "/* colour flags: the due flag and the priority show as coloured pills (see FLAGS_SCRIPT, which sets data-ownfms-flag) */",
+    "[data-ownfms-flag] > div, [data-ownfms-flag].ownfms-pill { display: inline-flex !important; padding: 2px 11px; border-radius: 999px; font-weight: 600; font-size: 13px; line-height: 1.5; }",
+    "[data-ownfms-flag=\"Overdue\"] > div, [data-ownfms-flag=\"High\"] > div, [data-ownfms-flag=\"Overdue\"].ownfms-pill, [data-ownfms-flag=\"High\"].ownfms-pill,",
+    "[data-ownfms-flag=\"Over budget\"] > div, [data-ownfms-flag=\"Payments exceed award\"] > div, [data-ownfms-flag=\"Over budget\"].ownfms-pill, [data-ownfms-flag=\"Payments exceed award\"].ownfms-pill { background: #fde2e0; color: #b3261e; }",
+    "[data-ownfms-flag=\"Due this week\"] > div, [data-ownfms-flag=\"Due this week\"].ownfms-pill,",
+    "[data-ownfms-flag=\"Possible duplicate\"] > div, [data-ownfms-flag=\"Nearly spent\"] > div, [data-ownfms-flag=\"Payments short\"] > div,",
+    "[data-ownfms-flag=\"Possible duplicate\"].ownfms-pill, [data-ownfms-flag=\"Nearly spent\"].ownfms-pill, [data-ownfms-flag=\"Payments short\"].ownfms-pill { background: #ffe5cc; color: #9a4b00; }",
+    "[data-ownfms-flag=\"Due in 30 days\"] > div, [data-ownfms-flag=\"Medium\"] > div, [data-ownfms-flag=\"Due in 30 days\"].ownfms-pill, [data-ownfms-flag=\"Medium\"].ownfms-pill { background: #fff3c4; color: #7a5d00; }",
+    "[data-ownfms-flag=\"Later\"] > div, [data-ownfms-flag=\"Low\"] > div, [data-ownfms-flag=\"Later\"].ownfms-pill, [data-ownfms-flag=\"Low\"].ownfms-pill { background: #eceff1; color: #55606a; }",
+    "[data-ownfms-flag=\"In review\"] > div, [data-ownfms-flag=\"In review\"].ownfms-pill { background: #dcebfb; color: #0b4f8a; }",
+    "[data-ownfms-flag=\"Done\"] > div, [data-ownfms-flag=\"On track\"] > div, [data-ownfms-flag=\"Payments match\"] > div,",
+    "[data-ownfms-flag=\"Done\"].ownfms-pill, [data-ownfms-flag=\"On track\"].ownfms-pill, [data-ownfms-flag=\"Payments match\"].ownfms-pill { background: #dff3e6; color: #17653a; }",
     "/* a list inside a Tabs block repeats the tab label as its own heading */",
     "body#compose .tab-pane .block.RecordList > .card-header { display: none !important; }",
     "/* zero-size grid items hold the tab children and must not paint a sliver */",
-    'body#compose .vue-grid-item[style*="width: 0px"] { display: none !important; }',
+    "body#compose .vue-grid-item[style*=\"width: 0px\"] { display: none !important; }",
     "/* record-list tables fit their block and wrap long text instead of scrolling sideways */",
     ".block.RecordList .record-list-table > table { width: 100% !important; max-width: 100% !important; }",
-    ".block.RecordList table td .text-nowrap, .block.RecordList table th { white-space: normal !important; overflow-wrap: anywhere; }",
-    ".block.RecordList table td > .d-flex { min-width: 90px !important; }",
+    ".block.RecordList table td .text-nowrap, .block.RecordList table th { white-space: normal !important; }",
+    "/* long text breaks only when one word cannot fit; \"anywhere\" let narrow columns split words in the middle */",
+    ".block.RecordList table td, .block.RecordList table td *, .block.RecordList table th { overflow-wrap: break-word !important; }",
+    "/* narrow columns so a five-column list (the grant History tab) fits its panel without scrolling sideways; the first",
+    "   column stays wide enough for a date on two lines. Corteza makes every header sticky at the left edge, which piles",
+    "   the headers up on each other as soon as a table does scroll, so the left stickiness is switched off. */",
+    ".block.RecordList table td > .d-flex { min-width: 56px !important; }",
+    ".block.RecordList table td:first-child > .d-flex { min-width: 88px !important; }",
+    ".block.RecordList table th.b-table-sticky-column { left: auto !important; }",
+    ".block.RecordList .record-list-table th, .block.RecordList .record-list-table td { padding-left: 8px !important; padding-right: 8px !important; }",
     ""
   ].join("\n");
 
@@ -520,6 +568,28 @@
 })();
 `;
 
+  var FLAGS_SCRIPT_BODY = String.raw`
+(function () {
+  // Colour the due flag and priority values of requirements. Matching is by exact text inside lists and detail blocks.
+  if (document.body.id !== 'compose') { return; }
+  var FLAGS = { 'Overdue': 1, 'Due this week': 1, 'Due in 30 days': 1, 'Later': 1, 'In review': 1, 'Done': 1, 'High': 1, 'Medium': 1, 'Low': 1,
+                'Possible duplicate': 1, 'Over budget': 1, 'Nearly spent': 1, 'On track': 1, 'Payments match': 1, 'Payments short': 1, 'Payments exceed award': 1 };
+  var timer = null;
+  function paint() {
+    var cells = document.querySelectorAll('.block.RecordList table td, .block.Record .field-value, .block.Record .value');
+    for (var i = 0; i < cells.length; i++) {
+      var el = cells[i], t = (el.textContent || '').trim();
+      if (FLAGS[t] && el.children.length < 4) {
+        if (el.getAttribute('data-ownfms-flag') !== t) { el.setAttribute('data-ownfms-flag', t); }
+      } else if (el.hasAttribute('data-ownfms-flag')) { el.removeAttribute('data-ownfms-flag'); }
+    }
+  }
+  new MutationObserver(function () { clearTimeout(timer); timer = setTimeout(paint, 120); })
+    .observe(document.body, { childList: true, subtree: true, characterData: true });
+  paint();
+})();
+`;
+
   function wrapScript(body) { return "<script>" + body.replace(/\n$/, "") + "\n</scr" + "ipt>"; }
   function fill(text, map) {
     Object.keys(map).forEach(function (k) { text = text.split(k).join(map[k]); });
@@ -528,6 +598,7 @@
   // The leading newline in the raw bodies is the one after <script> in the Python source
   var NAV_SCRIPT = wrapScript(NAV_SCRIPT_BODY);
   var LANDING_SCRIPT = wrapScript(LANDING_SCRIPT_BODY);
+  var FLAGS_SCRIPT = wrapScript(FLAGS_SCRIPT_BODY);
 
   // ---------------------------------------------------------------------------
   // Schema and page specs (setup_ownfms.py)
@@ -536,28 +607,34 @@
   // Dependency order. Organization and Contact point at each other, so the primary contact link on
   // Organization is added after Contact exists. ensureModule and addField are supplied by the caller
   // so the same definitions drive both the install and the verify.
-  async function createModules(nsId, ensureModule, addField) {
+  async function createModules(nsId, ensureModule, addField, tuneModule, setDedup) {
     var ids = {};
     ids.fiscal_period = await ensureModule(nsId, "Fiscal Period", [
       f_string("name", "Name", false, true),
       f_date("start_date", "Start date"), f_date("end_date", "End date"),
       f_select("status", PERIOD_STATUSES, "Status"),
       f_number("budget", "Budget", "$", 0),
-      f_string("notes", "Notes", true)]);
+      f_string("notes", "Notes", true),
+      f_number("awarded_total", "Awarded", "$", 0),
+      f_number("budget_remaining", "Budget remaining", "$", 0),
+      f_string("budget_status", "Budget status")]);
     ids.program = await ensureModule(nsId, "Program", [
       f_string("name", "Name", false, true),
       f_string("description", "Description", true),
       f_select("status", ["Active", "Archived"], "Status")]);
     ids.organization = await ensureModule(nsId, "Organization", [
       f_string("name", "Name", false, true),
+      f_string("ein", "EIN"),
       f_select("type", ORG_TYPES, "Type"),
       f_select("status", ["Active", "Inactive"], "Status"),
-      f_string("phone", "Phone"), f_string("address", "Address"), f_url("website", "Website")]);
+      f_string("phone", "Phone"), f_string("address", "Address"), f_url("website", "Website"),
+      f_string("duplicate_check", "Duplicate check")]);
     ids.contact = await ensureModule(nsId, "Contact", [
       f_string("first_name", "First name", false, true),
       f_string("last_name", "Last name", false, true),
       f_email("email", "Email"), f_string("phone", "Phone"), f_string("title", "Title"),
-      f_record("organization", ids.organization, "Organization", false, "name")]);
+      f_record("organization", ids.organization, "Organization", false, "name"),
+      f_string("duplicate_check", "Duplicate check")]);
     await addField(nsId, ids.organization,
       f_record("primary_contact", ids.contact, "Primary contact", false, "last_name"));
     ids.board_meeting = await ensureModule(nsId, "Board Meeting", [
@@ -591,7 +668,18 @@
       f_select("status", GRANT_STATUSES, "Status"),
       f_date("approved_date", "Approved date"),
       f_record("board_meeting", ids.board_meeting, "Board meeting", false, "title"),
-      f_string("decision_notes", "Decision notes", true)]);
+      f_string("decision_notes", "Decision notes", true),
+      f_user("owner", "Owner"),
+      f_string("payment_check", "Payments")]);
+    // Written only by the history job, never by hand: who, when, which field, previous value, new value.
+    ids.change_log = await ensureModule(nsId, "Change Log", [
+      f_record("grant", ids.grant, "Grant", true, "reference_number"),
+      f_datetime("changed_at", "Date"),
+      f_string("changed_by", "Who"),
+      f_string("field_label", "Field"),
+      f_string("previous_value", "Previous value", true),
+      f_string("new_value", "New value", true),
+      f_string("change_key", "Change key")]);
     ids.grant_payment = await ensureModule(nsId, "Grant Payment", [
       f_record("grant", ids.grant, "Grant", true, "reference_number"),
       f_number("amount", "Amount", "$", 0),
@@ -606,21 +694,51 @@
       f_date("due_date", "Due date"), f_date("completed_date", "Completed date"),
       f_select("status", REQ_STATUSES, "Status"),
       f_record("fiscal_period", ids.fiscal_period, "Fiscal period", false, "name"),
-      f_file("file", "File"), f_string("notes", "Notes", true)]);
+      f_file("file", "File"), f_string("notes", "Notes", true),
+      f_select("priority", PRIORITIES, "Priority"), f_select("due_flag", DUE_FLAGS, "Due"),
+      f_user("owner", "Owner")]);
+    // Sensible starting values, and a format check on the EIN (12-3456789). The expression is true for a BAD value.
+    var tweaks = {
+      grant: { status: { "default": "Draft" } },
+      grant_payment: { status: { "default": "Scheduled" } },
+      grantee_requirement: { status: { "default": "Not started" }, priority: { "default": "Medium" } },
+      organization: { status: { "default": "Active" },
+        ein: { reject: ['!(value =~ "^[0-9]{2}-[0-9]{7}$")', "An EIN looks like 12-3456789."] } },
+      program: { status: { "default": "Active" } },
+      initiative: { status: { "default": "Draft" } },
+      board_meeting: { status: { "default": "Scheduled" } },
+      fiscal_period: { status: { "default": "Planned" } }
+    };
+    for (var th of ["grant", "grant_payment", "grantee_requirement", "organization", "program", "initiative", "board_meeting", "fiscal_period"]) {
+      await tuneModule(nsId, ids[th], tweaks[th]);
+    }
+    // Duplicates: an exact repeat of any of these is refused (one rule per field)
+    var dedup = {
+      organization: [["Organization name", "name", "An organization with this name already exists."],
+        ["Organization EIN", "ein", "An organization with this EIN (tax ID) already exists."]],
+      contact: [["Contact email", "email", "A contact with this email address already exists."]],
+      grant: [["Grant reference number", "reference_number", "A grant with this reference number already exists."]],
+      program: [["Program name", "name", "A program with this name already exists."]],
+      fiscal_period: [["Fiscal period name", "name", "A fiscal period with this name already exists."]],
+      initiative: [["Initiative title", "title", "An initiative with this title already exists."]]
+    };
+    for (var dh of ["organization", "contact", "grant", "program", "fiscal_period", "initiative"]) {
+      await setDedup(nsId, ids[dh], dedup[dh]);
+    }
     return ids;
   }
 
   // One entry per module page. related = [child module, tab title, field on the child that points here, columns]
   var SPECS = {
     organization: { title: "Organizations", singular: "Organization", record_title: "${record.values.name}",
-      list: ["name", "type", "status", "phone"],
-      form: ["name", "type", "status", "phone", "website", "address", "primary_contact"],
+      list: ["name", "type", "status", "phone", "duplicate_check"],
+      form: ["name", "ein", "type", "status", "phone", "website", "address", "primary_contact", "duplicate_check"],
       related: [["contact", "Contacts", "organization", ["first_name", "last_name", "email"]],
                 ["grant", "Grants", "organization", ["reference_number", "status", "amount_awarded"]]],
       history: true, editing_roles: EDITING },
     contact: { title: "Contacts", singular: "Contact", record_title: "${record.values.first_name} ${record.values.last_name}",
-      list: ["first_name", "last_name", "email", "organization"],
-      form: ["first_name", "last_name", "title", "email", "phone", "organization"],
+      list: ["first_name", "last_name", "email", "organization", "duplicate_check"],
+      form: ["first_name", "last_name", "title", "email", "phone", "organization", "duplicate_check"],
       editing_roles: EDITING },
     program: { title: "Programs", singular: "Program", record_title: "${record.values.name}",
       list: ["name", "status", "description"], form: ["name", "status", "description"],
@@ -633,14 +751,18 @@
              "start_date", "end_date"],
       related: [["grant", "Grants", "initiative", ["reference_number", "status", "amount_awarded"]]],
       history: true, editing_roles: EDITING },
-    grant: { title: "Grants", singular: "Grant", record_title: "${record.values.reference_number}",
+    grant: { title: "Grants", singular: "Grant", record_title: '${record.values.reference_number ? record.values.reference_number : "New grant"}',
       list: ["reference_number", "organization", "status", "amount_requested", "amount_awarded"],
       form: ["reference_number", "purpose", "organization", "contacts", "program", "initiative", "fiscal_period",
              "amount_requested", "amount_awarded", "start_date", "end_date", "status", "approved_date",
-             "board_meeting", "decision_notes"],
+             "board_meeting", "decision_notes", "owner", "payment_check"],
       related: [["grant_payment", "Payments", "grant", ["amount", "scheduled_date", "status"]],
-                ["grantee_requirement", "Requirements", "grant", ["title", "requirement_type", "due_date", "status"]]],
-      history: true, charts: [["grants_by_status", "Grants by Status"], ["amount_awarded_by_status", "Amount Awarded by Status"]],
+                ["grantee_requirement", "Requirements", "grant", ["title", "due_date", "due_flag", "status"]],
+                // the History tab: one row per changed field, newest first (filled by the history job)
+                ["change_log", "History", "grant", ["changed_at", "changed_by", "field_label", "previous_value", "new_value"],
+                  { presort: "changed_at DESC", hideAddButton: true, hideRecordEditButton: true,
+                    hideRecordViewButton: true, hideRecordCloneButton: true, hideRecordReminderButton: true }]],
+      charts: [["grants_by_status", "Grants by Status"], ["amount_awarded_by_status", "Amount Awarded by Status"]],
       editing_roles: [STAFF, MANAGER].concat(ADMIN_ROLES) },
     grant_payment: { title: "Grant Payments", singular: "Grant Payment", record_title: "Payment of $${record.values.amount}",
       list: ["grant", "amount", "scheduled_date", "paid_date", "status"],
@@ -648,12 +770,13 @@
       history: true, charts: [["payments_by_status", "Payments by Status"]], editing_roles: EDITING },
     grantee_requirement: { title: "Grantee Requirements", singular: "Grantee Requirement",
       record_title: "${record.values.title}",
-      list: ["title", "grant", "requirement_type", "due_date", "status"],
-      form: ["grant", "title", "requirement_type", "due_date", "completed_date", "status", "fiscal_period", "file", "notes"],
+      list: ["title", "grant", "due_date", "due_flag", "priority", "status"],
+      form: ["grant", "title", "requirement_type", "priority", "due_date", "due_flag", "completed_date", "status", "owner",
+             "fiscal_period", "file", "notes"],
       charts: [["requirements_by_status", "Requirements by Status"]], editing_roles: EDITING },
     fiscal_period: { title: "Fiscal Periods", singular: "Fiscal Period", record_title: "${record.values.name}",
-      list: ["name", "start_date", "end_date", "status", "budget"],
-      form: ["name", "status", "start_date", "end_date", "budget", "notes"],
+      list: ["name", "start_date", "end_date", "status", "budget", "budget_remaining", "budget_status"],
+      form: ["name", "status", "start_date", "end_date", "budget", "awarded_total", "budget_remaining", "budget_status", "notes"],
       related: [["grant", "Grants", "fiscal_period", ["reference_number", "status", "amount_awarded"]],
                 ["grant_payment", "Payments", "fiscal_period", ["amount", "scheduled_date", "status"]]],
       editing_roles: EDITING },
@@ -890,6 +1013,10 @@
       for (var i = 0; i < set.length; i++) {
         if (set[i].handle === handle) {
           say("Module " + name + " exists (" + set[i].moduleID + ")");
+          var have = new Set((await api("GET", "/compose/namespace/" + nsId + "/module/" + set[i].moduleID)).response.fields.map(function (f) { return f.name; }));
+          for (var k = 0; k < fields.length; k++) {      // an upgrade only ever adds fields; it never changes or removes one
+            if (!have.has(fields[k].name)) { await addField(nsId, set[i].moduleID, fields[k]); }
+          }
           return set[i].moduleID;
         }
       }
@@ -902,9 +1029,60 @@
     async function addField(nsId, moduleId, newField) {
       var mod = (await api("GET", "/compose/namespace/" + nsId + "/module/" + moduleId)).response;
       if (mod.fields.some(function (f) { return f.name === newField.name; })) { return; }
-      await api("POST", "/compose/namespace/" + nsId + "/module/" + moduleId,
-        { name: mod.name, handle: mod.handle, fields: mod.fields.concat([newField]) });
+      var body = pick(mod, ["name", "handle", "meta", "config"]);     // keep the module's config (history, duplicate rules)
+      body.fields = mod.fields.concat([newField]);
+      body.updatedAt = mod.updatedAt === undefined ? null : mod.updatedAt;
+      await api("POST", "/compose/namespace/" + nsId + "/module/" + moduleId, body);
       say("  added field " + newField.name + " to " + mod.name);
+    }
+
+    // Block a record whose value in a field already exists in another record. One rule per field. rules: [[name, field, message]]
+    async function setDedup(nsId, moduleId, rules) {
+      var m = (await api("GET", "/compose/namespace/" + nsId + "/module/" + moduleId)).response;
+      var wanted = { enabled: true, rules: rules.map(function (r) {
+        return { name: r[0], strict: true, errorMessage: r[2],
+          constraints: [{ attribute: r[1], modifier: "ignore-case", multiValue: "one-of" }] };
+      }) };
+      var cfgm = Object.assign({}, orObj(m.config));
+      var current = (orObj(cfgm.recordDeDup).rules || []).map(function (r) {
+        return [r.name, (r.constraints || []).map(function (c) { return c.attribute; })];
+      });
+      if (sameJson(current, rules.map(function (r) { return [r[0], [r[1]]]; }))) { return; }
+      cfgm.recordDeDup = wanted;
+      var body = pick(m, ["name", "handle", "fields", "meta"]);
+      body.config = cfgm;
+      body.updatedAt = m.updatedAt === undefined ? null : m.updatedAt;
+      await api("POST", "/compose/namespace/" + nsId + "/module/" + moduleId, body);
+      say("  duplicate rules on " + m.handle + ": " + rules.map(function (r) { return r[0]; }).join(", "));
+    }
+
+    // Set a default value and/or a format check on fields of a module that may already exist.
+    // tweaks: { field: { default: "Draft", reject: [expression true for a BAD value, message] } }
+    async function tuneModule(nsId, moduleId, tweaks) {
+      var m = (await api("GET", "/compose/namespace/" + nsId + "/module/" + moduleId)).response;
+      var changed = [];
+      m.fields.forEach(function (f) {
+        var t = has(tweaks, f.name) ? tweaks[f.name] : null;
+        if (!t) { return; }
+        if (has(t, "default")) {
+          var want = [{ name: "", value: t["default"] }];
+          if (!sameJson(f.defaultValue || [], want)) { f.defaultValue = want; changed.push(f.name); }
+        }
+        if (has(t, "reject")) {
+          var test = t.reject[0], msg = t.reject[1];
+          var curV = (orObj(f.expressions).validators || []).map(function (x) { return [x.test, x.error]; });
+          if (!sameJson(curV, [[test, msg]])) {
+            f.expressions = { validators: [{ validatorID: "1", test: test, error: msg }] };
+            changed.push(f.name);
+          }
+        }
+      });
+      if (!changed.length) { return; }
+      var body = pick(m, ["name", "handle", "fields", "meta", "config"]);
+      body.updatedAt = m.updatedAt === undefined ? null : m.updatedAt;
+      await api("POST", "/compose/namespace/" + nsId + "/module/" + moduleId, body);
+      var uniq = changed.filter(function (x, i) { return changed.indexOf(x) === i; }).sort();
+      say("  defaults and checks on " + m.handle + ": " + uniq.join(", "));
     }
 
     // Show dates as 'Oct 2, 2026' instead of '10/2/26' on modules that already exist.
@@ -912,7 +1090,7 @@
       var m = (await api("GET", "/compose/namespace/" + nsId + "/module/" + moduleId)).response;
       var changed = false;
       m.fields.forEach(function (f) {
-        if (f.kind === "DateTime" && orObj(f.options).format !== DATE_FORMAT) {
+        if (f.kind === "DateTime" && orObj(f.options).onlyDate && orObj(f.options).format !== DATE_FORMAT) {
           f.options = Object.assign({}, orObj(f.options), { format: DATE_FORMAT });
           changed = true;
         }
@@ -1007,6 +1185,7 @@
       var tabChildren = [];
       (spec.related || []).forEach(function (rel) {
         var childHandle = rel[0], tabTitle = rel[1], refField = rel[2], columns = rel[3];
+        var extra = rel.length > 4 ? rel[4] : {};      // optional block options, e.g. a read-only list sorted by its own field
         var child = modulesByHandle[childHandle];
         var cnames = new Set(child.fields.map(function (f) { return f.name; }));
         var bad = columns.concat([refField]).filter(function (f) { return !cnames.has(f); });
@@ -1017,6 +1196,7 @@
             hideAddButton: false, hideImportButton: true, hideConfigureFieldsButton: true,
             hideSearch: true, hideFiltering: true, hideSorting: true, selectable: false,
             perPage: RELATED_PER_PAGE, presort: "createdAt DESC", recordDisplayOption: "sameTab" } };
+        Object.assign(b.options, extra);
         blocks.push(b);
         tabChildren.push(b);
       });
@@ -1142,9 +1322,10 @@
       y += 22;
       queues.forEach(function (q, i) {
         var title = q[0], handle = q[1], prefilter = q[2], fields = q[3];
+        var presort = q.length > 4 ? q[4] : "createdAt DESC";
         add({ kind: "RecordList", title: title, options: {
           moduleID: modulesByHandle[handle].moduleID, fields: fields, prefilter: prefilter, perPage: 5,
-          presort: "createdAt DESC", hideAddButton: true, hideImportButton: true,
+          presort: presort, hideAddButton: true, hideImportButton: true,
           hideConfigureFieldsButton: true, hideSearch: true, hideFiltering: true, hideSorting: false,
           selectable: false, recordDisplayOption: "sameTab", allowExport: false } },
           [(i % 2) * Math.floor(GRID_WIDTH / 2), y, Math.floor(GRID_WIDTH / 2), 48]);
@@ -1177,7 +1358,8 @@
     async function installNavigation(nsId, pageTitles, homeId, forwardRoleIds) {
       var order = pyJsonList(["Home"].concat(pageTitles));
       var script = fill(NAV_SCRIPT, { "__NS_ID__": nsId, "__SLUG__": NAMESPACE_SLUG, "__ORDER__": order });
-      var snippets = [{ name: "OwnFMS top navigation", enabled: true, script: script }];
+      var snippets = [{ name: "OwnFMS top navigation", enabled: true, script: script },
+        { name: "OwnFMS colour flags: due flag and priority", enabled: true, script: FLAGS_SCRIPT }];
       if (homeId && forwardRoleIds && forwardRoleIds.length) {
         var landing = fill(LANDING_SCRIPT, { "__ROLES__": pyJsonList(forwardRoleIds.map(String)),
           "__SLUG__": NAMESPACE_SLUG, "__HOME__": String(homeId) });
@@ -1375,6 +1557,10 @@
       }
       for (var handle of Object.keys(ids)) {
         var modId = ids[handle];
+        if (handle === "change_log") {      // read-only for everyone but administrators: only the history job writes it
+          for (var rr of [staff, manager, demo]) { await grantModule(rr, nsId, modId, ["read"]); }
+          continue;
+        }
         await grantModule(staff, nsId, modId, ["create", "read", "update"]);     // no delete anywhere
         await grantModule(manager, nsId, modId, handle === "grant" ? ["read", "update"] : ["read"]);
         await grantModule(demo, nsId, modId, ["read"]);
@@ -1430,14 +1616,253 @@
           ["reference_number", "organization", "status", "amount_requested"]],
          ["Upcoming board meetings", "board_meeting", "status = 'Scheduled'",
           ["title", "meeting_type", "meeting_date"]],
-         ["Requirements not yet received", "grantee_requirement", "status = 'Not started' OR status = 'Needs revision'",
-          ["title", "grant", "due_date", "status"]],
+         ["Needs attention", "grantee_requirement", "due_flag = 'Overdue' OR due_flag = 'Due this week'",
+          ["title", "grant", "due_date", "due_flag", "priority"], "due_date ASC"],
          ["Payments scheduled", "grant_payment", "status = 'Scheduled'",
-          ["grant", "amount", "scheduled_date", "status"]]],
+          ["grant", "amount", "scheduled_date", "status"]],
+         ["My tasks", "grantee_requirement", "owner = ${userID} AND status != 'Accepted' AND status != 'Waived'",
+          ["title", "grant", "due_date", "due_flag", "priority"], "due_date ASC"],
+         ["Budget by fiscal year", "fiscal_period", "", ["name", "budget", "awarded_total", "budget_remaining"], "name ASC"]],
         modules, charts, pageIds);
       await installNavigation(nsId, NAV_ORDER.map(function (h) { return SPECS[h].title; }), homeId,
         Object.keys(roles).map(function (k) { return roles[k]; }));
       return { modules: modules, homeId: homeId };
+    }
+
+    // ---------------------------------------------------------------------------
+    // Upkeep (upkeep.py): reference numbers, due flags, budget status, payments check, possible duplicates
+    // ---------------------------------------------------------------------------
+
+    // Every row of a list endpoint, following Corteza's page cursor.
+    async function pagesOf(path) {
+      var out = [], cursor = null;
+      for (;;) {
+        var sep = path.indexOf("?") >= 0 ? "&" : "?";
+        var resp = (await api("GET", path + (cursor ? sep + "pageCursor=" + pyQuote(cursor) : ""))).response;
+        (resp.set || []).forEach(function (x) { out.push(x); });
+        cursor = orObj(resp.filter).nextPage;
+        if (!cursor) { return out; }
+      }
+    }
+
+    function firstValues(rec) {
+      var out = {};
+      (rec.values || []).forEach(function (x) { if (!has(out, x.name)) { out[x.name] = has(x, "value") ? x.value : null; } });
+      return out;
+    }
+
+    function dueFlag(status, due, todayMs) {
+      if (status === "Accepted" || status === "Waived") { return "Done"; }
+      if (status === "Submitted") { return "In review"; }
+      if (!due) { return ""; }
+      var s = String(due).slice(0, 10).split("-");
+      var days = Math.round((Date.UTC(+s[0], +s[1] - 1, +s[2]) - todayMs) / 86400000);
+      if (days < 0) { return "Overdue"; }
+      if (days <= 7) { return "Due this week"; }
+      if (days <= 30) { return "Due in 30 days"; }
+      return "Later";
+    }
+
+    var NAME_NOISE = ["the", "inc", "llc", "ltd", "co", "corp", "corporation", "incorporated", "of", "and"];
+    function normName(text) {
+      var words = String(text || "").toLowerCase().replace(/[^a-z0-9 ]+/g, " ").split(/\s+/).filter(function (w) { return w; });
+      return words.filter(function (w) { return NAME_NOISE.indexOf(w) < 0; }).join(" ");
+    }
+    function domainOf(url) {
+      var dm = String(url || "").trim().toLowerCase().replace(/^[a-z]+:\/\//, "").split("/")[0];
+      return dm.indexOf("www.") === 0 ? dm.slice(4) : dm;
+    }
+    // Python's difflib.SequenceMatcher(None, a, b).ratio() for short strings (no junk): matching blocks by longest common run
+    function seqRatio(a, b) {
+      var b2j = {};
+      for (var j = 0; j < b.length; j++) { (b2j[b[j]] = b2j[b[j]] || []).push(j); }
+      function longest(alo, ahi, blo, bhi) {
+        var besti = alo, bestj = blo, bestsize = 0, j2len = {};
+        for (var i = alo; i < ahi; i++) {
+          var newj2len = {}, js2 = b2j[a[i]] || [];
+          for (var n = 0; n < js2.length; n++) {
+            var jj = js2[n];
+            if (jj < blo) { continue; }
+            if (jj >= bhi) { break; }
+            var k = (j2len[jj - 1] || 0) + 1;
+            newj2len[jj] = k;
+            if (k > bestsize) { besti = i - k + 1; bestj = jj - k + 1; bestsize = k; }
+          }
+          j2len = newj2len;
+        }
+        return [besti, bestj, bestsize];
+      }
+      var queue = [[0, a.length, 0, b.length]], matched = 0;
+      while (queue.length) {
+        var q = queue.pop();
+        var m = longest(q[0], q[1], q[2], q[3]);
+        if (m[2]) {
+          matched += m[2];
+          if (q[0] < m[0] && q[2] < m[1]) { queue.push([q[0], m[0], q[2], m[1]]); }
+          if (m[0] + m[2] < q[1] && m[1] + m[2] < q[3]) { queue.push([m[0] + m[2], q[1], m[1] + m[2], q[3]]); }
+        }
+      }
+      return a.length + b.length ? 2 * matched / (a.length + b.length) : 1;
+    }
+    function similarNames(a, b) {
+      if (!a || !b) { return false; }
+      if (a === b) { return true; }
+      if (Math.min(a.length, b.length) >= 8 && (a.indexOf(b) === 0 || b.indexOf(a) === 0)) { return true; }
+      return seqRatio(a, b) >= 0.9;
+    }
+
+    // Writes a record only with the values that changed; a value that is empty is removed.
+    async function upkeepSave(nsId, moduleId, rec, changes, dryRun) {
+      var keep = (rec.values || []).filter(function (x) { return !has(changes, x.name); });
+      var nu = keep.slice();
+      Object.keys(changes).forEach(function (k) {
+        var val = changes[k];
+        if (val !== null && val !== undefined && val !== "") { nu.push({ name: k, value: String(val) }); }
+      });
+      if (!dryRun) { await api("POST", "/compose/namespace/" + nsId + "/module/" + moduleId + "/record/" + rec.recordID, { values: nu }); }
+    }
+
+    async function upkeepRun(nsId, mods, opts) {
+      opts = opts || {};
+      var dry = !!opts.dryRun, quiet = !!opts.quiet;
+      var nowD = new Date();
+      var todayStr = nowD.toISOString().slice(0, 10);
+      var tp = todayStr.split("-");
+      var todayMs = Date.UTC(+tp[0], +tp[1] - 1, +tp[2]);
+      var path = function (handle) { return "/compose/namespace/" + nsId + "/module/" + mods[handle] + "/record/?limit=100"; };
+      var written = 0;
+      var tell = function (msg) { say("  " + msg); };
+      var COUNTED = ["Approved", "Active", "Closed"];
+
+      // 1. reference numbers
+      var prefix = options.referencePrefix || "OF";
+      var grants = await pagesOf(path("grant"));
+      var top = {};
+      var refRe = new RegExp("^" + prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "-(\\d{4})-(\\d+)$");
+      grants.forEach(function (g) {
+        var m = refRe.exec(firstValues(g).reference_number || "");
+        if (m) { top[m[1]] = Math.max(top[m[1]] || 0, parseInt(m[2], 10)); }
+      });
+      var byCreated = grants.slice().sort(function (x, y) {
+        var a = x.createdAt || "", b = y.createdAt || "";
+        return a < b ? -1 : a > b ? 1 : 0;
+      });
+      for (var g of byCreated) {
+        if (firstValues(g).reference_number) { continue; }
+        var year = (g.createdAt || todayStr).slice(0, 4);
+        top[year] = (top[year] || 0) + 1;
+        var ref = prefix + "-" + year + "-" + String(top[year]).padStart(3, "0");
+        tell("grant " + g.recordID + ": reference number " + ref);
+        await upkeepSave(nsId, mods.grant, g, { reference_number: ref }, dry);
+        written += 1;
+      }
+
+      // 2. due flags and default priority
+      for (var r of await pagesOf(path("grantee_requirement"))) {
+        var rv = firstValues(r);
+        var changes = {};
+        var flag = dueFlag(rv.status, rv.due_date, todayMs);
+        if (flag !== (rv.due_flag || "")) { changes.due_flag = flag; }
+        if (!rv.priority) { changes.priority = "Medium"; }
+        if (Object.keys(changes).length) {
+          tell("requirement '" + rv.title + "': " + Object.keys(changes).map(function (k) { return k + " = " + (changes[k] || "(blank)"); }).join(", "));
+          await upkeepSave(nsId, mods.grantee_requirement, r, changes, dry);
+          written += 1;
+        }
+      }
+
+      // 3. budget by fiscal year
+      var awarded = {};
+      grants.forEach(function (gg) {
+        var gv = firstValues(gg);
+        if (gv.fiscal_period && COUNTED.indexOf(gv.status) >= 0 && gv.amount_awarded) {
+          awarded[gv.fiscal_period] = (awarded[gv.fiscal_period] || 0) + parseFloat(gv.amount_awarded);
+        }
+      });
+      for (var fp of await pagesOf(path("fiscal_period"))) {
+        var fv = firstValues(fp);
+        var total = awarded[fp.recordID] || 0;
+        var budget = fv.budget ? parseFloat(fv.budget) : null;
+        var want = { awarded_total: total.toFixed(0) };
+        if (budget !== null) {
+          var left = budget - total;
+          want.budget_remaining = left.toFixed(0);
+          want.budget_status = left < 0 ? "Over budget" : left <= 0.1 * budget ? "Nearly spent" : "On track";
+        }
+        var fch = {};
+        Object.keys(want).forEach(function (k) {
+          var cur = fv[k], x = want[k];
+          var same = cur !== null && cur !== undefined && cur !== "" && (/^-?[\d.]+$/.test(x) ? parseFloat(cur) === parseFloat(x) : cur === x);
+          if (!same) { fch[k] = x; }
+        });
+        if (Object.keys(fch).length) {
+          tell("fiscal period " + fv.name + ": " + Object.keys(fch).map(function (k) { return k + " = " + fch[k]; }).join(", "));
+          await upkeepSave(nsId, mods.fiscal_period, fp, fch, dry);
+          written += 1;
+        }
+      }
+
+      // 4. do the payments add up to the award?
+      var paid = {};
+      for (var pay of await pagesOf(path("grant_payment"))) {
+        var pv = firstValues(pay);
+        if (pv.grant && pv.status !== "Cancelled" && pv.amount) { paid[pv.grant] = (paid[pv.grant] || 0) + parseFloat(pv.amount); }
+      }
+      for (var gr of grants) {
+        var grv = firstValues(gr);
+        var check = "";
+        if (COUNTED.indexOf(grv.status) >= 0 && grv.amount_awarded) {
+          var diff = (paid[gr.recordID] || 0) - parseFloat(grv.amount_awarded);
+          check = Math.abs(diff) < 0.5 ? "Payments match" : diff < 0 ? "Payments short" : "Payments exceed award";
+        }
+        if (check !== (grv.payment_check || "")) {
+          tell("grant " + (grv.reference_number || gr.recordID) + ": payment_check = " + (check || "(blank)"));
+          await upkeepSave(nsId, mods.grant, gr, { payment_check: check }, dry);
+          written += 1;
+        }
+      }
+
+      // 5. possible duplicates: near misses that the exact-repeat rules let through
+      var contacts = await pagesOf(path("contact"));
+      var byPerson = {};
+      contacts.forEach(function (c) {
+        var cv = firstValues(c);
+        var nm = normName((cv.first_name || "") + " " + (cv.last_name || ""));
+        var org = cv.organization || "";
+        if (nm && org) { var key = JSON.stringify([nm, org]); (byPerson[key] = byPerson[key] || []).push(c.recordID); }
+      });
+      var flaggedC = new Set();
+      Object.keys(byPerson).forEach(function (k) { if (byPerson[k].length > 1) { byPerson[k].forEach(function (id) { flaggedC.add(id); }); } });
+      for (var c of contacts) {
+        var wantC = flaggedC.has(c.recordID) ? "Possible duplicate" : "";
+        var cvv = firstValues(c);
+        if (wantC !== (cvv.duplicate_check || "")) {
+          tell("contact " + cvv.first_name + " " + cvv.last_name + ": duplicate_check = " + (wantC || "(blank)"));
+          await upkeepSave(nsId, mods.contact, c, { duplicate_check: wantC }, dry);
+          written += 1;
+        }
+      }
+      var orgs = await pagesOf(path("organization"));
+      var info = orgs.map(function (o) { var ov = firstValues(o); return [o.recordID, normName(ov.name), domainOf(ov.website)]; });
+      var flaggedO = new Set();
+      for (var i = 0; i < info.length; i++) {
+        for (var j = i + 1; j < info.length; j++) {
+          if (similarNames(info[i][1], info[j][1]) || (info[i][2] && info[i][2] === info[j][2])) { flaggedO.add(info[i][0]); flaggedO.add(info[j][0]); }
+        }
+      }
+      for (var o of orgs) {
+        var wantO = flaggedO.has(o.recordID) ? "Possible duplicate" : "";
+        var ovv = firstValues(o);
+        if (wantO !== (ovv.duplicate_check || "")) {
+          tell("organization " + ovv.name + ": duplicate_check = " + (wantO || "(blank)"));
+          await upkeepSave(nsId, mods.organization, o, { duplicate_check: wantO }, dry);
+          written += 1;
+        }
+      }
+      if (written || !quiet) {
+        say(nowD.toISOString().replace("T", " ").slice(0, 19) + "Z upkeep: " + written + " records " + (dry ? "would be " : "") + "updated");
+      }
+      return written;
     }
 
     // ---------------------------------------------------------------------------
@@ -1449,12 +1874,26 @@
       return rows.length > 0;
     }
 
+    // The id of a demo sign-in, or null on a server that does not have it (then the record simply has no owner).
+    async function userId(email) {
+      var rows;
+      try { rows = (await api("GET", "/system/users/?query=" + pyQuote(email) + "&limit=5")).response.set; } catch (e) { return null; }
+      var hit = rows.find(function (u) { return String(u.email || "").toLowerCase() === email.toLowerCase(); });
+      return hit ? hit.userID : null;
+    }
+
     async function loadSampleData(nsId, ids) {
       if (await sampleAlreadyLoaded(nsId, ids.program)) {
         say("Sample data already present, skipped.");
         return false;
       }
       var mk = function (mod, vals) { return createRecord(nsId, ids[mod], vals); };
+      var staff = await userId("staff@ownfms.example"), manager = await userId("manager@ownfms.example");
+      var nowL = new Date();       // due dates move with the day the sample data is loaded (local date)
+      var soon = function (days) {
+        var t = new Date(nowL.getFullYear(), nowL.getMonth(), nowL.getDate() + days);
+        return t.getFullYear() + "-" + String(t.getMonth() + 1).padStart(2, "0") + "-" + String(t.getDate()).padStart(2, "0");
+      };
 
       // ---- fiscal years (July to June)
       var fy26 = await mk("fiscal_period", [v("name", "FY2026"), v("start_date", d("2025-07-01")), v("end_date", d("2026-06-30")),
@@ -1473,15 +1912,15 @@
         v("description", "Food access, nutrition and local food systems.")]);
 
       // ---- organizations and contacts
-      async function org(name, typ, phone, address, site, people) {
-        var oid = await mk("organization", [v("name", name), v("type", typ), v("status", "Active"), v("phone", phone),
+      async function org(name, typ, phone, address, site, people, ein) {
+        var oid = await mk("organization", [v("name", name), v("ein", ein), v("type", typ), v("status", "Active"), v("phone", phone),
           v("address", address), v("website", site)]);
         var cids = [];
         for (var p of people) {
           cids.push(await mk("contact", [v("first_name", p[0]), v("last_name", p[1]), v("title", p[2]),
             v("email", p[3]), v("organization", oid)]));
         }
-        var upd = [v("name", name), v("type", typ), v("status", "Active"), v("phone", phone), v("address", address),
+        var upd = [v("name", name), v("ein", ein), v("type", typ), v("status", "Active"), v("phone", phone), v("address", address),
           v("website", site), v("primary_contact", cids[0])];
         await api("POST", "/compose/namespace/" + nsId + "/module/" + ids.organization + "/record/" + oid, { values: upd });
         return [oid, cids];
@@ -1491,28 +1930,28 @@
       r = await org("Riverbend Learning Center", "Grantee", "(555) 010-1101", "14 Mill Street, Riverbend",
         "https://riverbend.example.org",
         [["Maya", "Okafor", "Executive Director", "maya.okafor@riverbend.example.org"],
-         ["Daniel", "Reyes", "Program Manager", "daniel.reyes@riverbend.example.org"]]);
+         ["Daniel", "Reyes", "Program Manager", "daniel.reyes@riverbend.example.org"]], "00-0001101");
       var riverbend = r[0], riverbendC = r[1];
       r = await org("Oakridge Family Clinic", "Grantee", "(555) 010-1102", "220 Oak Ridge Road, Oakridge",
         "https://oakridgeclinic.example.org",
-        [["Priya", "Nair", "Clinic Director", "priya.nair@oakridgeclinic.example.org"]]);
+        [["Priya", "Nair", "Clinic Director", "priya.nair@oakridgeclinic.example.org"]], "00-0001102");
       var oakridge = r[0], oakridgeC = r[1];
       r = await org("Harvest Table Pantry", "Grantee", "(555) 010-1103", "9 Market Lane, Fairview",
         "https://harvesttable.example.org",
         [["Tomas", "Lindqvist", "Director", "tomas.lindqvist@harvesttable.example.org"],
-         ["Aisha", "Bello", "Operations Lead", "aisha.bello@harvesttable.example.org"]]);
+         ["Aisha", "Bello", "Operations Lead", "aisha.bello@harvesttable.example.org"]], "00-0001103");
       var harvest = r[0], harvestC = r[1];
       r = await org("Lakeshore Youth Arts", "Prospective grantee", "(555) 010-1104", "3 Harbor Walk, Lakeshore",
         "https://lakeshorearts.example.org",
-        [["Chen", "Wu", "Founder", "chen.wu@lakeshorearts.example.org"]]);
+        [["Chen", "Wu", "Founder", "chen.wu@lakeshorearts.example.org"]], "00-0001104");
       var lakeshore = r[0], lakeshoreC = r[1];
       r = await org("Greenway Housing Partners", "Partner", "(555) 010-1105", "77 Elm Court, Greenway",
         "https://greenwayhousing.example.org",
-        [["Sofia", "Marin", "Partnerships Lead", "sofia.marin@greenwayhousing.example.org"]]);
+        [["Sofia", "Marin", "Partnerships Lead", "sofia.marin@greenwayhousing.example.org"]], "00-0001105");
       var greenway = r[0], greenwayC = r[1];
       r = await org("Summit Literacy Alliance", "Grantee", "(555) 010-1106", "501 Summit Avenue, Highland",
         "https://summitliteracy.example.org",
-        [["James", "Whitfield", "Executive Director", "james.whitfield@summitliteracy.example.org"]]);
+        [["James", "Whitfield", "Executive Director", "james.whitfield@summitliteracy.example.org"]], "00-0001106");
       var summit = r[0], summitC = r[1];
 
       // ---- board meetings
@@ -1543,7 +1982,7 @@
           [v("start_date", d("2026-07-01")), v("end_date", d("2029-06-30"))]));
 
       // ---- grants
-      async function grantRec(ref, purpose, orgId, contacts, program, init, fy, req, awarded, start, end, status, approved, meeting, notes) {
+      async function grantRec(ref, purpose, orgId, contacts, program, init, fy, req, awarded, start, end, status, approved, meeting, notes, owner) {
         var vals = [v("reference_number", ref), v("purpose", purpose), v("organization", orgId)]
           .concat(mv("contacts", contacts),
             [v("program", program), v("fiscal_period", fy), v("amount_requested", String(req)),
@@ -1553,30 +1992,31 @@
         if (approved) { vals.push(v("approved_date", d(approved))); }
         if (meeting) { vals.push(v("board_meeting", meeting)); }
         if (notes) { vals.push(v("decision_notes", notes)); }
+        if (owner) { vals.push(v("owner", owner)); }
         return mk("grant", vals);
       }
 
       var g1 = await grantRec("OF-2026-001", "Expand the family reading program to three new schools.", riverbend, riverbendC.slice(0, 1), pLearn,
         iRead, fy27, 60000, 60000, "2026-10-01", "2027-09-30", "Active", "2026-09-17", mFall,
-        "Approved in full. Strong track record with the first cohort.");
+        "Approved in full. Strong track record with the first cohort.", staff);
       var g2 = await grantRec("OF-2026-002", "Mobile clinic days in two outlying neighborhoods.", oakridge, oakridgeC, pHealth,
         iStart, fy27, 85000, 70000, "2026-10-01", "2027-09-30", "Active", "2026-09-17", mFall,
-        "Approved at a reduced amount; one clinic day per week instead of two.");
+        "Approved at a reduced amount; one clinic day per week instead of two.", manager);
       var g3 = await grantRec("OF-2026-003", "Cold storage and a delivery van for the pantry.", harvest, harvestC.slice(0, 1), pFood,
         iStart, fy27, 45000, 45000, "2026-11-01", "2027-10-31", "Approved", "2026-09-17", mFall,
-        "Approved. Funds released in two installments.");
+        "Approved. Funds released in two installments.", staff);
       await grantRec("OF-2026-004", "After-school arts and literacy workshops.", lakeshore, lakeshoreC, pLearn,
-        null, fy27, 30000, null, "2027-01-01", "2027-12-31", "Under Review");
+        null, fy27, 30000, null, "2027-01-01", "2027-12-31", "Under Review", undefined, undefined, undefined, staff);
       await grantRec("OF-2026-005", "Summer reading camp for 200 children.", summit, summitC, pLearn,
-        iRead, fy27, 52000, null, "2027-06-01", "2027-08-31", "Submitted");
+        iRead, fy27, 52000, null, "2027-06-01", "2027-08-31", "Submitted", undefined, undefined, undefined, manager);
       await grantRec("OF-2026-006", "Nutrition education for new parents.", oakridge, oakridgeC, pHealth,
-        iStart, fy28, 28000, null, "2027-07-01", "2028-06-30", "Draft");
+        iStart, fy28, 28000, null, "2027-07-01", "2028-06-30", "Draft", undefined, undefined, undefined, staff);
       await grantRec("OF-2026-007", "Community garden build-out.", greenway, greenwayC, pFood,
         null, fy27, 40000, null, "2026-11-01", "2027-10-31", "Declined", "2026-09-17", mFall,
-        "Declined. Outside current program priorities; invited to reapply next cycle.");
+        "Declined. Outside current program priorities; invited to reapply next cycle.", manager);
       var g8 = await grantRec("OF-2025-009", "Teacher training in early literacy.", summit, summitC, pLearn,
         null, fy26, 38000, 38000, "2025-09-01", "2026-06-30", "Closed", "2025-05-15", mSpring,
-        "Completed and closed. Final report accepted.");
+        "Completed and closed. Final report accepted.", manager);
 
       // ---- payments
       async function pay(g, amount, sched, paid, status, fy, note) {
@@ -1596,25 +2036,28 @@
       await pay(g8, 19000, "2026-02-01", "2026-02-03", "Released", fy26, "Second installment");
 
       // ---- requirements
-      async function req(g, title, typ, due, status, fy, done) {
+      async function req(g, title, typ, due, status, fy, done, priority, owner) {
         var vals = [v("grant", g), v("title", title), v("requirement_type", typ), v("due_date", d(due)),
-          v("status", status), v("fiscal_period", fy)];
+          v("status", status), v("fiscal_period", fy), v("priority", priority || "Medium")];
         if (done) { vals.push(v("completed_date", d(done))); }
+        if (owner) { vals.push(v("owner", owner)); }
         await mk("grantee_requirement", vals);
       }
-      await req(g1, "Signed grant agreement", "Documentation", "2026-10-01", "Accepted", fy27, "2026-09-28");
-      await req(g1, "Interim narrative report", "Report", "2027-03-15", "Not started", fy27);
-      await req(g1, "Final financial report", "Report", "2027-10-31", "Not started", fy27);
-      await req(g2, "Signed grant agreement", "Documentation", "2026-10-01", "Accepted", fy27, "2026-09-30");
-      await req(g2, "Clinic schedule for the first quarter", "Deliverable", "2026-10-30", "Not started", fy27);
-      await req(g2, "Interim impact report", "Report", "2027-03-31", "Not started", fy27);
-      await req(g3, "Signed grant agreement", "Documentation", "2026-10-15", "Submitted", fy27, "2026-10-01");
-      await req(g3, "Proof of equipment purchase", "Deliverable", "2027-02-28", "Not started", fy27);
-      await req(g8, "Final narrative report", "Report", "2026-07-31", "Accepted", fy26, "2026-07-20");
-      await req(g8, "Final financial report", "Report", "2026-07-31", "Accepted", fy26, "2026-07-22");
+      await req(g1, "Signed grant agreement", "Documentation", "2026-10-01", "Accepted", fy27, "2026-09-28", undefined, staff);
+      await req(g1, "Interim narrative report", "Report", "2027-03-15", "Not started", fy27, undefined, "Low", staff);
+      await req(g1, "Final financial report", "Report", "2027-10-31", "Not started", fy27, undefined, "Low", manager);
+      await req(g2, "Signed grant agreement", "Documentation", "2026-10-01", "Accepted", fy27, "2026-09-30", undefined, staff);
+      await req(g2, "Clinic schedule for the first quarter", "Deliverable", soon(5), "Not started", fy27, undefined, "High", staff);
+      await req(g2, "Interim impact report", "Report", "2027-03-31", "Not started", fy27, undefined, undefined, manager);
+      await req(g3, "Signed grant agreement", "Documentation", soon(-3), "Needs revision", fy27, undefined, "High", manager);
+      await req(g3, "Proof of equipment purchase", "Deliverable", soon(24), "Not started", fy27, undefined, undefined, staff);
+      await req(g8, "Final narrative report", "Report", "2026-07-31", "Accepted", fy26, "2026-07-20", undefined, manager);
+      await req(g8, "Final financial report", "Report", "2026-07-31", "Accepted", fy26, "2026-07-22", undefined, manager);
 
       say("Sample data loaded: 3 programs, 6 organizations, 8 contacts, 2 initiatives, 3 fiscal years, " +
         "3 board meetings, 8 grants, 8 payments, 10 requirements");
+      // fill in the calculated fields straight away (due flags, budget by fiscal year); a scheduled job keeps them current
+      await upkeepRun(nsId, ids, { quiet: true });
       return true;
     }
 
@@ -1635,7 +2078,7 @@
         var h = handle || slugify(name);
         mods[h] = { name: name, fields: fields.slice() };
         return "id_" + h;
-      }, async function (ns, mid, f) { mods[mid.slice(3)].fields.push(f); });
+      }, async function (ns, mid, f) { mods[mid.slice(3)].fields.push(f); }, async function () {}, async function () {});
       return mods;
     }
 
@@ -1675,7 +2118,7 @@
       (await api("GET", "/compose/namespace/" + nsId + "/module/")).response.set.forEach(function (m) { have[m.handle] = m; });
       var wantKeys = Object.keys(want);
       var missingMods = wantKeys.filter(function (k) { return !has(have, k); }).sort();
-      check(!missingMods.length, "all nine modules exist", "missing " + JSON.stringify(missingMods));
+      check(!missingMods.length, "all nine modules and the change log exist", "missing " + JSON.stringify(missingMods));
       var ids = {};
       for (var handle of wantKeys) {
         var w = want[handle];
@@ -1740,7 +2183,9 @@
       for (var h3 of wantKeys) {
         if (has(ids, h3)) {
           var fm = (await api("GET", "/compose/namespace/" + nsId + "/module/" + ids[h3])).response.fields;
-          var bad = fm.filter(function (x) { return x.kind === "DateTime" && orObj(x.options).format !== DATE_FORMAT; }).map(function (x) { return x.name; });
+          var bad = fm.filter(function (x) {
+            return x.kind === "DateTime" && orObj(x.options).format !== (orObj(x.options).onlyDate ? DATE_FORMAT : DATETIME_FORMAT);
+          }).map(function (x) { return x.name; });
           check(!bad.length, h3 + ": dates use the readable format", JSON.stringify(bad));
         }
       }
@@ -1827,7 +2272,7 @@
         var fy = await make("fiscal_period", [v("name", P + " Fiscal Period"), v("start_date", d("2030-07-01")),
           v("end_date", d("2031-06-30")), v("status", "Planned"), v("budget", "1000")]);
         var prog = await make("program", [v("name", P + " Program"), v("status", "Active")]);
-        var orgVals = [v("name", P + " Organization"), v("type", "Grantee"), v("status", "Active")];
+        var orgVals = [v("name", P + " Organization"), v("ein", "00-0009999"), v("type", "Grantee"), v("status", "Active")];
         var org = await make("organization", orgVals);
         var contact = await make("contact", [v("first_name", "Test"), v("last_name", P + " Contact"), v("email", "test@ownfms.example"),
           v("organization", org)]);
@@ -1885,6 +2330,101 @@
           check(n >= 3, "5. change history holds the edits", n + " revisions");
         } catch (e) {
           check(false, "5. change history holds the edits", String(e.message).slice(0, 140));
+        }
+
+
+        // everyday helpers: duplicates, due flags, budget by fiscal year, automatic reference numbers
+        var refused = async function (handle, vals) {
+          try {
+            var r = (await api("POST", recPath(handle), { values: vals })).response;
+            await api("DELETE", recPath(handle) + r.recordID);
+            return false;
+          } catch (e) {
+            return String(e && e.message).indexOf("duplication_error") >= 0;
+          }
+        };
+        check(await refused("organization", orgVals), "7. a second organization with the same name is refused");
+        check(await refused("organization", [v("name", P + " Other Organization"), v("ein", "00-0009999")]),
+          "7. a second organization with the same EIN (different name) is refused");
+        var blankOrgs = [];
+        try {
+          for (var n1 of [1, 2]) {
+            var ro = (await api("POST", recPath("organization"), { values: [v("name", P + " NoEIN " + n1)] })).response;
+            blankOrgs.push(ro.recordID);
+          }
+          check(blankOrgs.length === 2, "7. two organizations without an EIN are both accepted");
+        } catch (e) {
+          check(false, "7. two organizations without an EIN are both accepted", String(e.message).slice(0, 140));
+        } finally {
+          for (var oid of blankOrgs) { await api("DELETE", recPath("organization") + oid); }
+        }
+        check(await refused("grant", grantVals), "7. a second grant with the same reference number is refused");
+        check(await refused("contact", [v("first_name", "Dup"), v("last_name", P + " Dup Contact"), v("email", "test@ownfms.example")]),
+          "7. a second contact with the same email address is refused");
+        var blank = [];
+        try {
+          for (var n2 of [1, 2]) {
+            var rc = (await api("POST", recPath("contact"), { values: [v("first_name", "NoMail"), v("last_name", P + " NoMail " + n2)] })).response;
+            blank.push(rc.recordID);
+          }
+          check(blank.length === 2, "7. two contacts without an email address are both accepted");
+        } catch (e) {
+          check(false, "7. two contacts without an email address are both accepted", String(e.message).slice(0, 140));
+        }
+        for (var cid of blank) { await api("DELETE", recPath("contact") + cid); }
+        var yd = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+        var yesterday = yd.getFullYear() + "-" + pad2(yd.getMonth() + 1) + "-" + pad2(yd.getDate());
+        await update("grantee_requirement", [v("grant", grantId), v("title", P + " Requirement"), v("requirement_type", "Report"),
+          v("due_date", d(yesterday)), v("status", "Not started"), v("fiscal_period", fy)],
+          "7. a requirement is saved with a due date in the past");
+        var auto = (await api("POST", recPath("grant"), { values: [
+          v("purpose", P + " grant without a number"), v("organization", org)] })).response.recordID;
+        try {
+          await upkeepRun(nsId, ids, { quiet: true });
+          var reqV = valuesOf((await api("GET", recPath("grantee_requirement") + req)).response);
+          check((reqV.due_flag || [null])[0] === "Overdue", "7. the requirement shows as Overdue", String(reqV.due_flag));
+          check((reqV.priority || [null])[0] === "Medium", "7. a requirement without a priority gets Medium", String(reqV.priority));
+          var fyV = valuesOf((await api("GET", recPath("fiscal_period") + fy)).response);
+          check(parseFloat((fyV.awarded_total || ["-1"])[0]) === 4000 && parseFloat((fyV.budget_remaining || ["-1"])[0]) === -3000,
+            "7. the fiscal year shows what is awarded and what is left", String(fyV.awarded_total) + " " + String(fyV.budget_remaining));
+          var autoV = valuesOf((await api("GET", recPath("grant") + auto)).response);
+          var ref = (autoV.reference_number || [""])[0];
+          check(/^[A-Z]+-\d{4}-\d+$/.test(ref), "7. a grant saved without a number gets the next one", ref);
+          check((autoV.status || [null])[0] === "Draft", "8. a new grant starts as Draft", String(autoV.status));
+          check((fyV.budget_status || [null])[0] === "Over budget", "8. an overspent fiscal year shows Over budget", String(fyV.budget_status));
+          var grantV = valuesOf((await api("GET", recPath("grant") + grantId)).response);
+          check(["Payments match", "Payments short", "Payments exceed award"].indexOf((grantV.payment_check || [""])[0]) >= 0,
+            "8. an approved grant gets a payments check", String(grantV.payment_check));
+          try {
+            var rb = (await api("POST", recPath("organization"), { values: [v("name", P + " Bad EIN Org"), v("ein", "12345")] })).response;
+            await api("DELETE", recPath("organization") + rb.recordID);
+            check(false, "8. an EIN in the wrong format is refused", "it was saved");
+          } catch (e) {
+            check(String(e.message).indexOf("EIN looks like") >= 0, "8. an EIN in the wrong format is refused", String(e.message).slice(0, 140));
+          }
+          var extra = [];
+          try {
+            for (var nm of [P + " Alpha Foundation", P + " Alpha Foundation Inc."]) {
+              extra.push(["organization", (await api("POST", recPath("organization"), { values: [v("name", nm)] })).response.recordID]);
+            }
+            for (var n3 of [1, 2]) {
+              extra.push(["contact", (await api("POST", recPath("contact"), { values: [
+                v("first_name", "Twin"), v("last_name", P + " Person"), v("organization", org)] })).response.recordID]);
+            }
+            await upkeepRun(nsId, ids, { quiet: true });
+            var flags = [];
+            for (var ex of extra) {
+              flags.push((valuesOf((await api("GET", recPath(ex[0]) + ex[1])).response).duplicate_check || [""])[0]);
+            }
+            check(sameJson(flags.slice(0, 2), ["Possible duplicate", "Possible duplicate"]),
+              "8. two organizations with near-identical names are marked Possible duplicate", JSON.stringify(flags.slice(0, 2)));
+            check(sameJson(flags.slice(2), ["Possible duplicate", "Possible duplicate"]),
+              "8. two contacts with the same name at one organization are marked Possible duplicate", JSON.stringify(flags.slice(2)));
+          } finally {
+            for (var ex2 of extra) { await api("DELETE", recPath(ex2[0]) + ex2[1]); }
+          }
+        } finally {
+          await api("DELETE", recPath("grant") + auto);
         }
 
         // permissions, only when auth clients for those users were provided
@@ -1988,7 +2528,7 @@
       skippedOperations.clear();
       say("Building OwnFMS.works on " + web);
       var nsId = await ensureNamespace();
-      var ids = await createModules(nsId, ensureModule, addField);
+      var ids = await createModules(nsId, ensureModule, addField, tuneModule, setDedup);
       var charts = await createCharts(nsId, ids);
       var roles = await createRolesAndAccess(nsId, ids);
       var built = await buildPages(nsId, ids, charts, roles);

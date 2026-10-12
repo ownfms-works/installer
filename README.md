@@ -3,14 +3,15 @@
 **Own your system. Own your data. Own your future.**
 
 This is the web page behind <https://ownfms-works.github.io/installer/>. It sets up the open-source
-[OwnFMS.works](https://ownfms.works) base configuration (nine grant-management modules) on a Corteza server that
+[OwnFMS.works](https://ownfms.works) base configuration (nine linked grant-management modules and a change log) on a Corteza server that
 **you** control. You paste your server address and a setup key, press **Install**, and the page builds everything.
 
 The whole installer is one readable file, `index.html`. There are no outside scripts, no analytics and no tracking.
 
 ## How it works, and what it does with your key
 
-- The page talks **only to your own Corteza server**. It makes no other network requests.
+- The page talks **only to your own Corteza server**. It makes no other network requests. (It has two plain links to the
+  demo page, which open only if you click them.)
 - Your client ID and client secret stay in the page's memory. They are not stored (no cookies, no local storage, no
   address bar) and they are never sent to us or to anyone but your server.
 - When the install finishes the page can **revoke the setup key for you**: it disables the key, deletes it, and then
@@ -25,7 +26,7 @@ Please check it. Two simple ways:
 2. **Compare the checksum.** The SHA-256 of `index.html` is in `SHA256SUMS`:
 
    ```
-   4403e5bec37ec0e80fb70809656167bfb8ce25d66b541844279904789e25fe70  index.html
+   5043c4462aeafa6560c122b2ec26b29fbc9c88765f6eef148a9229db9c54d5e2  index.html
    ```
 
    To check what the live site serves, run this and compare the result with `SHA256SUMS`:
