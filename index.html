@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https: http://localhost:* http://127.0.0.1:*; img-src data:; frame-src https://player.vimeo.com https://mailchi.mp; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https: http://localhost:* http://127.0.0.1:*; img-src data:; frame-src https://player.vimeo.com; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <meta name="color-scheme" content="light">
@@ -30,9 +30,15 @@
   details.video summary { cursor: pointer; padding: 14px 16px; font-weight: 700; color: var(--brand); display: flex; gap: 8px 12px; align-items: baseline; flex-wrap: wrap; }
   details.video summary span { font-weight: 400; color: var(--muted); font-size: 0.92rem; }
   details.video .player { position: relative; aspect-ratio: 16 / 9; margin: 0 16px; border-radius: 10px; overflow: hidden; background: #000; }
-  details.video .player.tall { aspect-ratio: auto; height: 840px; background: #fff; border: 1px solid var(--line); }
   details.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   details.video .hint { margin: 10px 16px 14px; }
+  .whoami h2 span { font-weight: 400; color: var(--muted); font-size: 0.92rem; }
+  .whoami .trio { display: grid; grid-template-columns: 1fr 1fr 1.6fr; gap: 0 12px; }
+  .whoami label { margin-top: 8px; }
+  .whoami .check { margin-top: 12px; }
+  .whoami .hint { margin: 8px 0 0; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  @media (max-width: 560px) { .whoami .trio { grid-template-columns: 1fr; } }
   .card { border-top: 3px solid var(--accent); }
   h2 { font-size: 1.15rem; margin: 0 0 8px; }
   p { margin: 0 0 12px; }
@@ -45,7 +51,7 @@
   [hidden] { display: none !important; }
   label { display: block; font-weight: 600; margin: 14px 0 4px; }
   .hint { color: var(--muted); font-size: 0.9rem; margin: 2px 0 0; }
-  input[type="text"], input[type="password"], input[type="url"] {
+  input[type="text"], input[type="password"], input[type="url"], input[type="email"] {
     width: 100%; font: inherit; padding: 10px 12px; border: 1px solid #8a948f; border-radius: 8px; background: #fff; color: var(--ink); }
   input:focus-visible, button:focus-visible, summary:focus-visible, a:focus-visible, pre:focus-visible {
     outline: 3px solid #1a73e8; outline-offset: 2px; }
@@ -101,11 +107,17 @@
     <p class="hint">The video loads from Vimeo only when you open this box, in a sandboxed frame, and nothing you type on this page is shared with it. Prefer to read? <a href="https://ownfms-works.github.io/demo/install/" target="_blank" rel="noopener noreferrer">The same steps in writing</a>.</p>
   </details>
 
-  <details class="video" id="signup">
-    <summary>Tell us who you are <span>so we can help if you get stuck. You can skip it.</span></summary>
-    <div class="player tall" id="signupSlot" data-signup="https://mailchi.mp/a11993824583/ownfmsworks-installer-sign-up"></div>
-    <p class="hint">This form is Mailchimp's, in a sandboxed frame. Your details go to Mailchimp, never to this page, and the setup key never goes with them.</p>
-  </details>
+  <div class="card whoami" id="whoami" data-endpoint="https://script.google.com/macros/s/AKfycbxMxDde_65-kZCb1gVGdqau8hZ9fhRKOsp80t3x5D8yAj5uv9jTub5gsznblBKobIVf/exec">
+    <h2>Tell us who you are <span>(optional)</span></h2>
+    <div class="trio">
+      <div><label for="suFirst">First name</label><input id="suFirst" type="text" autocomplete="given-name"></div>
+      <div><label for="suLast">Last name</label><input id="suLast" type="text" autocomplete="family-name"></div>
+      <div><label for="suEmail">Email</label><input id="suEmail" type="email" autocomplete="email" inputmode="email" spellcheck="false"></div>
+    </div>
+    <div class="hp" aria-hidden="true"><label for="suWebsite">Leave this empty</label><input id="suWebsite" type="text" tabindex="-1" autocomplete="off"></div>
+    <label class="check" for="suUpdates"><input id="suUpdates" type="checkbox"><span>Also send me updates</span></label>
+    <p class="hint">If you add your email, it is passed to Mailchimp when you press Install, so we can help with your installation. Tick the box to also get updates. You can unsubscribe at any time. Nothing is sent if you leave it empty, and the setup key never goes with it.</p>
+  </div>
 
   <div class="notice" id="fileNote" hidden role="note">
     <p><strong>This page was opened from a file on your computer.</strong> Most servers refuse requests from such a page, so the connection may fail. If it does, put this file on an https address you control, or use the Python scripts or the Colab notebook instead.</p>
@@ -2670,8 +2682,8 @@
 </script>
 <script>
 (function () {
-  // the two frames (the how-to video and the sign-up form) are created only when their box is open: both boxes start
-  // closed, so nothing is requested from Vimeo or Mailchimp until its box is opened
+  // the how-to video frame is created only when its box is open: the box starts closed, so nothing is requested from Vimeo
+  // until it is opened
   function wire(boxId, slotId, attr, prefix, title, sandbox) {
     var box = document.getElementById(boxId), slot = document.getElementById(slotId);
     if (!box || !slot) { return; }
@@ -2692,8 +2704,6 @@
   }
   wire("howto", "videoSlot", "data-video", "https://player.vimeo.com/video/", "OwnFMS.works: install it on your own server",
     "allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox");
-  wire("signup", "signupSlot", "data-signup", "https://mailchi.mp/", "OwnFMS.works installer sign-up",
-    "allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox");
 })();
 </script>
 <script>
@@ -2867,6 +2877,21 @@
     });
   });
 
+  // the optional "Tell us who you are" box: when Install is pressed, the three fields go to our small relay, which adds the
+  // contact to Mailchimp. Nothing is sent without a valid email address, and never anything else from this page.
+  var signupSent = "";
+  function sendSignup() {
+    var url = document.getElementById("whoami").getAttribute("data-endpoint") || "";
+    var email = document.getElementById("suEmail").value.trim();
+    if (url.indexOf("https://script.google.com/macros/s/") !== 0 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || signupSent === email) { return; }
+    signupSent = email;
+    var body = new URLSearchParams({
+      first: document.getElementById("suFirst").value.trim(), last: document.getElementById("suLast").value.trim(), email: email,
+      updates: document.getElementById("suUpdates").checked ? "yes" : "", website: document.getElementById("suWebsite").value
+    });
+    try { fetch(url, { method: "POST", mode: "no-cors", body: body, keepalive: true }).catch(function () {}); } catch (e) { /* the install goes on */ }
+  }
+
   els.btnInstall.addEventListener("click", function () {
     if (busy) { return; }
     if (!els.dedicated.checked) {
@@ -2881,6 +2906,7 @@
       setStatus("Please confirm that you accept the software is provided as is.");
       return;
     }
+    sendSignup();
     run(els.btnInstall, async function () {
       resetLog();
       var i = getInstaller();
