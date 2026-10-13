@@ -32,6 +32,8 @@
   details.video .player { position: relative; aspect-ratio: 16 / 9; margin: 0 16px; border-radius: 10px; overflow: hidden; background: #000; }
   details.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   details.video .hint { margin: 10px 16px 14px; }
+  .whoami .req { color: #a32a1d; font-weight: 700; }
+  .sr { position: absolute; left: -9999px; }
   .whoami .sub { margin: 0 0 4px; color: var(--muted); }
   .whoami h2 span { font-weight: 400; color: var(--muted); font-size: 0.92rem; }
   .whoami .trio { display: grid; grid-template-columns: 1fr 1fr 1.6fr; gap: 0 12px; }
@@ -110,11 +112,11 @@
 
   <div class="card whoami" id="whoami" data-endpoint="https://script.google.com/macros/s/AKfycbxMxDde_65-kZCb1gVGdqau8hZ9fhRKOsp80t3x5D8yAj5uv9jTub5gsznblBKobIVf/exec">
     <h2>Tell us who you are</h2>
-    <p class="sub">We would love to know who you are, so we can help you along the way.</p>
+    <p class="sub">We would love to know who you are, so we can help you along the way. <span class="req">*</span> Required.</p>
     <div class="trio">
-      <div><label for="suFirst">First name</label><input id="suFirst" type="text" autocomplete="given-name"></div>
-      <div><label for="suLast">Last name</label><input id="suLast" type="text" autocomplete="family-name"></div>
-      <div><label for="suEmail">Email</label><input id="suEmail" type="email" autocomplete="email" inputmode="email" spellcheck="false"></div>
+      <div><label for="suFirst">First name <span class="req" aria-hidden="true">*</span><span class="sr">(required)</span></label><input id="suFirst" type="text" autocomplete="given-name" required aria-required="true"></div>
+      <div><label for="suLast">Last name <span class="req" aria-hidden="true">*</span><span class="sr">(required)</span></label><input id="suLast" type="text" autocomplete="family-name" required aria-required="true"></div>
+      <div><label for="suEmail">Email <span class="req" aria-hidden="true">*</span><span class="sr">(required)</span></label><input id="suEmail" type="email" autocomplete="email" inputmode="email" spellcheck="false" required aria-required="true"></div>
     </div>
     <div class="hp" aria-hidden="true"><label for="suWebsite">Leave this empty</label><input id="suWebsite" type="text" tabindex="-1" autocomplete="off"></div>
     <label class="check" for="suUpdates"><input id="suUpdates" type="checkbox"><span>Also send me updates (optional)</span></label>
