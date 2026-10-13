@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https: http://localhost:* http://127.0.0.1:*; img-src data:; frame-src https://player.vimeo.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https: http://localhost:* http://127.0.0.1:*; img-src data:; frame-src https://player.vimeo.com https://mailchi.mp; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <meta name="color-scheme" content="light">
@@ -30,6 +30,7 @@
   details.video summary { cursor: pointer; padding: 14px 16px; font-weight: 700; color: var(--brand); display: flex; gap: 8px 12px; align-items: baseline; flex-wrap: wrap; }
   details.video summary span { font-weight: 400; color: var(--muted); font-size: 0.92rem; }
   details.video .player { position: relative; aspect-ratio: 16 / 9; margin: 0 16px; border-radius: 10px; overflow: hidden; background: #000; }
+  details.video .player.tall { aspect-ratio: auto; height: 640px; background: #fff; border: 1px solid var(--line); }
   details.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   details.video .hint { margin: 10px 16px 14px; }
   .card { border-top: 3px solid var(--accent); }
@@ -98,6 +99,13 @@
     <summary>Watch how to install <span>5 minutes, with captions</span></summary>
     <div class="player" id="videoSlot" data-video="https://player.vimeo.com/video/1235220693?h=2e1a2ce60a&amp;title=0&amp;byline=0&amp;portrait=0&amp;dnt=1"></div>
     <p class="hint">The video loads from Vimeo only when you open this box, in a sandboxed frame, and nothing you type on this page is shared with it. Prefer to read? <a href="https://ownfms-works.github.io/demo/install/" target="_blank" rel="noopener noreferrer">The same steps in writing</a>.</p>
+  </details>
+
+  <details class="video" id="signup">
+    <summary>Tell us who you are <span>optional, takes a minute</span></summary>
+    <p class="hint" style="margin:0 16px 10px">A name and email lets us help if you get stuck and tell you about updates. You can install without it.</p>
+    <div class="player tall" id="signupSlot" data-signup="https://mailchi.mp/a11993824583/ownfmsworks-installer-sign-up"></div>
+    <p class="hint">The form loads from Mailchimp only when you open this box, in a sandboxed frame. Your details go to Mailchimp, never to this page, and the setup key never goes with them.</p>
   </details>
 
   <div class="notice" id="fileNote" hidden role="note">
@@ -218,7 +226,7 @@
     <p class="hint">The log never contains your secret or passwords.</p>
   </section>
 
-  <footer>OwnFMS.works installer <span id="ver"></span> &middot; Apache-2.0 &middot; ownfms.works &middot; <a href="https://ownfms-works.github.io/demo/" target="_blank" rel="noopener noreferrer">Try the demo</a></footer>
+  <footer>OwnFMS.works installer <span id="ver"></span> &middot; Apache-2.0, except the name and logo &middot; ownfms.works &middot; <a href="https://ownfms-works.github.io/demo/" target="_blank" rel="noopener noreferrer">Try the demo</a></footer>
 </main>
 
 <script>
@@ -2663,22 +2671,28 @@
 </script>
 <script>
 (function () {
-  // the how-to video: the frame is created only when the box is opened, so nothing is requested from Vimeo before that
-  var box = document.getElementById("howto"), slot = document.getElementById("videoSlot");
-  if (!box || !slot) { return; }
-  box.addEventListener("toggle", function () {
-    if (!box.open || slot.firstChild) { return; }
-    var url = slot.getAttribute("data-video") || "";
-    if (url.indexOf("https://player.vimeo.com/video/") !== 0) { return; }
-    var f = document.createElement("iframe");
-    f.setAttribute("src", url);
-    f.setAttribute("title", "OwnFMS.works: install it on your own server");
-    f.setAttribute("sandbox", "allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox");
-    f.setAttribute("allow", "fullscreen; picture-in-picture");
-    f.setAttribute("allowfullscreen", "");
-    f.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
-    slot.appendChild(f);
-  });
+  // the two optional frames (the how-to video and the sign-up form) are created only when their box is opened,
+  // so nothing is requested from Vimeo or Mailchimp before that
+  function wire(boxId, slotId, attr, prefix, title, sandbox) {
+    var box = document.getElementById(boxId), slot = document.getElementById(slotId);
+    if (!box || !slot) { return; }
+    box.addEventListener("toggle", function () {
+      if (!box.open || slot.firstChild) { return; }
+      var url = slot.getAttribute(attr) || "";
+      if (url.indexOf(prefix) !== 0) { return; }
+      var f = document.createElement("iframe");
+      f.setAttribute("src", url);
+      f.setAttribute("title", title);
+      f.setAttribute("sandbox", sandbox);
+      f.setAttribute("allow", "fullscreen; picture-in-picture");
+      f.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+      slot.appendChild(f);
+    });
+  }
+  wire("howto", "videoSlot", "data-video", "https://player.vimeo.com/video/", "OwnFMS.works: install it on your own server",
+    "allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox");
+  wire("signup", "signupSlot", "data-signup", "https://mailchi.mp/", "OwnFMS.works installer sign-up",
+    "allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox");
 })();
 </script>
 <script>
