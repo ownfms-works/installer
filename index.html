@@ -33,8 +33,6 @@
   details.video .player.tall { aspect-ratio: auto; height: 840px; background: #fff; border: 1px solid var(--line); }
   details.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   details.video .hint { margin: 10px 16px 14px; }
-  .gaterow { display: flex; gap: 10px 16px; align-items: center; flex-wrap: wrap; margin: -6px 0 16px; padding: 10px 16px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
-  .gaterow .check { margin: 0; }
   .card { border-top: 3px solid var(--accent); }
   h2 { font-size: 1.15rem; margin: 0 0 8px; }
   p { margin: 0 0 12px; }
@@ -108,10 +106,6 @@
     <div class="player tall" id="signupSlot" data-signup="https://mailchi.mp/a11993824583/ownfmsworks-installer-sign-up"></div>
     <p class="hint">This form is Mailchimp's, in a sandboxed frame. Your details go to Mailchimp, never to this page, and the setup key never goes with them.</p>
   </details>
-  <div class="gaterow">
-    <label class="check" for="signedUp"><input id="signedUp" type="checkbox"><span>I have signed up (open the box above)</span></label>
-    <button type="button" class="small" id="skipSignup">Skip for now</button>
-  </div>
 
   <div class="notice" id="fileNote" hidden role="note">
     <p><strong>This page was opened from a file on your computer.</strong> Most servers refuse requests from such a page, so the connection may fail. If it does, put this file on an https address you control, or use the Python scripts or the Colab notebook instead.</p>
@@ -185,7 +179,6 @@
       <button type="button" id="btnRevoke">Revoke setup key now</button>
     </div>
     <p class="hint">Test connection only reads. Run checks reads the setup and adds a few clearly labelled test records (ZZTEST-) which it removes again. Revoke setup key now turns the key off and deletes it; run your checks first.</p>
-    <p class="hint field-msg" id="gateHint" style="color:#a32a1d;font-weight:600">To continue, tick "I have signed up" under the sign-up box at the top of this page, or choose "Skip for now".</p>
     <div id="status" role="status" aria-live="polite"></div>
     <div class="row" style="margin-top:8px">
       <span class="hint" id="connNote" hidden>Connected. The secret box was cleared; the page keeps the connection in memory until you close or reload it.</span>
@@ -2717,8 +2710,7 @@
     errorBox: $("errorBox"), errorMsg: $("errorMsg"), errorHints: $("errorHints"), successBox: $("successBox"),
     signinLink: $("signinLink"), usersNote: $("usersNote"), checksBox: $("checksBox"), checksTitle: $("checksTitle"),
     checksBody: $("checksBody"), showId: $("showId"), showSecret: $("showSecret"), revoke: $("revoke"), btnRevoke: $("btnRevoke"),
-    revokeBox: $("revokeBox"), revokeTitle: $("revokeTitle"), revokeBody: $("revokeBody"), revokeStep: $("revokeStep"),
-    signedUp: $("signedUp"), skipSignup: $("skipSignup"), gateHint: $("gateHint")
+    revokeBox: $("revokeBox"), revokeTitle: $("revokeTitle"), revokeBody: $("revokeBody"), revokeStep: $("revokeStep")
   };
   var actionButtons = [els.btnTest, els.btnInstall, els.btnVerify, els.btnRevoke];
   var revokedKey = false;        // true once this page has revoked the key it was given
@@ -2754,24 +2746,12 @@
     els.status.appendChild(document.createTextNode(text || ""));
   }
 
-  // the sign-up gate: the four buttons wait until the person ticks "I have signed up" or chooses "Skip for now"
-  var gateOk = false;
-  function applyGate() {
-    actionButtons.forEach(function (b) { b.disabled = busy || !gateOk; });
-    els.gateHint.hidden = gateOk;
-  }
-  els.signedUp.addEventListener("change", function () { gateOk = els.signedUp.checked || els.skipSignup.disabled; applyGate(); });
-  els.skipSignup.addEventListener("click", function () {
-    els.skipSignup.disabled = true; els.skipSignup.textContent = "Skipped"; gateOk = true; applyGate();
-  });
-
   function setBusy(on) {
     busy = on;
-    actionButtons.forEach(function (b) { b.disabled = on || !gateOk; });
+    actionButtons.forEach(function (b) { b.disabled = on; });
     [els.server, els.clientId, els.secret, els.sample, els.users, els.pwStaff, els.pwManager, els.pwDemo, els.dedicated, els.terms, els.revoke, els.btnForget]
       .forEach(function (e) { e.disabled = on; });
   }
-  applyGate();
   window.addEventListener("beforeunload", function (e) { if (busy) { e.preventDefault(); e.returnValue = ""; } });
 
   function hideResults() {
