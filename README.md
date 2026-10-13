@@ -26,7 +26,7 @@ Please check it. Two simple ways:
 2. **Compare the checksum.** The SHA-256 of `index.html` is in `SHA256SUMS`:
 
    ```
-   481727d7798e7b8dc877989aa16c8a706ca615e0856d9078dc61e700c021e365  index.html
+   7c97fdd8b54620ed5e1de99b824dcfe9492e8824c7089d1af557ae87ca71b659  index.html
    ```
 
    To check what the live site serves, run this and compare the result with `SHA256SUMS`:
