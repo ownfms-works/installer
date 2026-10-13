@@ -102,7 +102,7 @@
   </div>
   <h1>Install OwnFMS.works</h1>
   <p class="tagline">Own your system. Own your data. Own your future.</p>
-  <p>This page sets up the OwnFMS.works starter on your own Corteza server: nine linked areas for managing grants (organizations, contacts, programs, initiatives, grants, payments, requirements, fiscal periods and board meetings), a change log for each grant, their pages, three roles, a dashboard and, if you want it, a small set of fictional sample data. It does the same work as the Python scripts, without installing anything on your computer. It is safe to run twice: whatever already exists is reused, and an older install gains the new fields.</p>
+  <p>Sets up the OwnFMS.works starter on your own Corteza server: nine linked areas for grants, a change log, three roles, a dashboard and optional fictional sample data. Safe to run twice.</p>
 
   <details class="video" id="howto">
     <summary>Watch how to install <span>5 minutes, with captions</span></summary>
@@ -121,7 +121,7 @@
     <div class="hp" aria-hidden="true"><label for="suWebsite">Leave this empty</label><input id="suWebsite" type="text" tabindex="-1" autocomplete="off"></div>
     <label class="check" for="suUpdates"><input id="suUpdates" type="checkbox"><span>Also send me updates (optional)</span></label>
     <p class="hint field-msg" id="suError" role="alert" hidden style="color:#a32a1d;font-weight:600">Please fill in your first name, last name and a valid email address, then press Install.</p>
-    <p class="hint">We use your name and email to help with your installation. They are passed to Mailchimp when you press Install, and the setup key never goes with them. Tick the box if you would also like updates; you can unsubscribe at any time.</p>
+    <p class="hint">Sent to Mailchimp when you press Install, never with the setup key. Tick the box for updates; unsubscribe any time.</p>
   </div>
 
   <div class="notice" id="fileNote" hidden role="note">
@@ -152,7 +152,7 @@
     </div>
 
     <label class="check" for="revoke"><input id="revoke" type="checkbox" checked aria-describedby="revokeHint"><span>Revoke this setup key when the install finishes (recommended)</span></label>
-    <p class="hint indent" id="revokeHint">The page installs, runs the checks, and then turns the setup key off and deletes it, so it cannot be used again. If the checks fail, it keeps the key so you can repair and try again. After the key is revoked, Test connection and Run checks no longer work with it, which is why the checks run first.</p>
+    <p class="hint indent" id="revokeHint">After the checks pass, the page turns the setup key off and deletes it. If they fail, it keeps the key so you can retry.</p>
     <p class="hint revoke-note">Expiry dates are not enforced for these keys. To revoke by hand: open Admin &gt; Auth Clients, untick Enabled, save, then delete.</p>
 
     <h2 style="margin-top:22px">Options</h2>
@@ -160,7 +160,7 @@
     <p class="hint indent">Fictional organizations, grants, payments and requirements, so there is something to look at.</p>
 
     <label class="check" for="users"><input id="users" type="checkbox"><span>Create the three sample sign-ins</span></label>
-    <p class="hint indent">Three made-up people to try the system as. <strong>Staff</strong> can create and edit records but not delete. <strong>Manager</strong> can read everything and decide grants. <strong>Demo Viewer</strong> can only look. They are not real people and use fictional addresses.</p>
+    <p class="hint indent"><strong>Staff</strong> (create and edit, no delete), <strong>Manager</strong> (read everything, decide grants), <strong>Demo Viewer</strong> (look only). Made-up people with fictional addresses.</p>
     <div id="pwBox" class="indent" hidden>
       <p class="hint">Optional. A sign-in is created only when you type a password for it. Leave a box empty to skip that sign-in. Choose your own passwords and keep them somewhere safe, because they are not shown again.</p>
       <label for="pwStaff">Staff password (staff@ownfms.example)</label>
@@ -171,11 +171,11 @@
       <input id="pwDemo" type="password" autocomplete="new-password" spellcheck="false">
     </div>
 
-    <h2 style="margin-top:22px">Before you install</h2>
+    <h2 style="margin-top:22px">Before you install (both required)</h2>
     <label class="check" for="dedicated"><input id="dedicated" type="checkbox" aria-describedby="dedicatedHint"><span>I am using a server just for this</span></label>
-    <p class="hint indent" id="dedicatedHint">Required to install. Some settings apply to the whole Corteza server, not only to OwnFMS.works.</p>
+    <p class="hint indent" id="dedicatedHint">Some settings apply to the whole Corteza server, not only to OwnFMS.works.</p>
     <label class="check" for="terms"><input id="terms" type="checkbox" aria-describedby="termsHint"><span>I understand this software is provided as is, with no warranty. I am responsible for my server, my data and my backups.</span></label>
-    <p class="hint indent" id="termsHint">Required to install. It is free, open-source software under the Apache 2.0 licence.</p>
+    <p class="hint indent" id="termsHint">Free, open-source software under the Apache 2.0 licence.</p>
     <details>
       <summary>What the setup changes on your server</summary>
       <ul>
@@ -195,7 +195,7 @@
       <button type="button" id="btnVerify">Run checks</button>
       <button type="button" id="btnRevoke">Revoke setup key now</button>
     </div>
-    <p class="hint">Test connection only reads. Run checks reads the setup and adds a few clearly labelled test records (ZZTEST-) which it removes again. Revoke setup key now turns the key off and deletes it; run your checks first.</p>
+    <p class="hint">Test connection only reads. Run checks adds ZZTEST- records and removes them. Revoke now turns the key off and deletes it; run checks first.</p>
     <div id="status" role="status" aria-live="polite"></div>
     <div class="row" style="margin-top:8px">
       <span class="hint" id="connNote" hidden>Connected. The secret box was cleared; the page keeps the connection in memory until you close or reload it.</span>
@@ -242,7 +242,7 @@
     <p class="hint">The log never contains your secret or passwords.</p>
   </section>
 
-  <footer>OwnFMS.works installer <span id="ver"></span> &middot; Apache-2.0, except the name and logo &middot; ownfms.works &middot; <a href="https://ownfms-works.github.io/demo/" target="_blank" rel="noopener noreferrer">Try the demo</a></footer>
+  <footer>OwnFMS.works installer <span id="ver"></span> &middot; Apache-2.0, except the name and logo &middot; ownfms.works</footer>
 </main>
 
 <script>
