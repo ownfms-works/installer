@@ -164,6 +164,9 @@
     <label class="check" for="sample"><input id="sample" type="checkbox" checked><span>Load the sample data</span></label>
     <p class="hint indent">Fictional organizations, grants, payments and requirements, so there is something to look at.</p>
 
+    <label class="check" for="uploads"><input id="uploads" type="checkbox"><span>Allow document uploads</span></label>
+    <p class="hint indent">Off by default: on every Corteza 2024.9 release, a file attached to a record can be downloaded by anyone who has its link (CVE-2026-108729). While off, the File fields stay on the screen but the server refuses every upload. Run the installer again with this box ticked to switch uploads on.</p>
+
     <label class="check" for="users"><input id="users" type="checkbox"><span>Create the three sample sign-ins</span></label>
     <p class="hint indent"><strong>Staff</strong> (create and edit, no delete), <strong>Manager</strong> (read everything, decide grants), <strong>Demo Viewer</strong> (look only). Made-up people with fictional addresses.</p>
     <div id="pwBox" class="indent" hidden>
@@ -236,7 +239,7 @@
       <li>Add your people: in Admin &gt; Users make a user for each person with the Staff or Manager role, and give the administrator login to nobody. Change or remove the sample sign-ins before real people use the server.</li>
       <li>Switch on multi-factor authentication for the administrator: your server's address followed by <code>/auth/security</code>.</li>
       <li>Back up the server (a snapshot from your host is enough) before you enter real records, and check that your host's daily backups are on.</li>
-      <li>Hold off on uploading sensitive documents until Corteza releases the fix for CVE-2026-108729: on every Corteza 2024.9 release, a file attached to a record can be downloaded by anyone who has its link, without signing in. Keep such documents where they are and note the location in the record.</li>
+      <li id="uploadsStep">Document uploads are off, because on every Corteza 2024.9 release a file attached to a record can be downloaded by anyone who has its link (CVE-2026-108729). Keep such documents where they are and note the location in the record. When Corteza ships the fix, run the installer again with Allow document uploads ticked.</li>
       <li>Optional, and recommended: schedule the small job that keeps the calculated fields current (automatic reference numbers, due flags, budget status, the payments check, possible-duplicate marks and each grant's History tab). It is <code>run_jobs.py</code> in the starter; the README has a section called "Keeping it up to date". Without it everything else works, but those fields stay empty.</li>
     </ol>
     <p style="margin:6px 0 0">The README's section "Your first week" has the full list, with the reasons.</p>
@@ -277,7 +280,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : (typeof window !== "undefined" ? window : this), function () {
   "use strict";
 
-  var VERSION = "0.2.4";
+  var VERSION = "0.2.5";
 
   // ---------------------------------------------------------------------------
   // Constants (ownfms_lib.py, setup_ownfms.py)
@@ -1103,6 +1106,32 @@
 
     // Set a default value and/or a format check on fields of a module that may already exist.
     // tweaks: { field: { default: "Draft", reject: [expression true for a BAD value, message] } }
+    // Document uploads (ownfms_lib.set_upload_lock): a File field's allowed type is checked against the real file
+    // contents, so a type nothing matches refuses every upload while the field stays on the screen. The one setting
+    // of an existing field the setup changes, and it changes it both ways.
+    var NO_UPLOADS_TYPE = "application/x-ownfms-no-uploads";
+    async function setUploadLock(nsId, moduleIds, locked) {
+      var changed = 0;
+      for (var i = 0; i < moduleIds.length; i++) {
+        var m = (await api("GET", "/compose/namespace/" + nsId + "/module/" + moduleIds[i])).response;
+        var dirty = false;
+        m.fields.forEach(function (f) {
+          if (f.kind !== "File") { return; }
+          var opts = Object.assign({}, orObj(f.options));
+          if ((opts.mimetypes === NO_UPLOADS_TYPE) === locked) { return; }
+          if (locked) { opts.mimetypes = NO_UPLOADS_TYPE; opts.maxSize = 1; }
+          else { delete opts.mimetypes; delete opts.maxSize; }
+          f.options = opts; dirty = true; changed++;
+        });
+        if (dirty) {
+          var body = pick(m, ["name", "handle", "fields", "meta", "config"]);
+          body.updatedAt = m.updatedAt === undefined ? null : m.updatedAt;
+          await api("POST", "/compose/namespace/" + nsId + "/module/" + moduleIds[i], body);
+        }
+      }
+      return changed;
+    }
+
     async function tuneModule(nsId, moduleId, tweaks) {
       var m = (await api("GET", "/compose/namespace/" + nsId + "/module/" + moduleId)).response;
       var changed = [];
@@ -2623,6 +2652,10 @@
       var charts = await createCharts(nsId, ids);
       var roles = await createRolesAndAccess(nsId, ids);
       var built = await buildPages(nsId, ids, charts, roles);
+      var uploadsOn = options.documentUploads === true;
+      var lockN = await setUploadLock(nsId, Object.keys(ids).map(function (k) { return ids[k]; }), !uploadsOn);
+      say("Document uploads: " + (uploadsOn ? "on" : "off, until Corteza ships the fix for CVE-2026-108729 (run again with the box ticked to switch them on)") +
+        (lockN ? " (" + lockN + " field" + (lockN === 1 ? "" : "s") + " changed)" : ""));
       var users = await createUsers(roles);
       var sample = false;
       if (options.sampleData !== false) {
@@ -2635,7 +2668,7 @@
       say("");
       say("Done. " + signIn);
       return { ok: true, server: web, namespaceId: nsId, homeId: built.homeId, signInUrl: signIn,
-        sampleDataLoaded: sample, usersCreated: users, skippedOperations: Array.from(skippedOperations).sort() };
+        sampleDataLoaded: sample, usersCreated: users, documentUploads: uploadsOn, skippedOperations: Array.from(skippedOperations).sort() };
     }
 
     async function verify(opts) {
@@ -2720,6 +2753,14 @@
       connect: connect,
       check: checkServer,
       mail: mailCheck,
+      // Switch document uploads on (true) or off (false) on an installed server. Returns the number of fields changed.
+      uploads: async function (on) {
+        var nsId = await findNamespace();
+        var mods = await moduleIds(nsId);
+        var n = await setUploadLock(nsId, Object.keys(mods).map(function (k) { return mods[k]; }), !on);
+        say("Document uploads: " + (on ? "on" : "off") + " (" + n + " field" + (n === 1 ? "" : "s") + " changed)");
+        return n;
+      },
       mail: mailCheck,
       install: install,
       verify: verify,
@@ -2775,13 +2816,13 @@
   var core = window.OwnFMSInstaller;
   var inst = null, instKey = "", busy = false;
   var els = {
-    server: $("server"), clientId: $("clientId"), secret: $("clientSecret"), sample: $("sample"), users: $("users"),
+    server: $("server"), clientId: $("clientId"), secret: $("clientSecret"), sample: $("sample"), uploads: $("uploads"), users: $("users"),
     pwBox: $("pwBox"), pwStaff: $("pwStaff"), pwManager: $("pwManager"), pwDemo: $("pwDemo"), dedicated: $("dedicated"),
     terms: $("terms"), termsError: $("termsError"), dedicatedError: $("dedicatedError"), btnTest: $("btnTest"), btnInstall: $("btnInstall"), btnVerify: $("btnVerify"),
     btnForget: $("btnForget"), btnCopy: $("btnCopy"), status: $("status"), connNote: $("connNote"), log: $("log"),
     errorBox: $("errorBox"), errorMsg: $("errorMsg"), errorHints: $("errorHints"), successBox: $("successBox"),
     signinLink: $("signinLink"), usersNote: $("usersNote"), checksBox: $("checksBox"), checksTitle: $("checksTitle"),
-    checksBody: $("checksBody"), showId: $("showId"), showSecret: $("showSecret"), revoke: $("revoke"), btnRevoke: $("btnRevoke"), mailNote: $("mailNote"), mailNoteText: $("mailNoteText"), mailStep: $("mailStep"),
+    checksBody: $("checksBody"), showId: $("showId"), showSecret: $("showSecret"), revoke: $("revoke"), btnRevoke: $("btnRevoke"), mailNote: $("mailNote"), mailNoteText: $("mailNoteText"), mailStep: $("mailStep"), uploadsStep: $("uploadsStep"),
     revokeBox: $("revokeBox"), revokeTitle: $("revokeTitle"), revokeBody: $("revokeBody"), revokeStep: $("revokeStep")
   };
   var actionButtons = [els.btnTest, els.btnInstall, els.btnVerify, els.btnRevoke];
@@ -2821,7 +2862,7 @@
   function setBusy(on) {
     busy = on;
     actionButtons.forEach(function (b) { b.disabled = on; });
-    [els.server, els.clientId, els.secret, els.sample, els.users, els.pwStaff, els.pwManager, els.pwDemo, els.dedicated, els.terms, els.revoke, els.btnForget]
+    [els.server, els.clientId, els.secret, els.sample, els.uploads, els.users, els.pwStaff, els.pwManager, els.pwDemo, els.dedicated, els.terms, els.revoke, els.btnForget]
       .forEach(function (e) { e.disabled = on; });
   }
   window.addEventListener("beforeunload", function (e) { if (busy) { e.preventDefault(); e.returnValue = ""; } });
@@ -2867,7 +2908,7 @@
   function currentOptions() {
     var pw = { staff: "", manager: "", demo: "" };
     if (els.users.checked) { pw = { staff: els.pwStaff.value, manager: els.pwManager.value, demo: els.pwDemo.value }; }
-    return { sampleData: els.sample.checked, passwords: pw };
+    return { sampleData: els.sample.checked, documentUploads: els.uploads.checked, passwords: pw };
   }
   function getInstaller() {
     if (revokedKey && !els.secret.value) {
@@ -3016,6 +3057,7 @@
       }
       els.revokeStep.textContent = REVOKE_BY_HAND;
       els.mailStep.hidden = !(mail && mail.configured === false);
+      els.uploadsStep.hidden = !!r.documentUploads;
       els.successBox.hidden = false;
       els.successBox.scrollIntoView({ block: "nearest" });
       var done = "Done. OwnFMS.works is installed" + (info.version ? " on Corteza " + info.version : "") + ".";
