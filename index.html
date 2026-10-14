@@ -228,10 +228,13 @@
     <p style="margin-bottom:4px"><strong>Next steps</strong></p>
     <ol class="steps">
       <li id="revokeStep">Revoke the setup client: open Admin &gt; Auth Clients, untick Enabled, save, then delete. Expiry dates are not enforced for these keys, and the key can act as an administrator.</li>
-      <li>Change the passwords of the sample sign-ins, or remove those users, before real people use the server.</li>
-      <li>Back up the server (a snapshot from your host is enough) before you enter real records.</li>
+      <li>Add your people: in Admin &gt; Users make a user for each person with the Staff or Manager role, and give the administrator login to nobody. Change or remove the sample sign-ins before real people use the server.</li>
+      <li>Switch on multi-factor authentication for the administrator: your server's address followed by <code>/auth/security</code>.</li>
+      <li>Back up the server (a snapshot from your host is enough) before you enter real records, and check that your host's daily backups are on.</li>
+      <li>Hold off on uploading sensitive documents until Corteza releases the fix for CVE-2026-108729: on every Corteza 2024.9 release, a file attached to a record can be downloaded by anyone who has its link, without signing in. Keep such documents where they are and note the location in the record.</li>
       <li>Optional, and recommended: schedule the small job that keeps the calculated fields current (automatic reference numbers, due flags, budget status, the payments check, possible-duplicate marks and each grant's History tab). It is <code>run_jobs.py</code> in the starter; the README has a section called "Keeping it up to date". Without it everything else works, but those fields stay empty.</li>
     </ol>
+    <p style="margin:6px 0 0">The README's section "Your first week" has the full list, with the reasons.</p>
   </div>
 
   <section class="card" aria-labelledby="logTitle">
@@ -269,7 +272,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : (typeof window !== "undefined" ? window : this), function () {
   "use strict";
 
-  var VERSION = "0.2.3";
+  var VERSION = "0.2.4";
 
   // ---------------------------------------------------------------------------
   // Constants (ownfms_lib.py, setup_ownfms.py)
