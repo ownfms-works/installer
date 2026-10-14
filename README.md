@@ -26,7 +26,7 @@ Please check it. Two simple ways:
 2. **Compare the checksum.** The SHA-256 of `index.html` is in `SHA256SUMS`:
 
    ```
-   4b54539c3fad4d9871fe187536623bf4e8c2182310f841d4b3df6e21360bb4f8  index.html
+   adcb8feb3910b98b1f140ac90f1e86f26a53162c8e354ce5a1c7ad6b05436ac2  index.html
    ```
 
    To check what the live site serves, run this and compare the result with `SHA256SUMS`:
@@ -37,10 +37,19 @@ Please check it. Two simple ways:
 
 You can also read the network panel in your browser's developer tools while you use it: the only requests go to your own server.
 
+## Download the starter
+
+The whole starter (the Python setup and checks, this installer as one file, the Colab notebook, the upkeep jobs,
+the sample data and the README) is published on the [releases page](https://github.com/ownfms-works/installer/releases).
+The newest zip is always at
+<https://github.com/ownfms-works/installer/releases/latest/download/ownfms-works-starter.zip>, and each release
+carries a `SHA256SUMS.txt` to compare it with.
+
 ## What you need
 
 - A Corteza server, **version 2024.9.1**, reachable over https. A managed one such as Elestio works.
 - A setup client created in the Corteza admin area (Auth Clients): grant type `client_credentials`, acting as your administrator.
+- Outgoing e-mail from the server, for password resets. Test connection tells you whether one is set.
 - About 15 minutes.
 
 Prefer not to use a web page? The same setup is available as Python scripts and a Colab notebook in the starter package.

@@ -128,6 +128,10 @@
     <p><strong>This page was opened from a file on your computer.</strong> Most servers refuse requests from such a page, so the connection may fail. If it does, put this file on an https address you control, or use the Python scripts or the Colab notebook instead.</p>
   </div>
 
+  <div class="notice" id="mailNote" hidden role="note">
+    <p id="mailNoteText"></p>
+  </div>
+
   <div class="notice" role="note">
     <p><strong>Your client secret stays in this page and is sent only to your own server. It is not stored.</strong></p>
   </div>
@@ -228,6 +232,7 @@
     <p style="margin-bottom:4px"><strong>Next steps</strong></p>
     <ol class="steps">
       <li id="revokeStep">Revoke the setup client: open Admin &gt; Auth Clients, untick Enabled, save, then delete. Expiry dates are not enforced for these keys, and the key can act as an administrator.</li>
+      <li id="mailStep" hidden>Set up outgoing e-mail: the server has no usable e-mail server yet, so Forgot password and e-mail sign-in codes will not work. Enter your host's SMTP details in the admin area under Settings, Email, or ask your host.</li>
       <li>Add your people: in Admin &gt; Users make a user for each person with the Staff or Manager role, and give the administrator login to nobody. Change or remove the sample sign-ins before real people use the server.</li>
       <li>Switch on multi-factor authentication for the administrator: your server's address followed by <code>/auth/security</code>.</li>
       <li>Back up the server (a snapshot from your host is enough) before you enter real records, and check that your host's daily backups are on.</li>
@@ -2564,6 +2569,52 @@
       return { server: web, token: true, namespaces: slugs, roles: roles, installed: slugs.indexOf(NAMESPACE_SLUG) >= 0 };
     }
 
+    // Read-only: can the server send e-mail? Forgot password and e-mail codes depend on it. Mirrors how Corteza
+    // picks the host and port (a "host:port" value overrides the port; no host or port 0 means nothing is sent).
+    async function mailCheck() {
+      var settings = (await api("GET", "/system/settings/")).response || [];
+      function setting(name) { var s = settings.filter(function (x) { return x.name === name; })[0]; return s ? s.value : undefined; }
+      var srv = (setting("smtp.servers") || [])[0] || {};
+      var host = String(srv.host || "").trim(), port = parseInt(srv.port, 10) || 0;
+      if (host.indexOf(":") >= 0) { var hp = host.split(":"); port = parseInt(hp[1], 10) || 0; host = hp[0]; }
+      var resetOn = setting("auth.internal.password-reset.enabled") !== false;
+      var out;
+      if (host && port) {
+        out = { configured: true, host: host, port: port, resetOn: resetOn,
+          detail: "Outgoing e-mail: a server is set (" + host + ", port " + port + "). To be sure it delivers, use Forgot password on the sign-in page once." +
+            (resetOn ? "" : " Password resets are switched off in the admin area (Settings, Authentication).") };
+      } else {
+        out = { configured: false, host: host, port: port, resetOn: resetOn,
+          detail: "Outgoing e-mail: " + (host ? "the e-mail server has no port" : "no e-mail server is set") +
+            ", so Forgot password and e-mail sign-in codes will not work until one is entered in the admin area (Settings, Email) or by your host." };
+      }
+      say(out.detail);
+      return out;
+    }
+
+    // Read-only: can the server send e-mail? Forgot password and e-mail codes depend on it. Mirrors how Corteza
+    // picks the host and port (a "host:port" value overrides the port; no host or port 0 means nothing is sent).
+    async function mailCheck() {
+      var settings = (await api("GET", "/system/settings/")).response || [];
+      function setting(name) { var s = settings.filter(function (x) { return x.name === name; })[0]; return s ? s.value : undefined; }
+      var srv = (setting("smtp.servers") || [])[0] || {};
+      var host = String(srv.host || "").trim(), port = parseInt(srv.port, 10) || 0;
+      if (host.indexOf(":") >= 0) { var hp = host.split(":"); port = parseInt(hp[1], 10) || 0; host = hp[0]; }
+      var resetOn = setting("auth.internal.password-reset.enabled") !== false;
+      var out;
+      if (host && port) {
+        out = { configured: true, host: host, port: port, resetOn: resetOn,
+          detail: "Outgoing e-mail: a server is set (" + host + ", port " + port + "). To be sure it delivers, use Forgot password on the sign-in page once." +
+            (resetOn ? "" : " Password resets are switched off in the admin area (Settings, Authentication).") };
+      } else {
+        out = { configured: false, host: host, port: port, resetOn: resetOn,
+          detail: "Outgoing e-mail: " + (host ? "the e-mail server has no port" : "no e-mail server is set") +
+            ", so Forgot password and e-mail sign-in codes will not work until one is entered in the admin area (Settings, Email) or by your host." };
+      }
+      say(out.detail);
+      return out;
+    }
+
     async function install() {
       skippedOperations.clear();
       say("Building OwnFMS.works on " + web);
@@ -2668,6 +2719,8 @@
       server: web,
       connect: connect,
       check: checkServer,
+      mail: mailCheck,
+      mail: mailCheck,
       install: install,
       verify: verify,
       cleanup: cleanup,
@@ -2728,7 +2781,7 @@
     btnForget: $("btnForget"), btnCopy: $("btnCopy"), status: $("status"), connNote: $("connNote"), log: $("log"),
     errorBox: $("errorBox"), errorMsg: $("errorMsg"), errorHints: $("errorHints"), successBox: $("successBox"),
     signinLink: $("signinLink"), usersNote: $("usersNote"), checksBox: $("checksBox"), checksTitle: $("checksTitle"),
-    checksBody: $("checksBody"), showId: $("showId"), showSecret: $("showSecret"), revoke: $("revoke"), btnRevoke: $("btnRevoke"),
+    checksBody: $("checksBody"), showId: $("showId"), showSecret: $("showSecret"), revoke: $("revoke"), btnRevoke: $("btnRevoke"), mailNote: $("mailNote"), mailNoteText: $("mailNoteText"), mailStep: $("mailStep"),
     revokeBox: $("revokeBox"), revokeTitle: $("revokeTitle"), revokeBody: $("revokeBody"), revokeStep: $("revokeStep")
   };
   var actionButtons = [els.btnTest, els.btnInstall, els.btnVerify, els.btnRevoke];
@@ -2774,7 +2827,7 @@
   window.addEventListener("beforeunload", function (e) { if (busy) { e.preventDefault(); e.returnValue = ""; } });
 
   function hideResults() {
-    els.errorBox.hidden = true; els.successBox.hidden = true; els.checksBox.hidden = true; els.revokeBox.hidden = true;
+    els.errorBox.hidden = true; els.successBox.hidden = true; els.checksBox.hidden = true; els.revokeBox.hidden = true; els.mailNote.hidden = true;
     els.dedicatedError.hidden = true; els.termsError.hidden = true;
     [els.server, els.clientId, els.secret].forEach(function (e) { e.classList.remove("field-error"); });
   }
@@ -2865,6 +2918,17 @@
     catch (e) { showError(e); }
     finally { setBusy(false); if (button) { button.focus(); } }
   }
+  // Outgoing e-mail is a courtesy check: it never stops an install, and it is skipped if the setting cannot be read.
+  async function mailCheck(i) {
+    try { return await i.mail(); } catch (e) { appendLog("Outgoing e-mail: could not be read (" + (e && e.message ? e.message : e) + ")."); return null; }
+  }
+  function showMailNote(m) {
+    if (m && m.configured === false) {
+      var d = m.detail.replace(/^Outgoing e-mail: /, "");
+      els.mailNoteText.textContent = "No outgoing e-mail yet. " + d.charAt(0).toUpperCase() + d.slice(1) + " Everything else installs and works without it.";
+      els.mailNote.hidden = false;
+    } else { els.mailNote.hidden = true; }
+  }
   async function connectFirst(i) {
     setStatus("Connecting to your server...", true);
     var info = await i.connect();
@@ -2879,6 +2943,7 @@
       var info = await connectFirst(i);
       setStatus("Reading what is on the server...", true);
       var r = await i.check();
+      showMailNote(await mailCheck(i));
       var msg = "Connection works" + (info.version ? " (Corteza " + info.version + ")" : "") + ". " +
         (r.installed ? "OwnFMS.works is already installed here; Install will check and repair it." : "OwnFMS.works is not installed yet.");
       appendLog(msg);
@@ -2937,6 +3002,7 @@
       var i = getInstaller();
       var wantUsers = els.users.checked;
       var info = await connectFirst(i);
+      var mail = await mailCheck(i);
       setStatus("Installing. This can take a few minutes on a new server. Please keep this page open.", true);
       var r = await i.install();
       [els.pwStaff, els.pwManager, els.pwDemo].forEach(function (e) { e.value = ""; });
@@ -2949,6 +3015,7 @@
         els.usersNote.hidden = false;
       }
       els.revokeStep.textContent = REVOKE_BY_HAND;
+      els.mailStep.hidden = !(mail && mail.configured === false);
       els.successBox.hidden = false;
       els.successBox.scrollIntoView({ block: "nearest" });
       var done = "Done. OwnFMS.works is installed" + (info.version ? " on Corteza " + info.version : "") + ".";
