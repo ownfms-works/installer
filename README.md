@@ -10,8 +10,8 @@ The whole installer is one readable file, `index.html`. There are no outside scr
 
 ## How it works, and what it does with your key
 
-- The page talks **only to your own Corteza server**. It makes no other network requests. (It has two plain links to the
-  demo page, which open only if you click them.)
+- The page talks **only to your own Corteza server**. It makes no other network requests. (It has three plain links to the
+  demo page, including its Contact us card, which open only if you click them.)
 - Your client ID and client secret stay in the page's memory. They are not stored (no cookies, no local storage, no
   address bar) and they are never sent to us or to anyone but your server.
 - When the install finishes the page can **revoke the setup key for you**: it disables the key, deletes it, and then
@@ -26,7 +26,7 @@ Please check it. Two simple ways:
 2. **Compare the checksum.** The SHA-256 of `index.html` is in `SHA256SUMS`:
 
    ```
-   e1cca584ebd16d4412631ad6167465afcb8ec505418655ef3444807dd80d6510  index.html
+   4ea7f320570fa2c01d8e8750091011ad011cbd47760ca92f482f599cd699d334  index.html
    ```
 
    To check what the live site serves, run this and compare the result with `SHA256SUMS`:
