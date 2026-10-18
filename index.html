@@ -146,10 +146,10 @@
 
     <label for="clientId">Client ID</label>
     <div class="pwrow">
-      <input id="clientId" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="clientHint">
+      <input id="clientId" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="for example 123456789012345678" aria-describedby="clientHint">
       <button type="button" class="small" id="showId" aria-controls="clientId" aria-pressed="false" aria-label="Show Client ID">Show</button>
     </div>
-    <p class="hint" id="clientHint">From the setup client you created in the Corteza admin area (Auth Clients, type client_credentials).</p>
+    <p class="hint" id="clientHint">A long number of about 18 digits, for example 123456789012345678 (yours is different). In the Corteza admin area open System, then Auth Clients, then the setup client you created. The number is at the end of the page address, and also before the colon in the Example cURL box.</p>
 
     <label for="clientSecret">Client secret</label>
     <div class="pwrow">
@@ -281,7 +281,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : (typeof window !== "undefined" ? window : this), function () {
   "use strict";
 
-  var VERSION = "0.2.11";
+  var VERSION = "0.2.12";
 
   // ---------------------------------------------------------------------------
   // Constants (ownfms_lib.py, setup_ownfms.py)
