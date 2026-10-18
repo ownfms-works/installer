@@ -121,7 +121,7 @@
     </div>
     <div class="hp" aria-hidden="true"><label for="suWebsite">Leave this empty</label><input id="suWebsite" type="text" tabindex="-1" autocomplete="off"></div>
     <label class="check" for="suUpdates"><input id="suUpdates" type="checkbox"><span>Yes, send me occasional OwnFMS.works updates (a few a year, unsubscribe any time)</span></label>
-    <p class="hint field-msg" id="suError" role="alert" hidden style="color:#a32a1d;font-weight:600">Please fill in your first name, last name and a valid email address, then press Install.</p>
+    <p class="hint field-msg" id="suError" role="alert" hidden style="color:#a32a1d;font-weight:600">Please fill in your first name, last name and a real email address (temporary mail services are not accepted), then press Install.</p>
     <p class="hint">Sent to Mailchimp when you press Install, never with the setup key.</p>
   </div>
 
@@ -281,7 +281,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : (typeof window !== "undefined" ? window : this), function () {
   "use strict";
 
-  var VERSION = "0.2.12";
+  var VERSION = "0.2.13";
 
   // ---------------------------------------------------------------------------
   // Constants (ownfms_lib.py, setup_ownfms.py)
@@ -2997,17 +2997,26 @@
   // contact to Mailchimp. Nothing is sent without a valid email address, and never anything else from this page.
   var signupSent = "";
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  // temporary-mail services and reserved test domains: an address there cannot be a real contact. The page checks this itself, with no
+  // request to anyone; the sign-up relay checks it again, and also that the domain can receive mail.
+  var BLOCKED_DOMAINS = ["mailinator.com", "guerrillamail.com", "guerrillamail.net", "guerrillamail.org", "guerrillamailblock.com", "sharklasers.com", "grr.la", "10minutemail.com", "10minutemail.net", "temp-mail.org", "temp-mail.io", "tempmail.com", "tempmail.net", "tempail.com", "tempinbox.com", "yopmail.com", "yopmail.net", "trashmail.com", "trashmail.net", "trash-mail.com", "getnada.com", "nada.email", "dispostable.com", "maildrop.cc", "mailnesia.com", "fakeinbox.com", "throwawaymail.com", "mohmal.com", "emailondeck.com", "mintemail.com", "mytemp.email", "burnermail.io", "discard.email", "spamgourmet.com", "mailcatch.com", "mailnull.com", "moakt.com", "tmpmail.org", "tmpmail.net", "spambox.us", "jetable.org", "getairmail.com", "inboxkitten.com", "emailfake.com", "fakemailgenerator.com", "harakirimail.com", "mailforspam.com", "wegwerfmail.de", "einrot.com", "dropmail.me", "mail.tm", "tmail.ws", "example.com", "example.org", "example.net", "test.com", "localhost", "invalid"];
+  function emailOk(value) {
+    var v = String(value || "").trim().toLowerCase();
+    if (!EMAIL_RE.test(v)) { return false; }
+    var domain = v.slice(v.lastIndexOf("@") + 1);
+    return !BLOCKED_DOMAINS.some(function (b) { return domain === b || domain.slice(-(b.length + 1)) === "." + b; });
+  }
   // the first of first name, last name and email that is empty or not a valid address, or null when all three are fine
   function signupMissing() {
     var f = document.getElementById("suFirst"), l = document.getElementById("suLast"), e = document.getElementById("suEmail");
     if (!f.value.trim()) { return f; }
     if (!l.value.trim()) { return l; }
-    return EMAIL_RE.test(e.value.trim()) ? null : e;
+    return emailOk(e.value) ? null : e;
   }
   function sendSignup() {
     var url = document.getElementById("whoami").getAttribute("data-endpoint") || "";
     var email = document.getElementById("suEmail").value.trim();
-    if (url.indexOf("https://script.google.com/macros/s/") !== 0 || !EMAIL_RE.test(email) || signupSent === email) { return; }
+    if (url.indexOf("https://script.google.com/macros/s/") !== 0 || !emailOk(email) || signupSent === email) { return; }
     signupSent = email;
     var body = new URLSearchParams({
       first: document.getElementById("suFirst").value.trim(), last: document.getElementById("suLast").value.trim(), email: email,
