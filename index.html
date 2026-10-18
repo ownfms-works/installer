@@ -103,17 +103,17 @@
   </div>
   <h1>Install OwnFMS.works</h1>
   <p class="tagline">Own your system. Own your data. Own your future.</p>
-  <p>Sets up the OwnFMS.works starter on your own Corteza server: nine linked areas for grants, a change log, three roles, a dashboard and optional fictional sample data. Safe to run twice.</p>
+  <p>Installs the OwnFMS.works starter on your own Corteza server: nine linked areas for grants, a change log, three roles, a dashboard and optional fictional sample data. It is safe to run twice.</p>
 
   <details class="video" id="howto">
-    <summary>Watch how to install <span>9 minutes, with captions</span></summary>
+    <summary>Watch how to install <span>11 minutes, with captions</span></summary>
     <div class="player" id="videoSlot" data-video="https://player.vimeo.com/video/1235220693?h=2e1a2ce60a&amp;title=0&amp;byline=0&amp;portrait=0&amp;dnt=1"></div>
     <p class="hint">The video loads from Vimeo only when you open this box, in a sandboxed frame, and nothing you type on this page is shared with it. Prefer to read? <a href="https://ownfms-works.github.io/demo/install/" target="_blank" rel="noopener noreferrer">The same steps in writing</a>.</p>
   </details>
 
   <div class="card whoami" id="whoami" data-endpoint="https://script.google.com/macros/s/AKfycbxMxDde_65-kZCb1gVGdqau8hZ9fhRKOsp80t3x5D8yAj5uv9jTub5gsznblBKobIVf/exec">
     <h2>Tell us who you are</h2>
-    <p class="sub">We would love to know who you are, so we can help you along the way.</p>
+    <p class="sub">So we can help you through the install. Name and e-mail are required.</p>
     <div class="trio">
       <div><label for="suFirst">First name <span class="req" aria-hidden="true">*</span><span class="sr">(required)</span></label><input id="suFirst" type="text" autocomplete="given-name" required aria-required="true"></div>
       <div><label for="suLast">Last name <span class="req" aria-hidden="true">*</span><span class="sr">(required)</span></label><input id="suLast" type="text" autocomplete="family-name" required aria-required="true"></div>
@@ -122,7 +122,7 @@
     <div class="hp" aria-hidden="true"><label for="suWebsite">Leave this empty</label><input id="suWebsite" type="text" tabindex="-1" autocomplete="off"></div>
     <label class="check" for="suUpdates"><input id="suUpdates" type="checkbox"><span>Yes, send me occasional OwnFMS.works updates (a few a year, unsubscribe any time)</span></label>
     <p class="hint field-msg" id="suError" role="alert" hidden style="color:#a32a1d;font-weight:600">Please fill in your first name, last name and a real email address (temporary mail services are not accepted), then press Install.</p>
-    <p class="hint">Sent to Mailchimp when you press Install, never with the setup key.</p>
+    <p class="hint">Sent to our mailing list (Mailchimp) when you press Install, and never together with the setup key.</p>
   </div>
 
   <div class="notice" id="fileNote" hidden role="note">
@@ -139,7 +139,7 @@
 
   <form id="form" class="card" autocomplete="off" novalidate>
     <h2>Your server</h2>
-    <p class="hint">You need a Corteza server. The one in our install video, on Elestio (1 CPU, 1 GB, 25 GB, about $13 a month), is comfortable with about 8,000 records, for example 1,000 grants with their payments, requirements, organizations and contacts, and usable to about 20,000; its disk holds about 20,000 one-megabyte documents. Beyond that, pages slow down. In our test a server with two processors (about $40 a month at Elestio) kept pages quick for five people at 5,000 grants, while doubling only the memory did not help. Prices vary by host. The software is free.</p>
+    <p class="hint">You need a Corteza server. The one in our install video, on Elestio (1 CPU, 1 GB, 25 GB, about $13 a month), handles about 8,000 records comfortably, for example 1,000 grants with their payments, requirements, organizations and contacts, and stays usable to about 20,000. Beyond that, add processing power: in our test, a two-processor server (about $40 a month at Elestio) kept pages fast for five people at 5,000 grants, while extra memory alone did not help. Prices vary by host. The software is free.</p>
     <label for="server">Server address</label>
     <input id="server" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://corteza.example.com" aria-describedby="serverHint">
     <p class="hint" id="serverHint">The address of your Corteza server, starting with https://</p>
@@ -281,7 +281,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : (typeof window !== "undefined" ? window : this), function () {
   "use strict";
 
-  var VERSION = "0.2.13";
+  var VERSION = "0.2.14";
 
   // ---------------------------------------------------------------------------
   // Constants (ownfms_lib.py, setup_ownfms.py)
