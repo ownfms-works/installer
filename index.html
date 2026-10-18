@@ -165,9 +165,6 @@
     <label class="check" for="sample"><input id="sample" type="checkbox" checked><span>Load the sample data</span></label>
     <p class="hint indent">Fictional organizations, grants, payments and requirements, so there is something to look at.</p>
 
-    <label class="check" for="uploads"><input id="uploads" type="checkbox"><span>Allow document uploads</span></label>
-    <p class="hint indent">Off by default: on every Corteza 2024.9 release, a file attached to a record can be downloaded by anyone who has its link (CVE-2026-108729). While off, the File fields stay on the screen but the server refuses every upload. Run the installer again with this box ticked to switch uploads on.</p>
-
     <label class="check" for="users"><input id="users" type="checkbox"><span>Create the three sample sign-ins</span></label>
     <p class="hint indent"><strong>Staff</strong> (create and edit, no delete), <strong>Manager</strong> (read everything, decide grants), <strong>Demo Viewer</strong> (look only). Made-up people with fictional addresses.</p>
     <div id="pwBox" class="indent" hidden>
@@ -240,7 +237,6 @@
       <li>Add your people: in Admin &gt; Users make a user for each person with the Staff or Manager role, and give the administrator login to nobody. Change or remove the sample sign-ins before real people use the server.</li>
       <li>Switch on multi-factor authentication for the administrator: your server's address followed by <code>/auth/security</code>.</li>
       <li>Back up the server (a snapshot from your host is enough) before you enter real records, and check that your host's daily backups are on.</li>
-      <li id="uploadsStep">Document uploads are off, because on every Corteza 2024.9 release a file attached to a record can be downloaded by anyone who has its link (CVE-2026-108729). Keep such documents where they are and note the location in the record. When Corteza ships the fix, run the installer again with Allow document uploads ticked.</li>
       <li>Optional, and recommended: schedule the small job that keeps the calculated fields current (automatic reference numbers, due flags, budget status, the payments check, possible-duplicate marks and each grant's History tab). It is <code>run_jobs.py</code> in the starter; the README has a section called "Keeping it up to date". Without it everything else works, but those fields stay empty.</li>
     </ol>
     <p style="margin:6px 0 0">The README's section "Your first week" has the full list, with the reasons.</p>
@@ -281,7 +277,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : (typeof window !== "undefined" ? window : this), function () {
   "use strict";
 
-  var VERSION = "0.2.14";
+  var VERSION = "0.2.15";
 
   // ---------------------------------------------------------------------------
   // Constants (ownfms_lib.py, setup_ownfms.py)
@@ -2817,7 +2813,7 @@
   var core = window.OwnFMSInstaller;
   var inst = null, instKey = "", busy = false;
   var els = {
-    server: $("server"), clientId: $("clientId"), secret: $("clientSecret"), sample: $("sample"), uploads: $("uploads"), users: $("users"),
+    server: $("server"), clientId: $("clientId"), secret: $("clientSecret"), sample: $("sample"), users: $("users"),
     pwBox: $("pwBox"), pwStaff: $("pwStaff"), pwManager: $("pwManager"), pwDemo: $("pwDemo"), dedicated: $("dedicated"),
     terms: $("terms"), termsError: $("termsError"), dedicatedError: $("dedicatedError"), btnTest: $("btnTest"), btnInstall: $("btnInstall"), btnVerify: $("btnVerify"),
     btnForget: $("btnForget"), btnCopy: $("btnCopy"), status: $("status"), connNote: $("connNote"), log: $("log"),
@@ -2863,7 +2859,7 @@
   function setBusy(on) {
     busy = on;
     actionButtons.forEach(function (b) { b.disabled = on; });
-    [els.server, els.clientId, els.secret, els.sample, els.uploads, els.users, els.pwStaff, els.pwManager, els.pwDemo, els.dedicated, els.terms, els.revoke, els.btnForget]
+    [els.server, els.clientId, els.secret, els.sample, els.users, els.pwStaff, els.pwManager, els.pwDemo, els.dedicated, els.terms, els.revoke, els.btnForget]
       .forEach(function (e) { e.disabled = on; });
   }
   window.addEventListener("beforeunload", function (e) { if (busy) { e.preventDefault(); e.returnValue = ""; } });
@@ -2909,7 +2905,7 @@
   function currentOptions() {
     var pw = { staff: "", manager: "", demo: "" };
     if (els.users.checked) { pw = { staff: els.pwStaff.value, manager: els.pwManager.value, demo: els.pwDemo.value }; }
-    return { sampleData: els.sample.checked, documentUploads: els.uploads.checked, passwords: pw };
+    return { sampleData: els.sample.checked, documentUploads: false, passwords: pw };
   }
   function getInstaller() {
     if (revokedKey && !els.secret.value) {
@@ -3067,7 +3063,6 @@
       }
       els.revokeStep.textContent = REVOKE_BY_HAND;
       els.mailStep.hidden = !(mail && mail.configured === false);
-      els.uploadsStep.hidden = !!r.documentUploads;
       els.successBox.hidden = false;
       els.successBox.scrollIntoView({ block: "nearest" });
       var done = "Done. OwnFMS.works is installed" + (info.version ? " on Corteza " + info.version : "") + ".";
