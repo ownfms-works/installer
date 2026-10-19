@@ -103,7 +103,7 @@
   </div>
   <h1>Install OwnFMS.works</h1>
   <p class="tagline">Own your system. Own your data. Own your future.</p>
-  <p>Installs the OwnFMS.works starter on your own Corteza server: nine linked areas for grants, a change log, three roles, a dashboard and optional fictional sample data. It is safe to run twice.</p>
+  <p>This page installs the OwnFMS.works starter on your own Corteza server: nine linked areas for grants, a change log, three roles, a dashboard and some optional made-up sample data. Running it twice does no harm.</p>
 
   <details class="video" id="howto">
     <summary>Watch how to install <span>11 minutes, with captions</span></summary>
@@ -113,7 +113,7 @@
 
   <div class="card whoami" id="whoami" data-endpoint="https://script.google.com/macros/s/AKfycbxMxDde_65-kZCb1gVGdqau8hZ9fhRKOsp80t3x5D8yAj5uv9jTub5gsznblBKobIVf/exec">
     <h2>Tell us who you are</h2>
-    <p class="sub">So we can help you through the install. Name and e-mail are required.</p>
+    <p class="sub">We ask so we can help if you get stuck. Name and e-mail are required.</p>
     <div class="trio">
       <div><label for="suFirst">First name <span class="req" aria-hidden="true">*</span><span class="sr">(required)</span></label><input id="suFirst" type="text" autocomplete="given-name" required aria-required="true"></div>
       <div><label for="suLast">Last name <span class="req" aria-hidden="true">*</span><span class="sr">(required)</span></label><input id="suLast" type="text" autocomplete="family-name" required aria-required="true"></div>
@@ -139,7 +139,7 @@
 
   <form id="form" class="card" autocomplete="off" novalidate>
     <h2>Your server</h2>
-    <p class="hint">You need a Corteza server. The one in our install video, on Elestio (1 CPU, 1 GB, 25 GB, about $13 a month), handles about 8,000 records comfortably, for example 1,000 grants with their payments, requirements, organizations and contacts, and stays usable to about 20,000. Beyond that, add processing power: in our test, a two-processor server (about $40 a month at Elestio) kept pages fast for five people at 5,000 grants, while extra memory alone did not help. Prices vary by host. The software is free.</p>
+    <p class="hint">You'll need a Corteza server. The one in our install video, the smallest on Elestio (1 CPU, 1 GB, 25 GB, about $13 a month), handles around 8,000 records comfortably, say 1,000 grants with their payments, requirements, organizations and contacts, and stays usable to about 20,000. Past that, add processing power: in our test a two-processor server (about $40 a month at Elestio) kept pages fast for five people at 5,000 grants, while extra memory on its own made no difference. Prices vary by host. The software itself is free.</p>
     <label for="server">Server address</label>
     <input id="server" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://corteza.example.com" aria-describedby="serverHint">
     <p class="hint" id="serverHint">The address of your Corteza server, starting with https://</p>
@@ -149,7 +149,7 @@
       <input id="clientId" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="for example 123456789012345678" aria-describedby="clientHint">
       <button type="button" class="small" id="showId" aria-controls="clientId" aria-pressed="false" aria-label="Show Client ID">Show</button>
     </div>
-    <p class="hint" id="clientHint">A long number of about 18 digits, for example 123456789012345678 (yours is different). In the Corteza admin area open System, then Auth Clients, then the setup client you created. The number is at the end of the page address, and also before the colon in the Example cURL box.</p>
+    <p class="hint" id="clientHint">A long number, about 18 digits, something like 123456789012345678 (yours will be different). To find it, open System, then Auth Clients in the Corteza admin area and click the setup client you created. The number is at the end of the page address, and also just before the colon in the Example cURL box.</p>
 
     <label for="clientSecret">Client secret</label>
     <div class="pwrow">
@@ -163,12 +163,12 @@
 
     <h2 style="margin-top:22px">Options</h2>
     <label class="check" for="sample"><input id="sample" type="checkbox" checked><span>Load the sample data</span></label>
-    <p class="hint indent">Fictional organizations, grants, payments and requirements, so there is something to look at.</p>
+    <p class="hint indent">A few made-up organizations, grants, payments and requirements, so there's something to look at.</p>
 
     <label class="check" for="users"><input id="users" type="checkbox"><span>Create the three sample sign-ins</span></label>
     <p class="hint indent"><strong>Staff</strong> (create and edit, no delete), <strong>Manager</strong> (read everything, decide grants), <strong>Demo Viewer</strong> (look only). Made-up people with fictional addresses.</p>
     <div id="pwBox" class="indent" hidden>
-      <p class="hint">Optional. A sign-in is created only when you type a password for it. Leave a box empty to skip that sign-in. Choose your own passwords and keep them somewhere safe, because they are not shown again.</p>
+      <p class="hint">Optional. A sign-in is only created if you type a password for it, so leave a box empty to skip that one. Pick your own passwords and keep them somewhere safe; they aren't shown again.</p>
       <label for="pwStaff">Staff password (staff@ownfms.example)</label>
       <input id="pwStaff" type="password" autocomplete="new-password" spellcheck="false">
       <label for="pwManager">Manager password (manager@ownfms.example)</label>
@@ -277,7 +277,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : (typeof window !== "undefined" ? window : this), function () {
   "use strict";
 
-  var VERSION = "0.2.17";
+  var VERSION = "0.2.18";
 
   // ---------------------------------------------------------------------------
   // Constants (ownfms_lib.py, setup_ownfms.py)
